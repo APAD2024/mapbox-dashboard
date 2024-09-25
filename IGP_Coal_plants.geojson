@@ -1,0 +1,2721 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "id": 0,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.1354647,
+                    24.81410735
+                ]
+            },
+            "properties": {
+                "FID": 0,
+                "plnt_nm": "Adani Godda power station",
+                "country": "India",
+                "cap_all": "800, 800",
+                "ttl_cp_": 1600,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 14016000000,
+                "nx_tn_y": 60268.800000000003,
+                "sx_tn_y": 100915.2,
+                "p10_tn_": 5185.9200000000001,
+                "p25_tn_": 2663.04,
+                "long": 87.1354647,
+                "lat": 24.81410735
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 1,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.789127800000003,
+                    24.202043
+                ]
+            },
+            "properties": {
+                "FID": 1,
+                "plnt_nm": "Anpara power station",
+                "country": "India",
+                "cap_all": "210, 210, 210, 500, 500",
+                "ttl_cp_": 1630,
+                "stts_ll": "operating, operating, operating, operating, operating",
+                "units": 5,
+                "status": "operating",
+                "prod_kw": 14278800000,
+                "nx_tn_y": 61398.839999999997,
+                "sx_tn_y": 102807.36,
+                "p10_tn_": 5283.1559999999999,
+                "p25_tn_": 2712.9720000000002,
+                "long": 82.789127800000003,
+                "lat": 24.202043
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 2,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.797330000000002,
+                    24.203787599999998
+                ]
+            },
+            "properties": {
+                "FID": 2,
+                "plnt_nm": "Anpara-C power station",
+                "country": "India",
+                "cap_all": "600, 600",
+                "ttl_cp_": 1200,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 10512000000,
+                "nx_tn_y": 45201.599999999999,
+                "sx_tn_y": 75686.399999999994,
+                "p10_tn_": 3889.4400000000001,
+                "p25_tn_": 1997.28,
+                "long": 82.797330000000002,
+                "lat": 24.203787599999998
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 3,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.806342200000003,
+                    24.1962622
+                ]
+            },
+            "properties": {
+                "FID": 3,
+                "plnt_nm": "Anpara-D power station",
+                "country": "India",
+                "cap_all": "500, 500",
+                "ttl_cp_": 1000,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 8760000000,
+                "nx_tn_y": 37668,
+                "sx_tn_y": 63072,
+                "p10_tn_": 3241.1999999999998,
+                "p25_tn_": 1664.4000000000001,
+                "long": 82.806342200000003,
+                "lat": 24.1962622
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 4,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    79.940280000000001,
+                    26.192779999999999
+                ]
+            },
+            "properties": {
+                "FID": 4,
+                "plnt_nm": "Anpara-E power station",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "permitted, permitted",
+                "units": 2,
+                "status": "permitted",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 79.940280000000001,
+                "lat": 26.192779999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 5,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.129999999999995,
+                    23.649999999999999
+                ]
+            },
+            "properties": {
+                "FID": 5,
+                "plnt_nm": "Asansol Crescent power station",
+                "country": "India",
+                "cap_all": "40",
+                "ttl_cp_": 40,
+                "stts_ll": "operating",
+                "units": 1,
+                "status": "operating",
+                "prod_kw": 350400000,
+                "nx_tn_y": 1506.72,
+                "sx_tn_y": 2522.8800000000001,
+                "p10_tn_": 129.648,
+                "p25_tn_": 66.575999999999993,
+                "long": 88.129999999999995,
+                "lat": 23.649999999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 6,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.307964999999996,
+                    28.503772000000001
+                ]
+            },
+            "properties": {
+                "FID": 6,
+                "plnt_nm": "Badarpur Thermal Power Station Stage I",
+                "country": "India",
+                "cap_all": "95, 95, 95",
+                "ttl_cp_": 285,
+                "stts_ll": "operating, operating, operating",
+                "units": 3,
+                "status": "operating",
+                "prod_kw": 2496600000,
+                "nx_tn_y": 10735.379999999999,
+                "sx_tn_y": 17975.52,
+                "p10_tn_": 923.74199999999996,
+                "p25_tn_": 474.35399999999998,
+                "long": 77.307964999999996,
+                "lat": 28.503772000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 7,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.307964999999996,
+                    28.503772000000001
+                ]
+            },
+            "properties": {
+                "FID": 7,
+                "plnt_nm": "Badarpur Thermal Power Station Stage II",
+                "country": "India",
+                "cap_all": "210, 210",
+                "ttl_cp_": 420,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 3679200000,
+                "nx_tn_y": 15820.559999999999,
+                "sx_tn_y": 26490.240000000002,
+                "p10_tn_": 1361.3040000000001,
+                "p25_tn_": 699.048,
+                "long": 77.307964999999996,
+                "lat": 28.503772000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 8,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.451560000000001,
+                    23.828465999999999
+                ]
+            },
+            "properties": {
+                "FID": 8,
+                "plnt_nm": "Bakreswar Thermal Power Station Phase I",
+                "country": "India",
+                "cap_all": "210, 210, 210",
+                "ttl_cp_": 630,
+                "stts_ll": "operating, operating, operating",
+                "units": 3,
+                "status": "operating",
+                "prod_kw": 5518800000,
+                "nx_tn_y": 23730.84,
+                "sx_tn_y": 39735.360000000001,
+                "p10_tn_": 2041.9559999999999,
+                "p25_tn_": 1048.5719999999999,
+                "long": 87.451560000000001,
+                "lat": 23.828465999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 9,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.451560000000001,
+                    23.828465999999999
+                ]
+            },
+            "properties": {
+                "FID": 9,
+                "plnt_nm": "Bakreswar Thermal Power Station Phase II",
+                "country": "India",
+                "cap_all": "210, 210",
+                "ttl_cp_": 420,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 3679200000,
+                "nx_tn_y": 15820.559999999999,
+                "sx_tn_y": 26490.240000000002,
+                "p10_tn_": 1361.3040000000001,
+                "p25_tn_": 699.048,
+                "long": 87.451560000000001,
+                "lat": 23.828465999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 10,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.403815399999999,
+                    22.995745599999999
+                ]
+            },
+            "properties": {
+                "FID": 10,
+                "plnt_nm": "Bandel Thermal Power Station",
+                "country": "India",
+                "cap_all": "60, 210, 60, 60, 60",
+                "ttl_cp_": 450,
+                "stts_ll": "operating, operating, operating, operating, operating",
+                "units": 5,
+                "status": "operating",
+                "prod_kw": 3942000000,
+                "nx_tn_y": 16950.599999999999,
+                "sx_tn_y": 28382.400000000001,
+                "p10_tn_": 1458.54,
+                "p25_tn_": 748.98000000000002,
+                "long": 88.403815399999999,
+                "lat": 22.995745599999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 11,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    86.958299999999994,
+                    24.713999999999999
+                ]
+            },
+            "properties": {
+                "FID": 11,
+                "plnt_nm": "Banka Thermal Power Plant",
+                "country": "India",
+                "cap_all": "660, 660, 660, 660",
+                "ttl_cp_": 2640,
+                "stts_ll": "construction, construction, permitted, permitted",
+                "units": 4,
+                "status": "construction",
+                "prod_kw": 23126400000,
+                "nx_tn_y": 99443.520000000004,
+                "sx_tn_y": 166510.07999999999,
+                "p10_tn_": 8556.768,
+                "p25_tn_": 4394.0159999999996,
+                "long": 86.958299999999994,
+                "lat": 24.713999999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 12,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    81.658533800000001,
+                    25.196345000000001
+                ]
+            },
+            "properties": {
+                "FID": 12,
+                "plnt_nm": "Bara Thermal Power Project",
+                "country": "India",
+                "cap_all": "660, 660, 660",
+                "ttl_cp_": 1980,
+                "stts_ll": "operating, operating, operating",
+                "units": 3,
+                "status": "operating",
+                "prod_kw": 17344800000,
+                "nx_tn_y": 74582.639999999999,
+                "sx_tn_y": 124882.56,
+                "p10_tn_": 6417.576,
+                "p25_tn_": 3295.5120000000002,
+                "long": 81.658533800000001,
+                "lat": 25.196345000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 13,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.948631199999994,
+                    25.5537569
+                ]
+            },
+            "properties": {
+                "FID": 13,
+                "plnt_nm": "Barapukuria power station",
+                "country": "Bangladesh",
+                "cap_all": "125, 125, 275",
+                "ttl_cp_": 525,
+                "stts_ll": "operating, operating, operating",
+                "units": 3,
+                "status": "operating",
+                "prod_kw": 4599000000,
+                "nx_tn_y": 19775.700000000001,
+                "sx_tn_y": 33112.800000000003,
+                "p10_tn_": 1701.6300000000001,
+                "p25_tn_": 873.80999999999995,
+                "long": 88.948631199999994,
+                "lat": 25.5537569
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 14,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    86.023488299999997,
+                    25.3913756
+                ]
+            },
+            "properties": {
+                "FID": 14,
+                "plnt_nm": "Barauni power station",
+                "country": "India",
+                "cap_all": "250, 250, 110, 110",
+                "ttl_cp_": 720,
+                "stts_ll": "operating, operating, operating, operating",
+                "units": 4,
+                "status": "operating",
+                "prod_kw": 6307200000,
+                "nx_tn_y": 27120.959999999999,
+                "sx_tn_y": 45411.839999999997,
+                "p10_tn_": 2333.6640000000002,
+                "p25_tn_": 1198.3679999999999,
+                "long": 86.023488299999997,
+                "lat": 25.3913756
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 15,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    85.745159999999998,
+                    25.4693
+                ]
+            },
+            "properties": {
+                "FID": 15,
+                "plnt_nm": "Barh I power station",
+                "country": "India",
+                "cap_all": "660, 660, 660",
+                "ttl_cp_": 1980,
+                "stts_ll": "operating, construction, construction",
+                "units": 3,
+                "status": "operating",
+                "prod_kw": 17344800000,
+                "nx_tn_y": 74582.639999999999,
+                "sx_tn_y": 124882.56,
+                "p10_tn_": 6417.576,
+                "p25_tn_": 3295.5120000000002,
+                "long": 85.745159999999998,
+                "lat": 25.4693
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 16,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    85.745159999999998,
+                    25.486499999999999
+                ]
+            },
+            "properties": {
+                "FID": 16,
+                "plnt_nm": "Barh II power station",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 85.745159999999998,
+                "lat": 25.486499999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 17,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    80.099999999999994,
+                    28.550000000000001
+                ]
+            },
+            "properties": {
+                "FID": 17,
+                "plnt_nm": "Barkhera IPP power station",
+                "country": "India",
+                "cap_all": "45, 45",
+                "ttl_cp_": 90,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 788400000,
+                "nx_tn_y": 3390.1199999999999,
+                "sx_tn_y": 5676.4799999999996,
+                "p10_tn_": 291.70800000000003,
+                "p25_tn_": 149.79599999999999,
+                "long": 80.099999999999994,
+                "lat": 28.550000000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 18,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    79.907499999999999,
+                    26.194167
+                ]
+            },
+            "properties": {
+                "FID": 18,
+                "plnt_nm": "Bhognipur power station",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "permitted, permitted",
+                "units": 2,
+                "status": "permitted",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 79.907499999999999,
+                "lat": 26.194167
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 19,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    80.058059999999998,
+                    26.763390999999999
+                ]
+            },
+            "properties": {
+                "FID": 19,
+                "plnt_nm": "Bilhaur Super Thermal Power Plant",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "pre-permit, pre-permit",
+                "units": 2,
+                "status": "pre-permit",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 80.058059999999998,
+                "lat": 26.763390999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 20,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.139948700000005,
+                    22.470343700000001
+                ]
+            },
+            "properties": {
+                "FID": 20,
+                "plnt_nm": "Budge Budge Generating Station",
+                "country": "India",
+                "cap_all": "250, 250, 250",
+                "ttl_cp_": 750,
+                "stts_ll": "operating, operating, operating",
+                "units": 3,
+                "status": "operating",
+                "prod_kw": 6570000000,
+                "nx_tn_y": 28251,
+                "sx_tn_y": 47304,
+                "p10_tn_": 2430.9000000000001,
+                "p25_tn_": 1248.3,
+                "long": 88.139948700000005,
+                "lat": 22.470343700000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 21,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    83.882568000000006,
+                    25.462349
+                ]
+            },
+            "properties": {
+                "FID": 21,
+                "plnt_nm": "Buxar Thermal Power Station",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "construction, construction",
+                "units": 2,
+                "status": "construction",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 83.882568000000006,
+                "lat": 25.462349
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 22,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.897338899999994,
+                    25.0908847
+                ]
+            },
+            "properties": {
+                "FID": 22,
+                "plnt_nm": "Chunar Cement power station",
+                "country": "India",
+                "cap_all": "38",
+                "ttl_cp_": 38,
+                "stts_ll": "operating",
+                "units": 1,
+                "status": "operating",
+                "prod_kw": 332880000,
+                "nx_tn_y": 1431.384,
+                "sx_tn_y": 2396.7359999999999,
+                "p10_tn_": 123.1656,
+                "p25_tn_": 63.247199999999999,
+                "long": 82.897338899999994,
+                "lat": 25.0908847
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 23,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    83.101084799999995,
+                    24.6391037
+                ]
+            },
+            "properties": {
+                "FID": 23,
+                "plnt_nm": "Churk captive power station",
+                "country": "India",
+                "cap_all": "60, 60, 60, 60",
+                "ttl_cp_": 240,
+                "stts_ll": "operating, operating, operating, operating",
+                "units": 4,
+                "status": "operating",
+                "prod_kw": 2102400000,
+                "nx_tn_y": 9040.3199999999997,
+                "sx_tn_y": 15137.280000000001,
+                "p10_tn_": 777.88800000000003,
+                "p25_tn_": 399.45600000000002,
+                "long": 83.101084799999995,
+                "lat": 24.6391037
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 24,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.326764600000004,
+                    30.1075175
+                ]
+            },
+            "properties": {
+                "FID": 24,
+                "plnt_nm": "Deenbandhu Chhotu Ram Thermal Power Plant",
+                "country": "India",
+                "cap_all": "300, 300",
+                "ttl_cp_": 600,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 5256000000,
+                "nx_tn_y": 22600.799999999999,
+                "sx_tn_y": 37843.199999999997,
+                "p10_tn_": 1944.72,
+                "p25_tn_": 998.63999999999999,
+                "long": 77.326764600000004,
+                "lat": 30.1075175
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 25,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.539400000000001,
+                    30.331669999999999
+                ]
+            },
+            "properties": {
+                "FID": 25,
+                "plnt_nm": "Dera Ghazi Khan Cement power station",
+                "country": "Pakistan",
+                "cap_all": "30",
+                "ttl_cp_": 30,
+                "stts_ll": "operating",
+                "units": 1,
+                "status": "operating",
+                "prod_kw": 262800000,
+                "nx_tn_y": 1130.04,
+                "sx_tn_y": 1892.1600000000001,
+                "p10_tn_": 97.236000000000004,
+                "p25_tn_": 49.932000000000002,
+                "long": 70.539400000000001,
+                "lat": 30.331669999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 26,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.302309300000005,
+                    23.521147299999999
+                ]
+            },
+            "properties": {
+                "FID": 26,
+                "plnt_nm": "Durgapur Projects Limited power station",
+                "country": "India",
+                "cap_all": "300, 250",
+                "ttl_cp_": 550,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 4818000000,
+                "nx_tn_y": 20717.400000000001,
+                "sx_tn_y": 34689.599999999999,
+                "p10_tn_": 1782.6600000000001,
+                "p25_tn_": 915.41999999999996,
+                "long": 87.302309300000005,
+                "lat": 23.521147299999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 27,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.248475400000004,
+                    23.5518052
+                ]
+            },
+            "properties": {
+                "FID": 27,
+                "plnt_nm": "Durgapur SAIL power station",
+                "country": "India",
+                "cap_all": "60, 60",
+                "ttl_cp_": 120,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 1051200000,
+                "nx_tn_y": 4520.1599999999999,
+                "sx_tn_y": 7568.6400000000003,
+                "p10_tn_": 388.94400000000002,
+                "p25_tn_": 199.72800000000001,
+                "long": 87.248475400000004,
+                "lat": 23.5518052
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 28,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.204300000000003,
+                    23.579999999999998
+                ]
+            },
+            "properties": {
+                "FID": 28,
+                "plnt_nm": "Durgapur Steel City Andal power station",
+                "country": "India",
+                "cap_all": "500, 500",
+                "ttl_cp_": 1000,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 8760000000,
+                "nx_tn_y": 37668,
+                "sx_tn_y": 63072,
+                "p10_tn_": 3241.1999999999998,
+                "p25_tn_": 1664.4000000000001,
+                "long": 87.204300000000003,
+                "lat": 23.579999999999998
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 29,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.388222600000006,
+                    31.522923500000001
+                ]
+            },
+            "properties": {
+                "FID": 29,
+                "plnt_nm": "Faisalabad Sitara Chemical power plant",
+                "country": "Pakistan",
+                "cap_all": "40, 40",
+                "ttl_cp_": 80,
+                "stts_ll": "operating, construction",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 700800000,
+                "nx_tn_y": 3013.4400000000001,
+                "sx_tn_y": 5045.7600000000002,
+                "p10_tn_": 259.29599999999999,
+                "p25_tn_": 133.15199999999999,
+                "long": 73.388222600000006,
+                "lat": 31.522923500000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 30,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.893707000000006,
+                    24.772728900000001
+                ]
+            },
+            "properties": {
+                "FID": 30,
+                "plnt_nm": "Farakka power station",
+                "country": "India",
+                "cap_all": "200, 200, 200, 500, 500, 500",
+                "ttl_cp_": 2100,
+                "stts_ll": "operating, operating, operating, operating, operating, operating",
+                "units": 6,
+                "status": "operating",
+                "prod_kw": 18396000000,
+                "nx_tn_y": 79102.800000000003,
+                "sx_tn_y": 132451.20000000001,
+                "p10_tn_": 6806.5200000000004,
+                "p25_tn_": 3495.2399999999998,
+                "long": 87.893707000000006,
+                "lat": 24.772728900000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 31,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    67.419619999999995,
+                    24.833089999999999
+                ]
+            },
+            "properties": {
+                "FID": 31,
+                "plnt_nm": "Fauji Fertilizer power station",
+                "country": "Pakistan",
+                "cap_all": "118",
+                "ttl_cp_": 118,
+                "stts_ll": "operating",
+                "units": 1,
+                "status": "operating",
+                "prod_kw": 1033680000,
+                "nx_tn_y": 4444.8239999999996,
+                "sx_tn_y": 7442.4960000000001,
+                "p10_tn_": 382.46159999999998,
+                "p25_tn_": 196.39920000000001,
+                "long": 67.419619999999995,
+                "lat": 24.833089999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 32,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    81.327238399999999,
+                    25.9137597
+                ]
+            },
+            "properties": {
+                "FID": 32,
+                "plnt_nm": "Feroze Gandhi Unchahar Power Station",
+                "country": "India",
+                "cap_all": "210, 210, 210, 210, 210, 500",
+                "ttl_cp_": 1550,
+                "stts_ll": "operating, operating, operating, operating, operating, operating",
+                "units": 6,
+                "status": "operating",
+                "prod_kw": 13578000000,
+                "nx_tn_y": 58385.400000000001,
+                "sx_tn_y": 97761.600000000006,
+                "p10_tn_": 5023.8599999999997,
+                "p25_tn_": 2579.8200000000002,
+                "long": 81.327238399999999,
+                "lat": 25.9137597
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 33,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    80.188900000000004,
+                    25.975000000000001
+                ]
+            },
+            "properties": {
+                "FID": 33,
+                "plnt_nm": "Ghatampur power station",
+                "country": "India",
+                "cap_all": "660, 660, 660",
+                "ttl_cp_": 1980,
+                "stts_ll": "construction, construction, construction",
+                "units": 3,
+                "status": "construction",
+                "prod_kw": 17344800000,
+                "nx_tn_y": 74582.639999999999,
+                "sx_tn_y": 124882.56,
+                "p10_tn_": 6417.576,
+                "p25_tn_": 3295.5120000000002,
+                "long": 80.188900000000004,
+                "lat": 25.975000000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 34,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.146503199999998,
+                    31.384139600000001
+                ]
+            },
+            "properties": {
+                "FID": 34,
+                "plnt_nm": "Goindwal Sahib Thermal Power Plant",
+                "country": "India",
+                "cap_all": "270, 270, 660, 660",
+                "ttl_cp_": 1860,
+                "stts_ll": "operating, operating, pre-permit, pre-permit",
+                "units": 4,
+                "status": "operating",
+                "prod_kw": 16293600000,
+                "nx_tn_y": 70062.479999999996,
+                "sx_tn_y": 117313.92,
+                "p10_tn_": 6028.6319999999996,
+                "p25_tn_": 3095.7840000000001,
+                "long": 75.146503199999998,
+                "lat": 31.384139600000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 35,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.166096690000003,
+                    30.266554729999999
+                ]
+            },
+            "properties": {
+                "FID": 35,
+                "plnt_nm": "Guru Hargobind Lehra Mohabbat Power Station",
+                "country": "India",
+                "cap_all": "210, 210, 250, 250",
+                "ttl_cp_": 920,
+                "stts_ll": "operating, operating, operating, operating",
+                "units": 4,
+                "status": "operating",
+                "prod_kw": 8059200000,
+                "nx_tn_y": 34654.559999999998,
+                "sx_tn_y": 58026.239999999998,
+                "p10_tn_": 2981.904,
+                "p25_tn_": 1531.248,
+                "long": 75.166096690000003,
+                "lat": 30.266554729999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 36,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.924700000000001,
+                    30.233499999999999
+                ]
+            },
+            "properties": {
+                "FID": 36,
+                "plnt_nm": "Guru Nanak Dev Thermal Power Station (GNDTP) Stage I",
+                "country": "India",
+                "cap_all": "110, 110, 110, 120",
+                "ttl_cp_": 450,
+                "stts_ll": "operating, operating, operating, operating",
+                "units": 4,
+                "status": "operating",
+                "prod_kw": 3942000000,
+                "nx_tn_y": 16950.599999999999,
+                "sx_tn_y": 28382.400000000001,
+                "p10_tn_": 1458.54,
+                "p25_tn_": 748.98000000000002,
+                "long": 74.924700000000001,
+                "lat": 30.233499999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 37,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.109747999999996,
+                    22.060459000000002
+                ]
+            },
+            "properties": {
+                "FID": 37,
+                "plnt_nm": "Haldia Energy power station",
+                "country": "India",
+                "cap_all": "600, 600",
+                "ttl_cp_": 1200,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 10512000000,
+                "nx_tn_y": 45201.599999999999,
+                "sx_tn_y": 75686.399999999994,
+                "p10_tn_": 3889.4400000000001,
+                "p25_tn_": 1997.28,
+                "long": 88.109747999999996,
+                "lat": 22.060459000000002
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 38,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.073212999999996,
+                    22.085533999999999
+                ]
+            },
+            "properties": {
+                "FID": 38,
+                "plnt_nm": "Haldia India Power",
+                "country": "India",
+                "cap_all": "150, 150, 150",
+                "ttl_cp_": 450,
+                "stts_ll": "construction, construction, construction",
+                "units": 3,
+                "status": "construction",
+                "prod_kw": 3942000000,
+                "nx_tn_y": 16950.599999999999,
+                "sx_tn_y": 28382.400000000001,
+                "p10_tn_": 1458.54,
+                "p25_tn_": 748.98000000000002,
+                "long": 88.073212999999996,
+                "lat": 22.085533999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 39,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    78.129999999999995,
+                    28.017499999999998
+                ]
+            },
+            "properties": {
+                "FID": 39,
+                "plnt_nm": "Harduaganj power station",
+                "country": "India",
+                "cap_all": "660, 110, 250, 250, 660",
+                "ttl_cp_": 1930,
+                "stts_ll": "operating, operating, operating, operating, pre-permit",
+                "units": 5,
+                "status": "operating",
+                "prod_kw": 16906800000,
+                "nx_tn_y": 72699.240000000005,
+                "sx_tn_y": 121728.96000000001,
+                "p10_tn_": 6255.5159999999996,
+                "p25_tn_": 3212.2919999999999,
+                "long": 78.129999999999995,
+                "lat": 28.017499999999998
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 40,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.098412600000003,
+                    22.076989000000001
+                ]
+            },
+            "properties": {
+                "FID": 40,
+                "plnt_nm": "Hiranmaye Haldia power station",
+                "country": "India",
+                "cap_all": "150, 150",
+                "ttl_cp_": 300,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 2628000000,
+                "nx_tn_y": 11300.4,
+                "sx_tn_y": 18921.599999999999,
+                "p10_tn_": 972.36000000000001,
+                "p25_tn_": 499.31999999999999,
+                "long": 88.098412600000003,
+                "lat": 22.076989000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 41,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    66.783609999999996,
+                    25.155889999999999
+                ]
+            },
+            "properties": {
+                "FID": 41,
+                "plnt_nm": "Hub Cement power station",
+                "country": "Pakistan",
+                "cap_all": "30",
+                "ttl_cp_": 30,
+                "stts_ll": "operating",
+                "units": 1,
+                "status": "operating",
+                "prod_kw": 262800000,
+                "nx_tn_y": 1130.04,
+                "sx_tn_y": 1892.1600000000001,
+                "p10_tn_": 97.236000000000004,
+                "p25_tn_": 49.932000000000002,
+                "long": 66.783609999999996,
+                "lat": 25.155889999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 42,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    66.688760000000002,
+                    24.914674999999999
+                ]
+            },
+            "properties": {
+                "FID": 42,
+                "plnt_nm": "Hubco power station",
+                "country": "Pakistan",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 66.688760000000002,
+                "lat": 24.914674999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 43,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.373160499999997,
+                    28.485091400000002
+                ]
+            },
+            "properties": {
+                "FID": 43,
+                "plnt_nm": "Indira Gandhi Super Thermal Power Project",
+                "country": "India",
+                "cap_all": "500, 500, 500",
+                "ttl_cp_": 1500,
+                "stts_ll": "operating, operating, operating",
+                "units": 3,
+                "status": "operating",
+                "prod_kw": 13140000000,
+                "nx_tn_y": 56502,
+                "sx_tn_y": 94608,
+                "p10_tn_": 4861.8000000000002,
+                "p25_tn_": 2496.5999999999999,
+                "long": 76.373160499999997,
+                "lat": 28.485091400000002
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 44,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    68.266110999999995,
+                    25.472221999999999
+                ]
+            },
+            "properties": {
+                "FID": 44,
+                "plnt_nm": "Jamshoro power station",
+                "country": "Pakistan",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "construction, permitted",
+                "units": 2,
+                "status": "construction",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 68.266110999999995,
+                "lat": 25.472221999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 45,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    78.826070999999999,
+                    27.497098000000001
+                ]
+            },
+            "properties": {
+                "FID": 45,
+                "plnt_nm": "Jawaharpur Thermal Project",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "construction, construction",
+                "units": 2,
+                "status": "construction",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 78.826070999999999,
+                "lat": 27.497098000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 46,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.265595200000007,
+                    25.2369032
+                ]
+            },
+            "properties": {
+                "FID": 46,
+                "plnt_nm": "Kahalgaon Super Thermal Power Plant",
+                "country": "India",
+                "cap_all": "210, 210, 210, 210, 500, 500, 500",
+                "ttl_cp_": 2340,
+                "stts_ll": "operating, operating, operating, operating, operating, operating, operating",
+                "units": 7,
+                "status": "operating",
+                "prod_kw": 20498400000,
+                "nx_tn_y": 88143.119999999995,
+                "sx_tn_y": 147588.48000000001,
+                "p10_tn_": 7584.4080000000004,
+                "p25_tn_": 3894.6959999999999,
+                "long": 87.265595200000007,
+                "lat": 25.2369032
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 47,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    83.056088000000003,
+                    24.203818999999999
+                ]
+            },
+            "properties": {
+                "FID": 47,
+                "plnt_nm": "Kanoria Captive Power Plant",
+                "country": "India",
+                "cap_all": "50",
+                "ttl_cp_": 50,
+                "stts_ll": "operating",
+                "units": 1,
+                "status": "operating",
+                "prod_kw": 438000000,
+                "nx_tn_y": 1883.4000000000001,
+                "sx_tn_y": 3153.5999999999999,
+                "p10_tn_": 162.06,
+                "p25_tn_": 83.219999999999999,
+                "long": 83.056088000000003,
+                "lat": 24.203818999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 48,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.139332999999993,
+                    23.652583
+                ]
+            },
+            "properties": {
+                "FID": 48,
+                "plnt_nm": "Katwa Thermal Power Station",
+                "country": "India",
+                "cap_all": "800, 800",
+                "ttl_cp_": 1600,
+                "stts_ll": "pre-permit, pre-permit",
+                "units": 2,
+                "status": "pre-permit",
+                "prod_kw": 14016000000,
+                "nx_tn_y": 60268.800000000003,
+                "sx_tn_y": 100915.2,
+                "p10_tn_": 5185.9200000000001,
+                "p25_tn_": 2663.04,
+                "long": 88.139332999999993,
+                "lat": 23.652583
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 49,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    67.450000000000003,
+                    24.149999999999999
+                ]
+            },
+            "properties": {
+                "FID": 49,
+                "plnt_nm": "Keti Bandar power station",
+                "country": "Pakistan",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "pre-permit, pre-permit",
+                "units": 2,
+                "status": "pre-permit",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 67.450000000000003,
+                "lat": 24.149999999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 50,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    80.799999999999997,
+                    27.899999999999999
+                ]
+            },
+            "properties": {
+                "FID": 50,
+                "plnt_nm": "Khamberkhera IPP power station",
+                "country": "India",
+                "cap_all": "45, 45",
+                "ttl_cp_": 90,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 788400000,
+                "nx_tn_y": 3390.1199999999999,
+                "sx_tn_y": 5676.4799999999996,
+                "p10_tn_": 291.70800000000003,
+                "p25_tn_": 149.79599999999999,
+                "long": 80.799999999999997,
+                "lat": 27.899999999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 51,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.908332999999999,
+                    28.158332999999999
+                ]
+            },
+            "properties": {
+                "FID": 51,
+                "plnt_nm": "Khurja power station",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "construction, construction",
+                "units": 2,
+                "status": "construction",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 77.908332999999999,
+                "lat": 28.158332999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 52,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.870984100000001,
+                    22.416564999999999
+                ]
+            },
+            "properties": {
+                "FID": 52,
+                "plnt_nm": "Kolaghat Thermal Power Station",
+                "country": "India",
+                "cap_all": "210, 210, 210, 210, 210, 210",
+                "ttl_cp_": 1260,
+                "stts_ll": "operating, operating, operating, operating, operating, operating",
+                "units": 6,
+                "status": "operating",
+                "prod_kw": 11037600000,
+                "nx_tn_y": 47461.68,
+                "sx_tn_y": 79470.720000000001,
+                "p10_tn_": 4083.9119999999998,
+                "p25_tn_": 2097.1439999999998,
+                "long": 87.870984100000001,
+                "lat": 22.416564999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 53,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.230000000000004,
+                    27.030000000000001
+                ]
+            },
+            "properties": {
+                "FID": 53,
+                "plnt_nm": "Kundarki Ipp power station",
+                "country": "India",
+                "cap_all": "45, 45",
+                "ttl_cp_": 90,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 788400000,
+                "nx_tn_y": 3390.1199999999999,
+                "sx_tn_y": 5676.4799999999996,
+                "p10_tn_": 291.70800000000003,
+                "p25_tn_": 149.79599999999999,
+                "long": 82.230000000000004,
+                "lat": 27.030000000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 54,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.352534000000006,
+                    28.488143000000001
+                ]
+            },
+            "properties": {
+                "FID": 54,
+                "plnt_nm": "Mahatma Gandhi power station",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 76.352534000000006,
+                "lat": 28.488143000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 55,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    71.610641999999999,
+                    32.904671
+                ]
+            },
+            "properties": {
+                "FID": 55,
+                "plnt_nm": "Maple Leaf power station",
+                "country": "Pakistan",
+                "cap_all": "40",
+                "ttl_cp_": 40,
+                "stts_ll": "operating",
+                "units": 1,
+                "status": "operating",
+                "prod_kw": 350400000,
+                "nx_tn_y": 1506.72,
+                "sx_tn_y": 2522.8800000000001,
+                "p10_tn_": 129.648,
+                "p25_tn_": 66.575999999999993,
+                "long": 71.610641999999999,
+                "lat": 32.904671
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 56,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    79.939999999999998,
+                    27.809999999999999
+                ]
+            },
+            "properties": {
+                "FID": 56,
+                "plnt_nm": "Maqsoodpur power station",
+                "country": "India",
+                "cap_all": "45, 45",
+                "ttl_cp_": 90,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 788400000,
+                "nx_tn_y": 3390.1199999999999,
+                "sx_tn_y": 5676.4799999999996,
+                "p10_tn_": 291.70800000000003,
+                "p25_tn_": 149.79599999999999,
+                "long": 79.939999999999998,
+                "lat": 27.809999999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 57,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    81.940095999999997,
+                    25.145867299999999
+                ]
+            },
+            "properties": {
+                "FID": 57,
+                "plnt_nm": "Meja Thermal Power Project",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 81.940095999999997,
+                "lat": 25.145867299999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 58,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.131100000000004,
+                    23.463899999999999
+                ]
+            },
+            "properties": {
+                "FID": 58,
+                "plnt_nm": "Mejia power station",
+                "country": "India",
+                "cap_all": "500, 500, 210, 210, 210, 210, 250, 250",
+                "ttl_cp_": 2340,
+                "stts_ll": "operating, operating, operating, operating, operating, operating, operating, operating",
+                "units": 8,
+                "status": "operating",
+                "prod_kw": 20498400000,
+                "nx_tn_y": 88143.119999999995,
+                "sx_tn_y": 147588.48000000001,
+                "p10_tn_": 7584.4080000000004,
+                "p25_tn_": 3894.6959999999999,
+                "long": 87.131100000000004,
+                "lat": 23.463899999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 59,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.725347999999997,
+                    31.967407999999999
+                ]
+            },
+            "properties": {
+                "FID": 59,
+                "plnt_nm": "Mukerian Power Station",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "pre-permit, pre-permit",
+                "units": 2,
+                "status": "pre-permit",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 75.725347999999997,
+                "lat": 31.967407999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 60,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.966970000000003,
+                    30.294550000000001
+                ]
+            },
+            "properties": {
+                "FID": 60,
+                "plnt_nm": "Muzaffargarh sugar mill power station",
+                "country": "Pakistan",
+                "cap_all": "60, 60",
+                "ttl_cp_": 120,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 1051200000,
+                "nx_tn_y": 4520.1599999999999,
+                "sx_tn_y": 7568.6400000000003,
+                "p10_tn_": 388.94400000000002,
+                "p25_tn_": 199.72800000000001,
+                "long": 70.966970000000003,
+                "lat": 30.294550000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 61,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    85.3033018,
+                    26.194770800000001
+                ]
+            },
+            "properties": {
+                "FID": 61,
+                "plnt_nm": "Muzaffarpur power station",
+                "country": "India",
+                "cap_all": "195, 195, 110, 110",
+                "ttl_cp_": 610,
+                "stts_ll": "construction, construction, operating, operating",
+                "units": 4,
+                "status": "construction",
+                "prod_kw": 5343600000,
+                "nx_tn_y": 22977.48,
+                "sx_tn_y": 38473.919999999998,
+                "p10_tn_": 1977.1320000000001,
+                "p25_tn_": 1015.284,
+                "long": 85.3033018,
+                "lat": 26.194770800000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 62,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    84.1580254,
+                    24.776000100000001
+                ]
+            },
+            "properties": {
+                "FID": 62,
+                "plnt_nm": "Nabinagar Super Thermal Power Project",
+                "country": "India",
+                "cap_all": "660, 660, 660",
+                "ttl_cp_": 1980,
+                "stts_ll": "operating, operating, operating",
+                "units": 3,
+                "status": "operating",
+                "prod_kw": 17344800000,
+                "nx_tn_y": 74582.639999999999,
+                "sx_tn_y": 124882.56,
+                "p10_tn_": 6417.576,
+                "p25_tn_": 3295.5120000000002,
+                "long": 84.1580254,
+                "lat": 24.776000100000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 63,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    84.088738399999997,
+                    24.705081199999999
+                ]
+            },
+            "properties": {
+                "FID": 63,
+                "plnt_nm": "Nabinagar Thermal Power Project",
+                "country": "India",
+                "cap_all": "250, 250, 250, 250",
+                "ttl_cp_": 1000,
+                "stts_ll": "operating, operating, operating, operating",
+                "units": 4,
+                "status": "operating",
+                "prod_kw": 8760000000,
+                "nx_tn_y": 37668,
+                "sx_tn_y": 63072,
+                "p10_tn_": 3241.1999999999998,
+                "p25_tn_": 1664.4000000000001,
+                "long": 84.088738399999997,
+                "lat": 24.705081199999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 64,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.607799999999997,
+                    28.603000000000002
+                ]
+            },
+            "properties": {
+                "FID": 64,
+                "plnt_nm": "National Capital Dadri Thermal Power Plant",
+                "country": "India",
+                "cap_all": "210, 210, 210, 210, 490, 490",
+                "ttl_cp_": 1820,
+                "stts_ll": "operating, operating, operating, operating, operating, operating",
+                "units": 6,
+                "status": "operating",
+                "prod_kw": 15943200000,
+                "nx_tn_y": 68555.759999999995,
+                "sx_tn_y": 114791.03999999999,
+                "p10_tn_": 5898.9840000000004,
+                "p25_tn_": 3029.2080000000001,
+                "long": 77.607799999999997,
+                "lat": 28.603000000000002
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 65,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.980332500000003,
+                    24.444580299999998
+                ]
+            },
+            "properties": {
+                "FID": 65,
+                "plnt_nm": "Obra Thermal Power Station",
+                "country": "India",
+                "cap_all": "200, 200, 200, 200, 660, 660, 200",
+                "ttl_cp_": 2320,
+                "stts_ll": "operating, operating, operating, operating, construction, construction, operating",
+                "units": 7,
+                "status": "operating",
+                "prod_kw": 20323200000,
+                "nx_tn_y": 87389.759999999995,
+                "sx_tn_y": 146327.04000000001,
+                "p10_tn_": 7519.5839999999998,
+                "p25_tn_": 3861.4079999999999,
+                "long": 82.980332500000003,
+                "lat": 24.444580299999998
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 66,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.870271000000002,
+                    29.398841999999998
+                ]
+            },
+            "properties": {
+                "FID": 66,
+                "plnt_nm": "Panipat power station",
+                "country": "India",
+                "cap_all": "110, 110, 110, 110, 210, 210, 250, 250",
+                "ttl_cp_": 1360,
+                "stts_ll": "operating, operating, operating, operating, operating, operating, operating, operating",
+                "units": 8,
+                "status": "operating",
+                "prod_kw": 11913600000,
+                "nx_tn_y": 51228.480000000003,
+                "sx_tn_y": 85777.919999999998,
+                "p10_tn_": 4408.0320000000002,
+                "p25_tn_": 2263.5839999999998,
+                "long": 76.870271000000002,
+                "lat": 29.398841999999998
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 67,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    80.241,
+                    26.476600000000001
+                ]
+            },
+            "properties": {
+                "FID": 67,
+                "plnt_nm": "Panki Thermal Power Station",
+                "country": "India",
+                "cap_all": "660, 105, 105",
+                "ttl_cp_": 870,
+                "stts_ll": "construction, operating, operating",
+                "units": 3,
+                "status": "construction",
+                "prod_kw": 7621200000,
+                "nx_tn_y": 32771.160000000003,
+                "sx_tn_y": 54872.639999999999,
+                "p10_tn_": 2819.8440000000001,
+                "p25_tn_": 1448.028,
+                "long": 80.241,
+                "lat": 26.476600000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 68,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    90.312348999999998,
+                    22.025148999999999
+                ]
+            },
+            "properties": {
+                "FID": 68,
+                "plnt_nm": "Patuakhali power station (RPCL/NORINCO)",
+                "country": "Bangladesh",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "construction, construction",
+                "units": 2,
+                "status": "construction",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 90.312348999999998,
+                "lat": 22.025148999999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 69,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    90.308210000000003,
+                    22.001974000000001
+                ]
+            },
+            "properties": {
+                "FID": 69,
+                "plnt_nm": "Payra power station (BCPCL)",
+                "country": "Bangladesh",
+                "cap_all": "660, 660, 660, 660",
+                "ttl_cp_": 2640,
+                "stts_ll": "operating, operating, construction, construction",
+                "units": 4,
+                "status": "operating",
+                "prod_kw": 23126400000,
+                "nx_tn_y": 99443.520000000004,
+                "sx_tn_y": 166510.07999999999,
+                "p10_tn_": 8556.768,
+                "p25_tn_": 4394.0159999999996,
+                "long": 90.308210000000003,
+                "lat": 22.001974000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 70,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    67.369389999999996,
+                    24.784500000000001
+                ]
+            },
+            "properties": {
+                "FID": 70,
+                "plnt_nm": "Port Qasim EPC power station",
+                "country": "Pakistan",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 67.369389999999996,
+                "lat": 24.784500000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 71,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    67.274560100000002,
+                    24.812805399999998
+                ]
+            },
+            "properties": {
+                "FID": 71,
+                "plnt_nm": "Port Qasim Lucky power station",
+                "country": "Pakistan",
+                "cap_all": "660",
+                "ttl_cp_": 660,
+                "stts_ll": "operating",
+                "units": 1,
+                "status": "operating",
+                "prod_kw": 5781600000,
+                "nx_tn_y": 24860.880000000001,
+                "sx_tn_y": 41627.519999999997,
+                "p10_tn_": 2139.192,
+                "p25_tn_": 1098.5039999999999,
+                "long": 67.274560100000002,
+                "lat": 24.812805399999998
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 72,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.254043999999993,
+                    28.637429000000001
+                ]
+            },
+            "properties": {
+                "FID": 72,
+                "plnt_nm": "Rajghat Power Station",
+                "country": "India",
+                "cap_all": "67.5, 67.5",
+                "ttl_cp_": 135,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 1182600000,
+                "nx_tn_y": 5085.1800000000003,
+                "sx_tn_y": 8514.7199999999993,
+                "p10_tn_": 437.56200000000001,
+                "p25_tn_": 224.69399999999999,
+                "long": 77.254043999999993,
+                "lat": 28.637429000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 73,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.857538000000005,
+                    29.346980299999998
+                ]
+            },
+            "properties": {
+                "FID": 73,
+                "plnt_nm": "Rajiv Gandhi Thermal Power Project",
+                "country": "India",
+                "cap_all": "600, 600",
+                "ttl_cp_": 1200,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 10512000000,
+                "nx_tn_y": 45201.599999999999,
+                "sx_tn_y": 75686.399999999994,
+                "p10_tn_": 3889.4400000000001,
+                "p25_tn_": 1997.28,
+                "long": 75.857538000000005,
+                "lat": 29.346980299999998
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 74,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.577593100000001,
+                    30.5589628
+                ]
+            },
+            "properties": {
+                "FID": 74,
+                "plnt_nm": "Rajpura Thermal Power Project",
+                "country": "India",
+                "cap_all": "700, 700",
+                "ttl_cp_": 1400,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 12264000000,
+                "nx_tn_y": 52735.199999999997,
+                "sx_tn_y": 88300.800000000003,
+                "p10_tn_": 4537.6800000000003,
+                "p25_tn_": 2330.1599999999999,
+                "long": 76.577593100000001,
+                "lat": 30.5589628
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 75,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    89.556426999999999,
+                    22.592458199999999
+                ]
+            },
+            "properties": {
+                "FID": 75,
+                "plnt_nm": "Rampal power station",
+                "country": "Bangladesh",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "operating, construction",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 89.556426999999999,
+                "lat": 22.592458199999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 76,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.791279399999993,
+                    24.181093199999999
+                ]
+            },
+            "properties": {
+                "FID": 76,
+                "plnt_nm": "Renusagar power station",
+                "country": "India",
+                "cap_all": "67.5, 75, 67.5, 74, 74, 68, 74, 74, 76.7, 75",
+                "ttl_cp_": 725.70000000000005,
+                "stts_ll": "operating, operating, operating, operating, operating, operating, operating, operating, operating, operating",
+                "units": 10,
+                "status": "operating",
+                "prod_kw": 6357132000.000001,
+                "nx_tn_y": 27335.667600000004,
+                "sx_tn_y": 45771.35040000001,
+                "p10_tn_": 2352.1388400000005,
+                "p25_tn_": 1207.8550800000003,
+                "long": 82.791279399999993,
+                "lat": 24.181093199999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 77,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.791499999999999,
+                    24.027000000000001
+                ]
+            },
+            "properties": {
+                "FID": 77,
+                "plnt_nm": "Rihand power station",
+                "country": "India",
+                "cap_all": "500, 500, 500, 500, 500, 500",
+                "ttl_cp_": 3000,
+                "stts_ll": "operating, operating, operating, operating, operating, operating",
+                "units": 6,
+                "status": "operating",
+                "prod_kw": 26280000000,
+                "nx_tn_y": 113004,
+                "sx_tn_y": 189216,
+                "p10_tn_": 9723.6000000000004,
+                "p25_tn_": 4993.1999999999998,
+                "long": 82.791499999999999,
+                "lat": 24.027000000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 78,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    79.937161799999998,
+                    27.8194455
+                ]
+            },
+            "properties": {
+                "FID": 78,
+                "plnt_nm": "Rosa Thermal Power Plant",
+                "country": "India",
+                "cap_all": "300, 300, 300, 300",
+                "ttl_cp_": 1200,
+                "stts_ll": "operating, operating, operating, operating",
+                "units": 4,
+                "status": "operating",
+                "prod_kw": 10512000000,
+                "nx_tn_y": 45201.599999999999,
+                "sx_tn_y": 75686.399999999994,
+                "p10_tn_": 3889.4400000000001,
+                "p25_tn_": 1997.28,
+                "long": 79.937161799999998,
+                "lat": 27.8194455
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 79,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.104000099999993,
+                    24.368814100000002
+                ]
+            },
+            "properties": {
+                "FID": 79,
+                "plnt_nm": "Sagardighi Thermal Power Station",
+                "country": "India",
+                "cap_all": "300, 300, 500, 500, 660",
+                "ttl_cp_": 2260,
+                "stts_ll": "operating, operating, operating, operating, construction",
+                "units": 5,
+                "status": "operating",
+                "prod_kw": 19797600000,
+                "nx_tn_y": 85129.679999999993,
+                "sx_tn_y": 142542.72,
+                "p10_tn_": 7325.1120000000001,
+                "p25_tn_": 3761.5439999999999,
+                "long": 88.104000099999993,
+                "lat": 24.368814100000002
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 80,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.238020000000006,
+                    30.714220000000001
+                ]
+            },
+            "properties": {
+                "FID": 80,
+                "plnt_nm": "Sahiwal power station",
+                "country": "Pakistan",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 73.238020000000006,
+                "lat": 30.714220000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 81,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.180800000000005,
+                    31.6526
+                ]
+            },
+            "properties": {
+                "FID": 81,
+                "plnt_nm": "Sheikhupura power station",
+                "country": "Pakistan",
+                "cap_all": "31.5",
+                "ttl_cp_": 31.5,
+                "stts_ll": "construction",
+                "units": 1,
+                "status": "construction",
+                "prod_kw": 275940000,
+                "nx_tn_y": 1186.5419999999999,
+                "sx_tn_y": 1986.768,
+                "p10_tn_": 102.09780000000001,
+                "p25_tn_": 52.428600000000003,
+                "long": 74.180800000000005,
+                "lat": 31.6526
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 82,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.367088300000006,
+                    24.783617599999999
+                ]
+            },
+            "properties": {
+                "FID": 82,
+                "plnt_nm": "Siddiqsons power station",
+                "country": "Pakistan",
+                "cap_all": "330",
+                "ttl_cp_": 330,
+                "stts_ll": "permitted",
+                "units": 1,
+                "status": "permitted",
+                "prod_kw": 2890800000,
+                "nx_tn_y": 12430.440000000001,
+                "sx_tn_y": 20813.759999999998,
+                "p10_tn_": 1069.596,
+                "p25_tn_": 549.25199999999995,
+                "long": 70.367088300000006,
+                "lat": 24.783617599999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 83,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.706355200000004,
+                    24.104211899999999
+                ]
+            },
+            "properties": {
+                "FID": 83,
+                "plnt_nm": "Singrauli Super Thermal Power Station",
+                "country": "India",
+                "cap_all": "200, 200, 200, 200, 200, 500, 500, 800, 800",
+                "ttl_cp_": 3600,
+                "stts_ll": "operating, operating, operating, operating, operating, operating, operating, permitted, permitted",
+                "units": 9,
+                "status": "operating",
+                "prod_kw": 31536000000,
+                "nx_tn_y": 135604.79999999999,
+                "sx_tn_y": 227059.20000000001,
+                "p10_tn_": 11668.32,
+                "p25_tn_": 5991.8400000000001,
+                "long": 82.706355200000004,
+                "lat": 24.104211899999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 84,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.291511999999997,
+                    22.549591100000001
+                ]
+            },
+            "properties": {
+                "FID": 84,
+                "plnt_nm": "Southern CESC power station",
+                "country": "India",
+                "cap_all": "67.5, 67.5",
+                "ttl_cp_": 135,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 1182600000,
+                "nx_tn_y": 5085.1800000000003,
+                "sx_tn_y": 8514.7199999999993,
+                "p10_tn_": 437.56200000000001,
+                "p25_tn_": 224.69399999999999,
+                "long": 88.291511999999997,
+                "lat": 22.549591100000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 85,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.018741000000006,
+                    29.181766
+                ]
+            },
+            "properties": {
+                "FID": 85,
+                "plnt_nm": "Suratgarh Super Thermal Power Station",
+                "country": "India",
+                "cap_all": "250, 250, 250, 250, 250, 250, 660, 660",
+                "ttl_cp_": 2820,
+                "stts_ll": "operating, operating, operating, operating, operating, operating, operating, operating",
+                "units": 8,
+                "status": "operating",
+                "prod_kw": 24703200000,
+                "nx_tn_y": 106223.75999999999,
+                "sx_tn_y": 177863.04000000001,
+                "p10_tn_": 9140.1839999999993,
+                "p25_tn_": 4693.6080000000002,
+                "long": 74.018741000000006,
+                "lat": 29.181766
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 86,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.238929400000004,
+                    29.924579600000001
+                ]
+            },
+            "properties": {
+                "FID": 86,
+                "plnt_nm": "Talwandi Sabo Power Project",
+                "country": "India",
+                "cap_all": "660, 660, 660",
+                "ttl_cp_": 1980,
+                "stts_ll": "operating, operating, operating",
+                "units": 3,
+                "status": "operating",
+                "prod_kw": 17344800000,
+                "nx_tn_y": 74582.639999999999,
+                "sx_tn_y": 124882.56,
+                "p10_tn_": 6417.576,
+                "p25_tn_": 3295.5120000000002,
+                "long": 75.238929400000004,
+                "lat": 29.924579600000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 87,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.600375400000004,
+                    26.589198700000001
+                ]
+            },
+            "properties": {
+                "FID": 87,
+                "plnt_nm": "Tanda power station",
+                "country": "India",
+                "cap_all": "660, 660, 110, 110, 110, 110",
+                "ttl_cp_": 1760,
+                "stts_ll": "operating, operating, operating, operating, operating, operating",
+                "units": 6,
+                "status": "operating",
+                "prod_kw": 15417600000,
+                "nx_tn_y": 66295.679999999993,
+                "sx_tn_y": 111006.72,
+                "p10_tn_": 5704.5119999999997,
+                "p25_tn_": 2929.3440000000001,
+                "long": 82.600375400000004,
+                "lat": 26.589198700000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 88,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.388369400000002,
+                    24.8154559
+                ]
+            },
+            "properties": {
+                "FID": 88,
+                "plnt_nm": "ThalNova power station",
+                "country": "Pakistan",
+                "cap_all": "330",
+                "ttl_cp_": 330,
+                "stts_ll": "operating",
+                "units": 1,
+                "status": "operating",
+                "prod_kw": 2890800000,
+                "nx_tn_y": 12430.440000000001,
+                "sx_tn_y": 20813.759999999998,
+                "p10_tn_": 1069.596,
+                "p25_tn_": 549.25199999999995,
+                "long": 70.388369400000002,
+                "lat": 24.8154559
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 89,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.302493299999995,
+                    24.710802900000001
+                ]
+            },
+            "properties": {
+                "FID": 89,
+                "plnt_nm": "Thar Block I power station",
+                "country": "Pakistan",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 70.302493299999995,
+                "lat": 24.710802900000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 90,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.394069000000002,
+                    24.812481200000001
+                ]
+            },
+            "properties": {
+                "FID": 90,
+                "plnt_nm": "Thar Block II power station",
+                "country": "Pakistan",
+                "cap_all": "330, 330",
+                "ttl_cp_": 660,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 5781600000,
+                "nx_tn_y": 24860.880000000001,
+                "sx_tn_y": 41627.519999999997,
+                "p10_tn_": 2139.192,
+                "p25_tn_": 1098.5039999999999,
+                "long": 70.394069000000002,
+                "lat": 24.812481200000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 91,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.315074899999999,
+                    24.8408017
+                ]
+            },
+            "properties": {
+                "FID": 91,
+                "plnt_nm": "Thar Block VI power station",
+                "country": "Pakistan",
+                "cap_all": "700, 700",
+                "ttl_cp_": 1400,
+                "stts_ll": "pre-permit, pre-permit",
+                "units": 2,
+                "status": "pre-permit",
+                "prod_kw": 12264000000,
+                "nx_tn_y": 52735.199999999997,
+                "sx_tn_y": 88300.800000000003,
+                "p10_tn_": 4537.6800000000003,
+                "p25_tn_": 2330.1599999999999,
+                "long": 70.315074899999999,
+                "lat": 24.8408017
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 92,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.400500699999995,
+                    24.806213499999998
+                ]
+            },
+            "properties": {
+                "FID": 92,
+                "plnt_nm": "Thar Energy Limited power station",
+                "country": "Pakistan",
+                "cap_all": "330",
+                "ttl_cp_": 330,
+                "stts_ll": "operating",
+                "units": 1,
+                "status": "operating",
+                "prod_kw": 2890800000,
+                "nx_tn_y": 12430.440000000001,
+                "sx_tn_y": 20813.759999999998,
+                "p10_tn_": 1069.596,
+                "p25_tn_": 549.25199999999995,
+                "long": 70.400500699999995,
+                "lat": 24.806213499999998
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 93,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    87.302978999999993,
+                    23.518135000000001
+                ]
+            },
+            "properties": {
+                "FID": 93,
+                "plnt_nm": "The Durgapur Projects Limited",
+                "country": "India",
+                "cap_all": "250, 110, 30, 30, 77, 77, 77, 300",
+                "ttl_cp_": 951,
+                "stts_ll": "operating, operating, operating, operating, operating, operating, operating, operating",
+                "units": 8,
+                "status": "operating",
+                "prod_kw": 8330760000,
+                "nx_tn_y": 35822.267999999996,
+                "sx_tn_y": 59981.472000000002,
+                "p10_tn_": 3082.3811999999998,
+                "p25_tn_": 1582.8444,
+                "long": 87.302978999999993,
+                "lat": 23.518135000000001
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 94,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    88.370309199999994,
+                    22.731974099999999
+                ]
+            },
+            "properties": {
+                "FID": 94,
+                "plnt_nm": "Titagarh power station",
+                "country": "India",
+                "cap_all": "60, 60, 60, 60",
+                "ttl_cp_": 240,
+                "stts_ll": "operating, operating, operating, operating",
+                "units": 4,
+                "status": "operating",
+                "prod_kw": 2102400000,
+                "nx_tn_y": 9040.3199999999997,
+                "sx_tn_y": 15137.280000000001,
+                "p10_tn_": 777.88800000000003,
+                "p25_tn_": 399.45600000000002,
+                "long": 88.370309199999994,
+                "lat": 22.731974099999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 95,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.180000000000007,
+                    27.43
+                ]
+            },
+            "properties": {
+                "FID": 95,
+                "plnt_nm": "Utraula power station",
+                "country": "India",
+                "cap_all": "45, 45",
+                "ttl_cp_": 90,
+                "stts_ll": "operating, operating",
+                "units": 2,
+                "status": "operating",
+                "prod_kw": 788400000,
+                "nx_tn_y": 3390.1199999999999,
+                "sx_tn_y": 5676.4799999999996,
+                "p10_tn_": 291.70800000000003,
+                "p25_tn_": 149.79599999999999,
+                "long": 82.180000000000007,
+                "lat": 27.43
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 96,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    82.678633000000005,
+                    24.982358000000001
+                ]
+            },
+            "properties": {
+                "FID": 96,
+                "plnt_nm": "Welspun Energy Mirzapur power station",
+                "country": "India",
+                "cap_all": "660, 660",
+                "ttl_cp_": 1320,
+                "stts_ll": "permitted, permitted",
+                "units": 2,
+                "status": "permitted",
+                "prod_kw": 11563200000,
+                "nx_tn_y": 49721.760000000002,
+                "sx_tn_y": 83255.039999999994,
+                "p10_tn_": 4278.384,
+                "p25_tn_": 2197.0079999999998,
+                "long": 82.678633000000005,
+                "lat": 24.982358000000001
+            }
+        }
+    ]
+}

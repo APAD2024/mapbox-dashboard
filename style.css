@@ -1,0 +1,754 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    /* Prevent any scrollbars from appearing */
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    /* Offset to account for the top bar height */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    /* Adjust height to subtract the height of the top bar */
+}
+
+/* Top bar styling */
+#topBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #4b6151;
+    /* Dark green */
+    color: #e3e0db;
+    /* Pale green text */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-family: 'Open Sans', sans-serif;
+    z-index: 2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* Left Section: Logo and Title */
+.left-section {
+    display: flex;
+    align-items: center;
+    width: auto;
+}
+
+.left-section img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.left-section h1 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    color: #e3e0db;
+    /* Pale green */
+    white-space: nowrap;
+}
+
+
+
+/* Geocoder input styling for width management */
+.mapboxgl-ctrl-geocoder {
+    width: 100%;
+}
+
+/* Right Section: Filters */
+.filter-section {
+    flex: 0 0 30%;
+    /* 30% width */
+    display: flex;
+    align-items: center;
+    /* Center the labels and dropdowns vertically */
+    justify-content: center;
+    /* Align filters to the center */
+    gap: 15px;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    /* Ensure both label and select are vertically centered */
+    justify-content: space-between;
+    background-color: #4b6151;
+    /* Match top bar background */
+    border-radius: 8px;
+    padding: 4px 12px;
+    border: 1px solid #e3e0db;
+    color: #e3e0db;
+    width: auto;
+}
+
+.filter-label {
+    font-size: 12px;
+    color: #e3e0db;
+    margin-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.filter-select {
+    border: none;
+    background-color: transparent;
+    color: #e3e0db;
+    font-size: 12px;
+    width: 100%;
+    outline: none;
+    cursor: pointer;
+    text-align: right;
+}
+
+
+.filter-select option {
+    color: #2e2e2e;
+    /* Dark text color for dropdown options */
+    width: auto;
+}
+
+
+
+
+
+/* Middle Section: Geocoder */
+.geocoder-section {
+    position: fixed;
+    left: 500px;
+    flex: 0 0 40%;
+    /* Middle section takes 40% of the top bar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1009;
+    width: 400px;
+}
+
+/* Geocoder container */
+#geocoder {
+    width: 100%;
+    /* Take full width of the geocoder section */
+    max-width: 90%;
+    /* Restrict max width to 90% of the .geocoder-section */
+
+}
+
+/* Geocoder control styling */
+.mapboxgl-ctrl-geocoder.mapboxgl-ctrl {
+    width: 100%;
+    /* Ensure the control takes up full width */
+    border-radius: 8px;
+
+}
+
+/* Geocoder input field */
+.mapboxgl-ctrl-geocoder--input {
+    width: 600px;
+    /* The input field will fill the entire geocoder container */
+    font-size: 14px;
+    /* Font size for better readability */
+    border-radius: 8px;
+    padding: 6px 12px;
+    /* Padding for proper sizing */
+}
+
+
+
+
+
+
+/* Move the map controls down */
+.mapboxgl-ctrl-top-right {
+    top: 60px !important;
+    /* Adjust the distance from the top */
+    right: 10px;
+    /* Keep the distance from the right */
+}
+
+
+#menuButton {
+    position: absolute;
+    top: 170px;
+    right: 10px;
+    background: white;
+    padding: 9px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    z-index: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#menuButton i {
+    font-size: 20px;
+}
+
+#menu {
+    position: absolute;
+    top: 170px;
+    right: 55px;
+    background: white;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    z-index: 1;
+    display: none;
+    color: #2c3e50;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    background: none;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    color: #333;
+}
+
+
+
+
+#filterPanel {
+    position: absolute;
+    top: 110px;
+    left: 50px;
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+    z-index: 1;
+    display: none;
+}
+
+#country,
+#coal_country,
+#resetButton,
+#filterButton {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.map-overlay {
+    position: absolute;
+    height: auto;
+    bottom: 40px;
+    left: 10px;
+    background: #ffffff;
+    margin-right: 20px;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    border-radius: 10px;
+    /* Rounded corners */
+    padding: 15px;
+    /* Padding inside the box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Subtle shadow for depth */
+    max-width: 300px;
+    /* Control the maximum width */
+    width: 100%;
+    /* Full width to make it responsive */
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* Light border */
+    transition: bottom 0.3s ease, right 0.3s ease;
+    /* Smooth transition for bottom and right */
+}
+
+#pollutantChart{
+    display: none;
+}
+
+/* Title styling */
+.map-overlay h2 {
+    font-size: 14px;
+    /* Slightly larger for the title */
+    font-weight: bold;
+    /* Bold for emphasis */
+    color: #333;
+    /* Darker text color for better readability */
+    margin-bottom: 10px;
+    border-bottom: 2px solid #f1f1f1;
+    /* Subtle border below the heading */
+    padding-bottom: 5px;
+}
+
+.map-overlay h3 {
+    font-size: 15px;
+    /* Slightly larger for the title */
+    font-weight: bold;
+    /* Bold for emphasis */
+    color: #4b6151;
+    /* Darker text color for better readability */
+}
+
+/* Text styling */
+.map-overlay p {
+    font-size: 12px;
+    /* Smaller font for the description */
+    color: #666;
+    /* Softer color for the text */
+    margin: 0;
+}
+
+.map-overlay p:hover {
+    color: #000;
+    /* Darker color on hover for interaction */
+    text-decoration: underline;
+    /* Underline on hover for emphasis */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .map-overlay {
+        bottom: 20px;
+        /* Move the overlay slightly up */
+        right: 10px;
+        /* Keep it aligned to the right */
+        max-width: 90%;
+        /* Reduce max-width on smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .map-overlay {
+        bottom: 15px;
+        /* Further move the overlay up on smaller screens */
+        right: 5px;
+        /* Align closer to the right edge */
+        left: 10px;
+        max-width: 30%;
+        /* Take up full width on very small screens */
+        padding: 8px;
+        /* Adjust padding for small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .map-overlay {
+        bottom: 10px;
+        /* Even further up on mobile */
+        right: 5px;
+        /* Align closer to the right edge */
+        left: 10px;
+        max-width: 50%;
+        /* Take up full width on very small screens */
+        padding: 10px;
+        /* Adjust padding for small screens */
+    }
+
+    .map-overlay h2 {
+        font-size: 16px;
+        /* Smaller title size on mobile */
+    }
+
+    .map-overlay p {
+        font-size: 12px;
+        /* Smaller description size on mobile */
+    }
+}
+
+
+#filtersearch {
+    position: absolute;
+    top: 110px;
+    left: 10px;
+    background: white;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    z-index: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#legend {
+    position: absolute;
+    top: 70px;
+    left: 50px;
+    background: white;
+    /* Soft white background */
+    color: #2e2e2e;
+    /* Green text */
+    font-size: 14px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 1;
+    width: 200px;
+    font-family: 'Open Sans', sans-serif;
+    display: none;
+}
+
+
+.legend-section {
+    margin-bottom: 10px;
+}
+
+.legend-key {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+#legendButton {
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    background: white;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    z-index: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#brickKilnCountries {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.legend-subunit {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    text-align: left;
+    /* Ensure the text aligns to the left */
+    color: #4b6151;
+    padding-left: 25px;
+    padding-bottom: 5px;
+    font-weight: lighter;
+}
+
+.graduated-circles {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* Align the circles and labels to the left */
+    gap: 8px;
+    /* Add consistent spacing between the circles */
+}
+
+.graduated-circles div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.circle {
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.circle-label {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    text-align: left;
+    /* Ensure the text aligns to the left */
+    color: #4b6151;
+}
+
+
+/* Dynamically translate the circles horizontally based on their size */
+.circle[style*="width: 50px"] {
+    transform: translateX(0);
+    /* Largest circle, no shift */
+}
+
+.circle[style*="width: 40px"] {
+    transform: translateX(5px);
+    /* Translate smaller circles right */
+}
+
+.circle[style*="width: 30px"] {
+    transform: translateX(10px);
+    /* Translate smaller circles right */
+}
+
+.circle[style*="width: 20px"] {
+    transform: translateX(15px);
+    /* Translate smaller circles right */
+}
+
+.circle[style*="width: 15px"] {
+    transform: translateX(17.5px);
+    /* Translate smaller circles right */
+}
+
+.circle[style*="width: 7px"] {
+    transform: translateX(21.5px);
+    /* Translate smallest circle right */
+}
+
+/* Labels and Population Count for Grid */
+label {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #2c3e50;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.row,
+.rowdecay {
+    height: 12px;
+    width: 100%;
+    border-radius: 4px;
+    /* Rounded corners for gradient bars */
+}
+
+/* For Population Grid */
+.colors {
+    margin-bottom: 5px;
+    background: linear-gradient(to right, #3DA1D1, #ABCEAB, #F1FB7B, #F8A047, #F0261C, #F0261C);
+}
+
+
+/* For Pollutant Decay */
+.colorsdecay {
+    margin-bottom: 5px;
+    background: linear-gradient(to right, #FFFFB2, #FECC5C, #FD8D3C, #F03B20, #BD0026);
+}
+
+/* Labels for min and max values */
+.label,
+.labeldecay {
+    width: 18%;
+    display: inline-block;
+    text-align: center;
+    font-size: 12px;
+    color: #4b6151;
+}
+
+/* Add spacing between elements */
+.session,
+.sessiondecay {
+    margin-bottom: 20px;
+}
+
+/* General popup container styling */
+.popup-table {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: #2c3e50;
+    background-color: #fafafa;
+    /* Softer white background */
+    max-width: 250px;
+}
+
+/* Title/heading style */
+.popup-table h3 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #4b6151;
+    padding-bottom: 5px;
+    /* Keep the padding, but remove the border */
+}
+
+
+/* Table styling for the popup content */
+.popup-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.popup-table th,
+.popup-table td {
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.popup-table th {
+    font-weight: bold;
+    color: #4b6151;
+    /* Darker text for labels */
+}
+
+.popup-table td {
+    color: #555;
+    /* Softer gray for data */
+}
+
+/* Border below each row */
+.popup-table tr:not(:last-child) {
+    border-bottom: 0.5px solid #e6e6e6;
+    /* Light gray border */
+}
+
+/* Override the default Mapbox popup styles */
+.mapboxgl-popup-content {
+    border: 0.5px solid #d2cfcf;
+    /* Soft border */
+    background-color: #fafafa;
+    /* Softer white background */
+    border-radius: 16px;
+    /* More rounder corners */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    /* Stronger shadow for elevation */
+    padding: 10px;
+    /* Ensure the content has some padding */
+}
+
+/* Optional: Customize the popup arrow to match the content */
+.mapboxgl-popup-tip {
+    border-color: #fafafa;
+    /* Match the background color of the popup */
+}
+
+/* Navigation Buttons */
+#navBarButtons {
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.nav-btn {
+    background-color: rgba(75, 97, 81, 0.9);
+    /* green */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* Light border */
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #e0e0e0;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+.nav-btn:hover {
+    background-color: rgba(49, 64, 38, 0.9);
+    /* Slightly darker shade on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.nav-btn:focus {
+    outline: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #navBarButtons {
+        bottom: 15px;
+        right: 10px;
+        flex-direction: column;
+        /* Stack the buttons vertically on smaller screens */
+        gap: 8px;
+    }
+
+    .nav-btn {
+        padding: 8px 15px;
+    }
+}
+
+#pollutant-legend {
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    z-index: 1;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    color: #4b6151;
+}
+
+#pollutant-legend .legend-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+#pollutant-legend .graduated-circles {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Add consistent spacing between the circles */
+}
+
+#pollutant-legend .legend-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+#pollutant-legend .circle {
+    border-radius: 50%;
+    display: inline-block;
+}
+
+#pollutant-legend .circle-label {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    text-align: left;
+    justify-content: flex-end;
+    color: #4b6151;
+    margin-left: 10px; /* Space between the circle and its label */
+}
+
+/* Dynamically translate the circles horizontally based on their size */
+#pollutant-legend .circle[style*="width: 50px"] {
+    transform: translateX(0); /* Largest circle, no shift */
+}
+
+#pollutant-legend .circle[style*="width: 40px"] {
+    transform: translateX(5px); /* Translate smaller circles right */
+}
+
+#pollutant-legend .circle[style*="width: 30px"] {
+    transform: translateX(10px); /* Translate smaller circles right */
+}
+
+#pollutant-legend .circle[style*="width: 20px"] {
+    transform: translateX(15px); /* Translate smaller circles right */
+}
+
+#pollutant-legend .circle[style*="width: 15px"] {
+    transform: translateX(17.5px); /* Translate smaller circles right */
+}
+
+#pollutant-legend .circle[style*="width: 7px"] {
+    transform: translateX(21.5px); /* Translate smallest circle right */
+}
+
+

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>APAD Web Map</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1-dev/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1-dev/mapbox-gl-geocoder.css"
+        type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+</head>
+
+<body>
+    <!----------------------------------------------------------------- Header ----------------------------------------------------------->
+    <div id="topBar">
+        <!-- Left Section: Logo and Title -->
+        <div class="left-section">
+            <img src="app-logo.png" alt="Logo">
+            <h1>Air Pollution Asset Level Detection - APAD</h1>
+        </div>
+
+        <!-- Middle Section: Geocoder Search Bar -->
+        <div class="geocoder-section">
+            <!-- Geocoder Search Box Start -->
+            <div id="geocoder"></div>
+            <!-- Geocoder Search Box End -->
+        </div>
+
+        <!-- Right Section: Filters for Country and Asset -->
+        <div class="filter-section">
+            <div class="filter-container">
+                <label for="polutantType" class="filter-label">Polutant Type</label>
+                <select id="polutantType" class="filter-select">
+                    <option value="">All</option>
+                    <option value="p25_tn_" name="PM25">PM₂.₅</option>
+                    <option value="p10_tn_" name="PM10">PM₁₀</option>
+                    <option value="sx_tn_y" name="SO2">SO₂</option>
+                    <option value="nx_tn_y" name="NO2">NO₂</option>
+                </select>
+            </div>
+
+            <div class="filter-container">
+                <label for="countryFilter" class="filter-label">Country</label>
+                <select id="countryFilter" class="filter-select">
+                    <option value="">All</option>
+                    <option value="India">India</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Bangladesh">Bangladesh</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <!------------------------------------------------------------- Basemap Menu ------------------------------------------------------->
+    <div id="menuButton"><i class="fas fa-globe"></i></div>
+    <div id="menu">
+        <button class="closeButton">&times;</button>
+        <input id="streets-v12" type="radio" name="rtoggle" value="streets-v12">
+        <label for="streets-v12">Streets</label><br>
+        <input id="satellite-streets-v12" type="radio" name="rtoggle" value="satellite-streets-v12">
+        <label for="satellite-streets-v12">Satellite</label><br>
+        <input id="outdoors-v12" type="radio" name="rtoggle" value="outdoors-v12">
+        <label for="outdoors-v12">Outdoors</label><br>
+        <input id="light-v11" type="radio" name="rtoggle" value="light-v11" checked="checked">
+        <label for="light-v11">Light</label><br>
+        <input id="dark-v11" type="radio" name="rtoggle" value="dark-v11">
+        <label for="dark-v11">Dark</label><br>
+    </div>
+
+    <!----------------------------------------------------------------- Map ----------------------------------------------------------------------->
+
+    <div id="map"></div>
+
+    <!------------------------------------------------------------- Legend Layers ----------------------------------------------------------------->
+    <div id="legendButton"><i class="fas fa-layer-group"></i></div>
+    <div id="legend">
+        <button class="closeButton">&times;</button>
+
+
+        <!-- Coal IGP -->
+        <div class="legend-section">
+            <div>
+                <input id="toggleCoal" type="checkbox" name="Coal" checked>
+                <div class="legend-key" style="background-color: #616161;"></div>
+                <span>Coal IGP</span>
+            </div>
+        </div>
+
+        <!-- Fossil Fuel and GPW  -->
+        <div class="legend-section">
+            <input id="toggleFossil" type="checkbox" name="fossil" unchecked>
+            <div class="legend-key" style="background-color: blue;"></div>
+            <span>Fossil Fuel</span>
+        </div>
+        <div class="legend-section">
+            <input id="toggleGPW" type="checkbox" name="GP" unchecked>
+            <div class="legend-key" style="background-color:black;"></div>
+            <span>GPW</span>
+        </div>
+
+
+
+
+
+
+
+        <!-- Population Grid -->
+        <div class="legend-section">
+            <div>
+                <input id="togglepop" type="checkbox" name="population" unchecked>
+                <span>Population Grid</span> <br />
+                <span class="legend-subunit">Count / 800 m<sup>2</sup></span>
+            </div>
+
+            <div class="row colors"></div>
+            <div class="row labels">
+                <div class="label">0</div>
+                <div class="label"></div>
+                <div class="label"></div>
+                <div class="label"></div>
+                <div class="label">17192</div>
+            </div>
+        </div>
+
+        <!-- Pollutant Decay -->
+        <div class="legend-section">
+            <input id="toggledecay" type="checkbox" name="population" unchecked>
+            <span>Pollutant Decay</span><br>
+            <div class="rowdecay colorsdecay"></div>
+            <div class="rowdecay labelsdecay">
+                <div class="labeldecay">Min</div>
+                <div class="labeldecay"></div>
+                <div class="labeldecay"></div>
+                <div class="labeldecay"></div>
+                <div class="labeldecay">Max</div>
+            </div>
+        </div>
+
+
+        <!-- Brick Kilns Legend (Main Checkbox) -->
+        <div class="legend-section">
+            <input id="toggleBrickKilns" type="checkbox" name="brick_kilns" unchecked>
+            <div class="legend-key" style="background-color:#70151d;"></div>
+            <span>Brick Kilns IGP</span>
+        </div>
+
+        <!-- Child Checkboxes for individual countries (initially hidden) -->
+        <div id="brickKilnCountries" style="display: none; padding-left: 20px;">
+            <div class="legend-section">
+                <input id="togglebkp" type="checkbox" name="bk_p" unchecked>
+                <div class="legend-key" style="background-color:#70151d;"></div>
+                <span>Brick Kilns Pakistan</span>
+            </div>
+            <div class="legend-section">
+                <input id="togglebkind" type="checkbox" name="bk_ind" unchecked>
+                <div class="legend-key" style="background-color:#70151d;"></div>
+                <span>Brick Kilns India</span>
+            </div>
+            <div class="legend-section">
+                <input id="togglebkban" type="checkbox" name="bk_ban" unchecked>
+                <div class="legend-key" style="background-color:#70151d;"></div>
+                <span>Brick Kilns Bangladesh</span>
+            </div>
+        </div>
+
+
+
+    </div>
+    </div>
+
+
+
+
+    <!--------------------------------------------------------- Pollutant Legend (Bottom Right) ----------------------------------------------------->
+    <div id="pollutant-legend" class="pollutant-legend" style="display:none;">
+        <button class="closeButton">&times;</button>
+        <div class="legend-title"></div>
+        <div class="graduated-circles">
+            <!-- Circle elements will be added here dynamically -->
+        </div>
+    </div>
+
+
+
+
+
+    <!-------------------------------------------------------------- Hover Charts Display  --------------------------------------------------------->
+    <div class="map-overlay" id="features">
+
+        <h2>Pollutants from Coal Plant</h2>
+        <div id="pd">
+            <!-- Plant Name and Country Info -->
+            <div id="plantInfo"></div>
+            <canvas id="pollutantChart" width="400"></canvas>
+            <p id="hoverText">Hover over a Data and Check Details about Pollutants</p>
+        </div>
+    </div>
+
+
+
+    <!---------------------------------------------------------- Navigation Buttons (Bottom) ------------------------------------------------------->
+    <div id="navBarButtons">
+        <a href="https://apad.world/" class="nav-btn">More Information</a>
+        <a href="https://survey123.arcgis.com/share/491dccba7ed14379ab459551f96722ff" class="nav-btn">Survey Form</a>
+    </div>
+
+
+    <!---------------------------------------------------------------- Scrpit JS------------------------------------------------------------------->
+    <script src="app.js"></script>
+
+
+</body>
+
+</html>
