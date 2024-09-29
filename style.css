@@ -193,6 +193,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 #menuButton i {
@@ -318,6 +319,24 @@ html {
     /* Underline on hover for emphasis */
 }
 
+.collapse-btn, .expand-btn {
+    background-color: #4b6151;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    float: right;
+}
+
+.collapse-btn:hover, .expand-btn:hover {
+    background-color: #3a4e42;
+}
+
+
+
+
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
     .map-overlay {
@@ -428,7 +447,24 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* Hexagonal Grid Legend Colors */
+.kiln-colors {
+    margin-bottom: 5px;
+    background: linear-gradient(to right, rgba(255,255,178,0), rgb(254,204,92), rgb(253,141,60), rgb(240,59,32), rgb(189,0,38));
+}
+
+/* Hexagonal Grid Legend Labels */
+.kiln-labels .label {
+    width: 18%;
+    display: inline-block;
+    text-align: center;
+    font-size: 12px;
+    color: #4b6151;
+}
+
 
 #brickKilnCountries {
     padding-left: 20px;
@@ -619,6 +655,12 @@ label {
     padding: 10px;
     /* Ensure the content has some padding */
 }
+/* Override the aria-hidden attribute on the close button */
+.mapboxgl-popup-close-button{
+    visibility: none !important; /* Ensure the button is visible */
+    
+}
+
 
 /* Optional: Customize the popup arrow to match the content */
 .mapboxgl-popup-tip {

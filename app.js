@@ -14,7 +14,7 @@ const map = new mapboxgl.Map({
 // Add navigation control (zoom and rotation) to the top-right corner
 map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-let populationLayer, fossilFuelLayer, coalLayer, gpwLayer, pollutantLayer, boundaryLayer, brick_kilns_PK, brick_kilns_BAN, brick_kilns_IND;
+let populationLayer, fossilFuelLayer, coalLayer, gpwLayer, pollutantLayer, boundaryLayer, brick_kilns_PK_hex, brick_kilns_IND_hex, brick_kilns_BAN_hex ;
 
 const menuButton = document.getElementById('menuButton');
 const menu = document.getElementById('menu');
@@ -28,14 +28,14 @@ const filterPanel = document.getElementById('filterPanel');
 // -------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
 
 // Store layer visibility status
-const layerIds = ['population',
-    'fossil', 
-    'coal_IGP', 
-    'GP', 
-    'pollutant', 
-    'unclustered-BK-P', 'clusters-BK-P', 'cluster-count-BK-P', 
-    'unclustered-BK-BAN', 'clusters-BK-BAN', 'cluster-count-BK-BAN',
-    'unclustered-BK-IND', 'clusters-BK-IND', 'cluster-count-BK-IND'
+const layerIds = [
+    'coal', 'population',
+    'fossil',
+    'GP',
+    'pollutant',
+    'brick_kilns_PK',
+    'brick_kilns_IND',
+    'brick_kilns_BAN'
 ];
 let layerVisibility = {};
 
@@ -120,7 +120,7 @@ function addDataLayers() {
 
 
         coalLayer = map.addLayer({
-            'id': 'coal_IGP',
+            'id': 'coal',
             'type': 'circle',
             'source': 'coal_IGP',
             'paint': {
@@ -132,7 +132,7 @@ function addDataLayers() {
         });
 
         // Popup for the coal layer
-        map.on('click', 'coal_IGP', (e) => {  // Use 'coal' as the layer ID
+        map.on('click', 'coal', (e) => {  // Use 'coal' as the layer ID
             const properties = e.features[0].properties;
             const popupContent = `
                 <div class="popup-table">
@@ -201,384 +201,255 @@ function addDataLayers() {
         });
     }
 
-    // Pollutant decay heatmap layer
-    if (!map.getSource('pollutant_decay')) {
-        map.addSource('pollutant_decay', {
-            type: 'geojson',
-            data: 'https://gist.githubusercontent.com/bilalpervaiz/97a2ce64252ad5a095c9222f4c9ae5b1/raw/4fcc0590f9b28e13a369fb93f4f0ff00410844a6/pollutant_decay.geojson'
-        });
-        pollutantLayer = map.addLayer({
-            'id': 'pollutant',
-            'type': 'heatmap',
-            'source': 'pollutant_decay',
-            'maxzoom': 12,
-            layout: {
-                visibility: 'none'
-            },
-            'paint': {
-                'heatmap-weight': {
-                    'property': 'decay_PM10_1',
-                    'type': 'exponential',
-                    'stops': [
-                        [0.030291835876543865, 0],
-                        [3.332101946419825, 1]
-                    ]
-                },
-                'heatmap-color': [
-                    'interpolate',
-                    ['linear'],
-                    ['heatmap-density'],
-                    0, 'rgba(255,255,178,0)',
-                    0.2, 'rgb(254,204,92)',
-                    0.4, 'rgb(253,141,60)',
-                    0.6, 'rgb(240,59,32)',
-                    0.8, 'rgb(189,0,38)'
-                ],
-                'heatmap-radius': {
-                    'stops': [
-                        [11, 15],
-                        [15, 20]
-                    ]
-                },
-                'heatmap-opacity': {
-                    'default': 1,
-                    'stops': [
-                        [14, 1],
-                        [15, 0]
-                    ]
+    // Brick Kilns Hexagonal Grid Layer
+    if (!map.getSource('brick_kilns_PK_hex')) {
+        // Fetch the brick kilns GeoJSON data and create a hexagonal grid
+        fetch('https://gist.githubusercontent.com/Mseher/ff38ecf6b4b365bfbaf1de99506685a3/raw/9907737c8ff94dbc896286df6fcf975307e538d6/brick_kilns_PK.geojson')
+            .then(response => response.json())
+            .then(data => {
+                // Get the bounding box of the points
+                const bbox = turf.bbox(data);
+
+                // Generate the hexagonal grid
+                const hexGrid = turf.hexGrid(bbox, 10, { units: 'kilometers' }); // 10 km hexagon size
+
+                // Count points within each hexagon
+                hexGrid.features.forEach(hex => {
+                    const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
+                    hex.properties.pointCount = pointsWithinHex.features.length; // Add the point count as a property
+                });
+
+                // Add the hex grid as a source, only if it doesn't already exist
+                if (!map.getSource('brick_kilns_PK_hex')) {
+                    map.addSource('brick_kilns_PK_hex', {
+                        type: 'geojson',
+                        data: hexGrid
+                    });
                 }
-            }
-        });
-    }
 
-    // Add the source for the Brick Kilns layer (with clustering)
-    // Add the source and layers for Brick Kilns of Bangladesh
-    if (!map.getSource('brick_kilns_BAN')) {
-        map.addSource('brick_kilns_BAN', {
-            type: 'geojson',
-            data: 'https://gist.githubusercontent.com/Mseher/10ad98920682d586ce53ff7610359fd5/raw/696a9005623f2f99308f5096c4782b232d388010/brick_kilns_BAN.geojson',
-            cluster: true,
-            clusterMaxZoom: 14, // Max zoom to cluster points
-            clusterRadius: 50    // Radius of each cluster when clustering points
-        });
-
-        // Unclustered point layer for brick kilns
-        map.addLayer({
-            id: 'unclustered-BK-BAN',
-            type: 'circle',
-            source: 'brick_kilns_BAN',
-            filter: ['!', ['has', 'point_count']],
-            paint: {
-                'circle-radius': 7,
-                'circle-color': '#70151d',   // Dark red for unclustered points
-                'circle-stroke-width': 1,
-                'circle-stroke-color': '#fff'
-            },
-            layout: {
-                'visibility': 'none'  // Initially set the visibility to none
-            }
-        });
-
-        // Clustered points for brick kilns with more granular size steps
-        map.addLayer({
-            id: 'clusters-BK-BAN',
-            type: 'circle',
-            source: 'brick_kilns_BAN',
-            filter: ['has', 'point_count'],
-            paint: {
-                'circle-radius': [
-                    'step',
-                    ['get', 'point_count'],
-                    15,  // Base size for clusters with fewer points
-                    25, 12,
-                    50, 25,  // For clusters with 50 or more points
-                    100, 30,  // For clusters with 100 or more points
-                    250, 35,
-                    500, 40,  // For clusters with 500 or more points
-                    750, 45,
-                    1000, 50, // For clusters with 1000 or more points
-                    3000, 60, // For clusters with 3000 or more points
-                    5000, 75, // For clusters with 5000 or more points
-                    10000, 90  // For very large clusters (10000 or more points)
-                ],
-                'circle-color': '#70151d',  // Same color for all clusters
-                'circle-stroke-width': 1,
-                'circle-stroke-color': '#fff',
-
-            },
-            layout: {
-                'visibility': 'none'  // Initially set the visibility to none
-            }
-        });
-
-
-        // Cluster count labels
-        map.addLayer({
-            id: 'cluster-count-BK-BAN',
-            type: 'symbol',
-            source: 'brick_kilns_BAN',
-            filter: ['has', 'point_count'],
-            layout: {
-                'text-field': '{point_count_abbreviated}',  // Display the cluster point count
-                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                'text-size': 12,
-                'visibility': 'none'
-            },
-            paint: {
-                'text-color': '#ffffff'   // White color for the count text
-            }
-        });
-
-
-
-        // Zoom into the cluster when clicked
-        map.on('click', 'clusters-BK-BAN', (e) => {
-            const features = map.queryRenderedFeatures(e.point, { layers: ['clusters-BK-BAN'] });
-            const clusterId = features[0].properties.cluster_id;
-
-            map.getSource('brick_kilns_BAN').getClusterExpansionZoom(clusterId, (err, zoom) => {
-                if (err) return;
-
-                map.easeTo({
-                    center: features[0].geometry.coordinates,
-                    zoom: zoom
-                });
+                // Add the layer to visualize the hex grid, only if it doesn't already exist
+                if (!map.getLayer('brick_kilns_PK')) {
+                    map.addLayer({
+                        'id': 'brick_kilns_PK',
+                        'type': 'fill',
+                        'source': 'brick_kilns_PK_hex',
+                        'maxzoom': 12,
+                        layout: {
+                            visibility: 'none'  // Set initial visibility to none
+                        },
+                        'paint': {
+                            'fill-color': [
+                                'interpolate',
+                                ['linear'],
+                                ['get', 'pointCount'],
+                                0, 'rgba(255,255,255,0)',
+                                1, '#ffeda0',
+                                10, '#feb24c',
+                                50, '#f03b20'
+                            ],
+                            'fill-opacity': 0.7
+                        }
+                    });
+                }
             });
-        });
 
-        // Change cursor to pointer on cluster hover
-        map.on('mouseenter', 'clusters-BK-BAN', () => {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-        map.on('mouseleave', 'clusters-BK-BAN', () => {
-            map.getCanvas().style.cursor = '';
-        });
-    }
-
-
-    // Add the source for the Brick Kilns layer (with clustering)
-    // Add the source and layers for Brick Kilns of Pakistan
-    if (!map.getSource('brick_kilns_IND')) {
-        map.addSource('brick_kilns_IND', {
-            type: 'geojson',
-            data: 'https://gist.githubusercontent.com/Mseher/90d883f8ead3c82f50cfeddc9fa11550/raw/38a23d2788867cc70c0a614eab7374ca1f47570b/brick_kilns_IND.geojson',
-            cluster: true,
-            clusterMaxZoom: 14, // Max zoom to cluster points
-            clusterRadius: 50    // Radius of each cluster when clustering points
-        });
-
-        // Unclustered point layer for brick kilns
-        map.addLayer({
-            id: 'unclustered-BK-IND',
-            type: 'circle',
-            source: 'brick_kilns_IND',
-            filter: ['!', ['has', 'point_count']],
-            paint: {
-                'circle-radius': 7,
-                'circle-color': '#70151d',   // Dark red for unclustered points
-                'circle-stroke-width': 1,
-                'circle-stroke-color': '#fff'
-            },
-            layout: {
-                'visibility': 'none'  // Initially set the visibility to none
-            }
-        });
-
-        // Clustered points for brick kilns with more granular size steps
-        map.addLayer({
-            id: 'clusters-BK-IND',
-            type: 'circle',
-            source: 'brick_kilns_IND',
-            filter: ['has', 'point_count'],
-            paint: {
-                'circle-radius': [
-                    'step',
-                    ['get', 'point_count'],
-                    15,  // Base size for clusters with fewer points
-                    25, 12,
-                    50, 25,  // For clusters with 50 or more points
-                    100, 30,  // For clusters with 100 or more points
-                    250, 35,
-                    500, 40,  // For clusters with 500 or more points
-                    750, 45,
-                    1000, 50, // For clusters with 1000 or more points
-                    3000, 60, // For clusters with 3000 or more points
-                    5000, 75, // For clusters with 5000 or more points
-                    10000, 90  // For very large clusters (10000 or more points)
-                ],
-                'circle-color': '#70151d',  // Same color for all clusters
-                'circle-stroke-width': 1,
-                'circle-stroke-color': '#fff',
-
-            },
-            layout: {
-                'visibility': 'none'  // Initially set the visibility to none
-            }
-        });
-
-
-        // Cluster count labels
-        map.addLayer({
-            id: 'cluster-count-BK-IND',
-            type: 'symbol',
-            source: 'brick_kilns_IND',
-            filter: ['has', 'point_count'],
-            layout: {
-                'text-field': '{point_count_abbreviated}',  // Display the cluster point count
-                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                'text-size': 12,
-                'visibility': 'none'
-            },
-            paint: {
-                'text-color': '#ffffff'   // White color for the count text
-            }
-        });
-
-        
-
-        // Zoom into the cluster when clicked
-        map.on('click', 'clusters-BK-IND', (e) => {
-            const features = map.queryRenderedFeatures(e.point, { layers: ['clusters-BK-IND'] });
-            const clusterId = features[0].properties.cluster_id;
-
-            map.getSource('brick_kilns_IND').getClusterExpansionZoom(clusterId, (err, zoom) => {
-                if (err) return;
-
-                map.easeTo({
-                    center: features[0].geometry.coordinates,
-                    zoom: zoom
-                });
-            });
-        });
-
-        // Change cursor to pointer on cluster hover
-        map.on('mouseenter', 'clusters-BK-IND', () => {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-        map.on('mouseleave', 'clusters-BK-IND', () => {
-            map.getCanvas().style.cursor = '';
-        });
-    }
-
-    // Add the source for the Brick Kilns layer (with clustering)
-    // Add the source and layers for Brick Kilns of Pakistan
-    if (!map.getSource('brick_kilns_PK')) {
-        map.addSource('brick_kilns_PK', {
-            type: 'geojson',
-            data: 'https://gist.githubusercontent.com/Mseher/ff38ecf6b4b365bfbaf1de99506685a3/raw/9907737c8ff94dbc896286df6fcf975307e538d6/brick_kilns_PK.geojson',
-            cluster: true,
-            clusterMaxZoom: 14, // Max zoom to cluster points
-            clusterRadius: 50    // Radius of each cluster when clustering points
-        });
-
-        // Unclustered point layer for brick kilns
-        map.addLayer({
-            id: 'unclustered-BK-P',
-            type: 'circle',
-            source: 'brick_kilns_PK',
-            filter: ['!', ['has', 'point_count']],
-            paint: {
-                'circle-radius': 7,
-                'circle-color': '#70151d',   // Dark red for unclustered points
-                'circle-stroke-width': 1,
-                'circle-stroke-color': '#fff'
-            },
-            layout: {
-                'visibility': 'none'  // Initially set the visibility to none
-            }
-        });
-
-        // Clustered points for brick kilns with more granular size steps
-        map.addLayer({
-            id: 'clusters-BK-P',
-            type: 'circle',
-            source: 'brick_kilns_PK',
-            filter: ['has', 'point_count'],
-            paint: {
-                'circle-radius': [
-                    'step',
-                    ['get', 'point_count'],
-                    15,  // Base size for clusters with fewer points
-                    25, 12,
-                    50, 25,  // For clusters with 50 or more points
-                    100, 30,  // For clusters with 100 or more points
-                    250, 35,
-                    500, 40,  // For clusters with 500 or more points
-                    750, 45,
-                    1000, 50, // For clusters with 1000 or more points
-                    3000, 60, // For clusters with 3000 or more points
-                    5000, 75, // For clusters with 5000 or more points
-                    10000, 90  // For very large clusters (10000 or more points)
-                ],
-                'circle-color': '#70151d',  // Same color for all clusters
-                'circle-stroke-width': 1,
-                'circle-stroke-color': '#fff',
-
-            },
-            layout: {
-                'visibility': 'none'  // Initially set the visibility to none
-            }
-        });
-
-
-        // Cluster count labels
-        map.addLayer({
-            id: 'cluster-count-BK-P',
-            type: 'symbol',
-            source: 'brick_kilns_PK',
-            filter: ['has', 'point_count'],
-            layout: {
-                'text-field': '{point_count_abbreviated}',  // Display the cluster point count
-                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                'text-size': 12,
-                'visibility': 'none'
-            },
-            paint: {
-                'text-color': '#ffffff'   // White color for the count text
-            }
-        });
-
-        // Add a click event for unclustered points
-        map.on('click', 'unclustered-BK-P', (e) => {
+        // Add a click event to display a popup with brick kiln density details
+        map.on('click', 'brick_kilns_PK', (e) => {
             const properties = e.features[0].properties;
+
+            // Prepare the popup content displaying only the density/count
             const popupContent = `
-                <div class="popup-table">
-                    <h3>Brick Kiln: ${properties.name}, ${properties.country}</h3>
-                    <table>
-                        <tr><th>Location:</th><td>${properties.location}</td></tr>
-                    </table>
-                </div>
-            `;
+            <div class="popup-table">
+                <h3>Brick Kiln Density / 10 km</h3>
+                <table>
+                    <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
+                </table>
+            </div>
+        `;
+
+            // Display the popup
             new mapboxgl.Popup()
                 .setLngLat(e.lngLat)
                 .setHTML(popupContent)
                 .addTo(map);
         });
 
-        // Zoom into the cluster when clicked
-        map.on('click', 'clusters-BK-P', (e) => {
-            const features = map.queryRenderedFeatures(e.point, { layers: ['clusters-BK-P'] });
-            const clusterId = features[0].properties.cluster_id;
-
-            map.getSource('brick_kilns_PK').getClusterExpansionZoom(clusterId, (err, zoom) => {
-                if (err) return;
-
-                map.easeTo({
-                    center: features[0].geometry.coordinates,
-                    zoom: zoom
-                });
-            });
-        });
-
-        // Change cursor to pointer on cluster hover
-        map.on('mouseenter', 'clusters-BK-P', () => {
+        // Change the cursor to pointer when hovering over the grid
+        map.on('mouseenter', 'brick_kilns_PK', () => {
             map.getCanvas().style.cursor = 'pointer';
         });
-        map.on('mouseleave', 'clusters-BK-P', () => {
+
+        // Reset the cursor when leaving the grid
+        map.on('mouseleave', 'brick_kilns_PK', () => {
             map.getCanvas().style.cursor = '';
         });
     }
 
+    if (!map.getSource('brick_kilns_IND_hex')) {
+        // Fetch the brick kilns GeoJSON data and create a hexagonal grid
+        fetch('https://gist.githubusercontent.com/Mseher/90d883f8ead3c82f50cfeddc9fa11550/raw/38a23d2788867cc70c0a614eab7374ca1f47570b/brick_kilns_IND.geojson')
+            .then(response => response.json())
+            .then(data => {
+                // Get the bounding box of the points
+                const bbox = turf.bbox(data);
+
+                // Generate the hexagonal grid
+                const hexGrid = turf.hexGrid(bbox, 10, { units: 'kilometers' }); // 10 km hexagon size
+
+                // Count points within each hexagon
+                hexGrid.features.forEach(hex => {
+                    const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
+                    hex.properties.pointCount = pointsWithinHex.features.length; // Add the point count as a property
+                });
+
+                // Add the hex grid as a source, only if it doesn't already exist
+                if (!map.getSource('brick_kilns_IND_hex')) {
+                    map.addSource('brick_kilns_IND_hex', {
+                        type: 'geojson',
+                        data: hexGrid
+                    });
+                }
+
+                // Add the layer to visualize the hex grid, only if it doesn't already exist
+                if (!map.getLayer('brick_kilns_IND')) {
+                    map.addLayer({
+                        'id': 'brick_kilns_IND',
+                        'type': 'fill',
+                        'source': 'brick_kilns_IND_hex',
+                        'maxzoom': 12,
+                        layout: {
+                            visibility: 'none'  // Set initial visibility to none
+                        },
+                        'paint': {
+                            'fill-color': [
+                                'interpolate',
+                                ['linear'],
+                                ['get', 'pointCount'],
+                                0, 'rgba(255,255,255,0)',
+                                1, '#ffeda0',
+                                10, '#feb24c',
+                                50, '#f03b20'
+                            ],
+                            'fill-opacity': 0.7
+                        }
+                    });
+                }
+            });
+
+        // Add a click event to display a popup with brick kiln density details
+        map.on('click', 'brick_kilns_IND', (e) => {
+            const properties = e.features[0].properties;
+
+            // Prepare the popup content displaying only the density/count
+            const popupContent = `
+            <div class="popup-table">
+                <h3>Brick Kiln Density / 10 km</h3>
+                <table>
+                    <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
+                </table>
+            </div>
+        `;
+
+            // Display the popup
+            new mapboxgl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(popupContent)
+                .addTo(map);
+        });
+
+        // Change the cursor to pointer when hovering over the grid
+        map.on('mouseenter', 'brick_kilns_IND', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Reset the cursor when leaving the grid
+        map.on('mouseleave', 'brick_kilns_IND', () => {
+            map.getCanvas().style.cursor = '';
+        });
+    }
+
+    if (!map.getSource('brick_kilns_BAN_hex')) {
+        // Fetch the brick kilns GeoJSON data and create a hexagonal grid
+        fetch('https://gist.githubusercontent.com/Mseher/10ad98920682d586ce53ff7610359fd5/raw/696a9005623f2f99308f5096c4782b232d388010/brick_kilns_BAN.geojson')
+            .then(response => response.json())
+            .then(data => {
+                // Get the bounding box of the points
+                const bbox = turf.bbox(data);
+
+                // Generate the hexagonal grid
+                const hexGrid = turf.hexGrid(bbox, 10, { units: 'kilometers' }); // 10 km hexagon size
+
+                // Count points within each hexagon
+                hexGrid.features.forEach(hex => {
+                    const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
+                    hex.properties.pointCount = pointsWithinHex.features.length; // Add the point count as a property
+                });
+
+                // Add the hex grid as a source, only if it doesn't already exist
+                if (!map.getSource('brick_kilns_BAN_hex')) {
+                    map.addSource('brick_kilns_BAN_hex', {
+                        type: 'geojson',
+                        data: hexGrid
+                    });
+                }
+
+                // Add the layer to visualize the hex grid, only if it doesn't already exist
+                if (!map.getLayer('brick_kilns_BAN')) {
+                    map.addLayer({
+                        'id': 'brick_kilns_BAN',
+                        'type': 'fill',
+                        'source': 'brick_kilns_BAN_hex',
+                        'maxzoom': 12,
+                        layout: {
+                            visibility: 'none'  // Set initial visibility to none
+                        },
+                        'paint': {
+                            'fill-color': [
+                                'interpolate',
+                                ['linear'],
+                                ['get', 'pointCount'],
+                                0, 'rgba(255,255,255,0)',
+                                1, '#ffeda0',
+                                10, '#feb24c',
+                                50, '#f03b20'
+                            ],
+                            'fill-opacity': 0.7
+                        }
+                    });
+                }
+            });
+
+        // Add a click event to display a popup with brick kiln density details
+        map.on('click', 'brick_kilns_BAN', (e) => {
+            const properties = e.features[0].properties;
+
+            // Prepare the popup content displaying only the density/count
+            const popupContent = `
+            <div class="popup-table">
+                <h3>Brick Kiln Density / 10 km</h3>
+                <table>
+                    <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
+                </table>
+            </div>
+        `;
+
+            // Display the popup
+            new mapboxgl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(popupContent)
+                .addTo(map);
+        });
+
+        // Change the cursor to pointer when hovering over the grid
+        map.on('mouseenter', 'brick_kilns_BAN', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Reset the cursor when leaving the grid
+        map.on('mouseleave', 'brick_kilns_BAN', () => {
+            map.getCanvas().style.cursor = '';
+        });
+    }
 }
 
 // Load data layers when map is initialized
@@ -630,6 +501,10 @@ document.getElementById('toggleFossil').addEventListener('change', (e) => {
     map.setLayoutProperty('fossil', 'visibility', e.target.checked ? 'visible' : 'none');
 });
 
+document.getElementById('toggleCoal').addEventListener('change', (e) => {
+    map.setLayoutProperty('coal', 'visibility', e.target.checked ? 'visible' : 'none');
+});
+
 document.getElementById('toggleGPW').addEventListener('change', (e) => {
     map.setLayoutProperty('GP', 'visibility', e.target.checked ? 'visible' : 'none');
 });
@@ -640,6 +515,19 @@ document.getElementById('toggledecay').addEventListener('change', (e) => {
     map.setLayoutProperty('pollutant', 'visibility', e.target.checked ? 'visible' : 'none');
 });
 
+
+document.getElementById('toggleHexGridPAK').addEventListener('change', (e) => {
+    map.setLayoutProperty('brick_kilns_PK', 'visibility', e.target.checked ? 'visible' : 'none');
+});
+
+document.getElementById('toggleHexGridIND').addEventListener('change', (e) => {
+    map.setLayoutProperty('brick_kilns_IND', 'visibility', e.target.checked ? 'visible' : 'none');
+});
+
+document.getElementById('toggleHexGridBAN').addEventListener('change', (e) => {
+    map.setLayoutProperty('brick_kilns_BAN', 'visibility', e.target.checked ? 'visible' : 'none');
+});
+
 // Main Brick Kilns checkbox functionality
 document.getElementById('toggleBrickKilns').addEventListener('change', (e) => {
     const visibility = e.target.checked ? 'visible' : 'none';
@@ -648,47 +536,18 @@ document.getElementById('toggleBrickKilns').addEventListener('change', (e) => {
     document.getElementById('brickKilnCountries').style.display = e.target.checked ? 'block' : 'none';
 
     // If the main checkbox is checked, set all child checkboxes to checked and show all layers
-    document.getElementById('togglebkp').checked = e.target.checked;
-    document.getElementById('togglebkind').checked = e.target.checked;
-    document.getElementById('togglebkban').checked = e.target.checked;
+    document.getElementById('toggleHexGridPAK').checked = e.target.checked;
+    document.getElementById('toggleHexGridIND').checked = e.target.checked;
+    document.getElementById('toggleHexGridBAN').checked = e.target.checked;
 
     // Toggle all Brick Kiln layers for Pakistan, India, and Bangladesh
-    map.setLayoutProperty('unclustered-BK-P', 'visibility', visibility);
-    map.setLayoutProperty('clusters-BK-P', 'visibility', visibility);
-    map.setLayoutProperty('cluster-count-BK-P', 'visibility', visibility);
+    map.setLayoutProperty('brick_kilns_PK', 'visibility', visibility);
 
-    map.setLayoutProperty('unclustered-BK-IND', 'visibility', visibility);
-    map.setLayoutProperty('clusters-BK-IND', 'visibility', visibility);
-    map.setLayoutProperty('cluster-count-BK-IND', 'visibility', visibility);
+    map.setLayoutProperty('brick_kilns_IND', 'visibility', visibility);
 
-    map.setLayoutProperty('unclustered-BK-BAN', 'visibility', visibility);
-    map.setLayoutProperty('clusters-BK-BAN', 'visibility', visibility);
-    map.setLayoutProperty('cluster-count-BK-BAN', 'visibility', visibility);
+    map.setLayoutProperty('brick_kilns_BAN', 'visibility', visibility);
 });
 
-// Child checkbox for Pakistan
-document.getElementById('togglebkp').addEventListener('change', (e) => {
-    const visibility = e.target.checked ? 'visible' : 'none';
-    map.setLayoutProperty('unclustered-BK-P', 'visibility', visibility);
-    map.setLayoutProperty('clusters-BK-P', 'visibility', visibility);
-    map.setLayoutProperty('cluster-count-BK-P', 'visibility', visibility);
-});
-
-// Child checkbox for India
-document.getElementById('togglebkind').addEventListener('change', (e) => {
-    const visibility = e.target.checked ? 'visible' : 'none';
-    map.setLayoutProperty('unclustered-BK-IND', 'visibility', visibility);
-    map.setLayoutProperty('clusters-BK-IND', 'visibility', visibility);
-    map.setLayoutProperty('cluster-count-BK-IND', 'visibility', visibility);
-});
-
-// Child checkbox for Bangladesh
-document.getElementById('togglebkban').addEventListener('change', (e) => {
-    const visibility = e.target.checked ? 'visible' : 'none';
-    map.setLayoutProperty('unclustered-BK-BAN', 'visibility', visibility);
-    map.setLayoutProperty('clusters-BK-BAN', 'visibility', visibility);
-    map.setLayoutProperty('cluster-count-BK-BAN', 'visibility', visibility);
-});
 
 
 
@@ -707,86 +566,171 @@ document.querySelector('#legend .closeButton').addEventListener('click', () => {
 
 // ----------------------------------------------------------- MAP OVERLAY CHARTS-------------------------------------------------------------
 
+// Global variables to store the last known pollutant data
+let lastPm10 = 0;
+let lastPm25 = 0;
+let lastSo2 = 0;
+let lastNo2 = 0;
+
+// Collapse button functionality
+const collapseBtn = document.getElementById('collapseBtn');
+const expandBtn = document.getElementById('expandBtn');
+const chartContent = document.getElementById('chartContent');
+const featuresDiv = document.getElementById('features');
+const frequencySelect = document.getElementById('frequencySelect');
+let dataFrequency = 'year'; // Default is per year
+
+collapseBtn.addEventListener('click', () => {
+    chartContent.style.display = 'none';
+    collapseBtn.style.display = 'none';
+    expandBtn.style.display = 'block';
+    featuresDiv.style.height = 'auto';
+    featuresDiv.style.padding = '5px';
+    featuresDiv.style.width = '200px'; // Adjust width when collapsed
+});
+
+expandBtn.addEventListener('click', () => {
+    chartContent.style.display = 'block';
+    collapseBtn.style.display = 'block';
+    expandBtn.style.display = 'none';
+    featuresDiv.style.height = 'auto';
+    featuresDiv.style.padding = '15px';
+    featuresDiv.style.width = '400px'; // Adjust width when expanded
+});
+
+// Function to convert data based on frequency (year or day)
+function getConvertedData(value) {
+    return dataFrequency === 'day' ? value / 365 : value;
+}
+
 // Initialize the chart object
-let pollutantChart;
+let pollutantChart1, pollutantChart2;
 
-function updatePollutantChart(pm10, pm25, so2, no2) {
-    const ctx = document.getElementById('pollutantChart').getContext('2d');
+function updatePollutantCharts(pm10, pm25, so2, no2) {
+    const ctx1 = document.getElementById('pollutantChart1').getContext('2d');
+    const ctx2 = document.getElementById('pollutantChart2').getContext('2d');
 
-    // If the chart already exists, destroy it before creating a new one
-    if (pollutantChart) {
-        pollutantChart.destroy();
-    }
+    // Destroy existing charts if they exist
+    if (pollutantChart1) pollutantChart1.destroy();
+    if (pollutantChart2) pollutantChart2.destroy();
 
-    // Create a new chart without the dataset label
-    pollutantChart = new Chart(ctx, {
+    // Update the data based on frequency (Per Year/Per Day)
+    const pm10Converted = getConvertedData(pm10);
+    const pm25Converted = getConvertedData(pm25);
+    const so2Converted = getConvertedData(so2);
+    const no2Converted = getConvertedData(no2);
+
+    // Create first chart for PM10 and PM2.5
+    pollutantChart1 = new Chart(ctx1, {
         type: 'bar',
         data: {
-            labels: ['PM₁₀', 'PM₂.₅', 'SO₂', 'NO₂'],
+            labels: ['PM₁₀', 'PM₂.₅'],
             datasets: [{
-                // No label here
-                data: [pm10, pm25, so2, no2],
-                backgroundColor: [
-                    'rgba(75, 192, 192, 0.2)', // PM10
-                    'rgba(54, 162, 235, 0.2)', // PM25
-                    'rgba(255, 206, 86, 0.2)', // SO2
-                    'rgba(255, 99, 132, 0.2)'  // NO2
-                ],
-                borderColor: [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(255, 99, 132, 1)'
-                ],
+                data: [pm10Converted, pm25Converted],
+                backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+                borderColor: ['rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)'],
                 borderWidth: 1
             }]
         },
         options: {
+            indexAxis: 'y',
             plugins: {
-                legend: {
-                    display: false // Hide the legend completely
-                }
+                legend: { display: false }
             },
             scales: {
-                y: {
+                x: {
                     beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Tonnes per Year' // Y-axis label only
-                    }
+                    title: { display: true, text: 'Tonnes per ' + (dataFrequency === 'year' ? 'Year' : 'Day') }
+                }
+            }
+        }
+    });
+
+    // Create second chart for SO2 and NO2
+    pollutantChart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['SO₂', 'NO₂'],
+            datasets: [{
+                data: [so2Converted, no2Converted],
+                backgroundColor: ['rgba(255, 206, 86, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                borderColor: ['rgba(255, 206, 86, 1)', 'rgba(255, 99, 132, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Tonnes per ' + (dataFrequency === 'year' ? 'Year' : 'Day') }
                 }
             }
         }
     });
 }
 
+// Listen to dropdown change and update the dataFrequency
+frequencySelect.addEventListener('change', () => {
+    dataFrequency = frequencySelect.value; // Update the data frequency (year/day)
+
+    // Recalculate and update the charts with last known values
+    updatePollutantCharts(lastPm10, lastPm25, lastSo2, lastNo2);
+});
+
 // Hover information display with chart
 map.on('mousemove', (event) => {
-    const states = map.queryRenderedFeatures(event.point, { layers: ['coal_IGP'] });
+    if(map.getLayer('coal')){
+        const states = map.queryRenderedFeatures(event.point, { layers: ['coal'] });
 
     if (states.length) {
-        // Extract pollutant data from the hovered feature
         const properties = states[0].properties;
         const pm10 = properties.p10_tn_;
-        const pm25 = properties.p25_tn_;  // Assuming pm25 data is present
+        const pm25 = properties.p25_tn_;
         const so2 = properties.sx_tn_y;
-        const no2 = properties.nx_tn_y;    // Assuming no2 data is present
+        const no2 = properties.nx_tn_y;
         const plantName = properties.plnt_nm;
         const country = properties.country;
 
-        // Update the plant name and country in the overlay
         document.getElementById('plantInfo').innerHTML = `<h3>${plantName}, ${country}</h3>`;
 
-        // Update the chart with pollutant data
-        updatePollutantChart(pm10, pm25, so2, no2, plantName);
+        // Update global variables with the latest pollutant data
+        lastPm10 = pm10;
+        lastPm25 = pm25;
+        lastSo2 = so2;
+        lastNo2 = no2;
 
-        // Hide hover text if chart is displayed
+        // Update the charts with the latest data
+        updatePollutantCharts(pm10, pm25, so2, no2);
+
         document.getElementById('hoverText').style.display = 'none';
     } else {
-        // Show hover text if no feature is hovered over
         document.getElementById('hoverText').style.display = 'block';
     }
+    }
+    
 });
+
+// Initialize the charts with default values when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    updatePollutantCharts(0, 0, 0, 0); // Default chart with zero values
+    document.getElementById('pollutantChart1').style.display = 'block';
+    document.getElementById('pollutantChart2').style.display = 'block';
+
+    // Keep the chart content collapsed by default
+    chartContent.style.display = 'none';
+    collapseBtn.style.display = 'none';
+    expandBtn.style.display = 'block';
+
+    // Initially keep the featuresDiv in its collapsed state
+    featuresDiv.style.height = 'auto';
+    featuresDiv.style.padding = '5px';
+    featuresDiv.style.width = '200px'; // Set initial collapsed width to 200px
+});
+
 
 
 
@@ -795,8 +739,8 @@ map.on('mousemove', (event) => {
 function coalPollutantFilter(pollutant, country = '') {
 
 
-    if (map.getLayer('coal_IGP')) {
-        map.removeLayer('coal_IGP');
+    if (map.getLayer('coal')) {
+        map.removeLayer('coal');
     }
 
     const filter = ['all'];
@@ -815,7 +759,7 @@ function coalPollutantFilter(pollutant, country = '') {
     if (pollutant === '') {
         document.getElementById('pollutant-legend').style.display = 'none';
         map.addLayer({
-            'id': 'coal_IGP',
+            'id': 'coal',
             'type': 'circle',
             'source': 'coal_IGP',
             'filter': filter,
@@ -912,7 +856,7 @@ function coalPollutantFilter(pollutant, country = '') {
         }
 
         map.addLayer({
-            'id': 'coal_IGP',
+            'id': 'coal',
             'type': 'circle',
             'source': 'coal_IGP',
             'filter': filter,

@@ -17,7 +17,7 @@
         href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1-dev/mapbox-gl-geocoder.css"
         type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
 
 </head>
 
@@ -92,7 +92,7 @@
         <!-- Coal IGP -->
         <div class="legend-section">
             <div>
-                <input id="toggleCoal" type="checkbox" name="Coal" checked>
+                <input id="toggleCoal" type="checkbox" name="coal" checked>
                 <div class="legend-key" style="background-color: #616161;"></div>
                 <span>Coal IGP</span>
             </div>
@@ -148,30 +148,77 @@
             </div>
         </div>
 
+    
+
+        <!-- Brick Kilns Hexagonal Grid -->
+        <!-- <div class="legend-section">
+            <input id="toggleHexGridPAK" type="checkbox" name="hex_grid" unchecked>
+            <span>Brick Kiln Density Pakistan</span><br>
+            <div class="row kiln-colors"></div>
+            <div class="row kiln-labels">
+                <div class="label">0</div>
+                <div class="label"></div>
+                <div class="label"></div>
+                <div class="label"></div>
+                <div class="label">50+</div>
+            </div>
+        </div>
+        
+        <div class="legend-section"></div>
+            <input id="toggleHexGridIND" type="checkbox" name="hex_grid" unchecked>
+            <span>Brick Kiln Density India</span><br>
+            <div class="row kiln-colors"></div>
+            <div class="row kiln-labels">
+                <div class="label">0</div>
+                <div class="label"></div>
+                <div class="label"></div>
+                <div class="label"></div>
+                <div class="label">50+</div>
+            </div>
+        </div>
+
+        <div class="legend-section"></div>
+            <input id="toggleHexGridBAN" type="checkbox" name="hex_grid" unchecked>
+            <span>Brick Kiln Density Bangladesh</span><br>
+            <div class="row kiln-colors"></div>
+            <div class="row kiln-labels">
+                <div class="label">0</div>
+                <div class="label"></div>
+                <div class="label"></div>
+                <div class="label"></div>
+                <div class="label">50+</div>
+            </div>
+        </div> -->
+
+
 
         <!-- Brick Kilns Legend (Main Checkbox) -->
         <div class="legend-section">
             <input id="toggleBrickKilns" type="checkbox" name="brick_kilns" unchecked>
-            <div class="legend-key" style="background-color:#70151d;"></div>
-            <span>Brick Kilns IGP</span>
+            <span>Brick Kiln Density IGP</span><br>
+            <div class="row kiln-colors"></div>
+            <div class="row kiln-labels">
+                <div class="label">0</div>
+                <div class="label"></div>
+                <div class="label"></div>
+                <div class="label"></div>
+                <div class="label">50+</div>
+            </div>
         </div>
 
         <!-- Child Checkboxes for individual countries (initially hidden) -->
         <div id="brickKilnCountries" style="display: none; padding-left: 20px;">
             <div class="legend-section">
-                <input id="togglebkp" type="checkbox" name="bk_p" unchecked>
-                <div class="legend-key" style="background-color:#70151d;"></div>
-                <span>Brick Kilns Pakistan</span>
+                <input id="toggleHexGridPAK" type="checkbox" name="hex_grid" unchecked>
+                <span>Pakistan</span>
             </div>
             <div class="legend-section">
-                <input id="togglebkind" type="checkbox" name="bk_ind" unchecked>
-                <div class="legend-key" style="background-color:#70151d;"></div>
-                <span>Brick Kilns India</span>
+                <input id="toggleHexGridIND" type="checkbox" name="bk_ind" unchecked>
+                <span>India</span>
             </div>
             <div class="legend-section">
-                <input id="togglebkban" type="checkbox" name="bk_ban" unchecked>
-                <div class="legend-key" style="background-color:#70151d;"></div>
-                <span>Brick Kilns Bangladesh</span>
+                <input id="toggleHexGridBAN" type="checkbox" name="bk_ban" unchecked>
+                <span>Bangladesh</span>
             </div>
         </div>
 
@@ -196,18 +243,38 @@
 
 
 
-    <!-------------------------------------------------------------- Hover Charts Display  --------------------------------------------------------->
+    <!-------------------------------------------------------------- Hover Charts Display ---------------------------------------------------------->
     <div class="map-overlay" id="features">
-
-        <h2>Pollutants from Coal Plant</h2>
-        <div id="pd">
+        <h2>
+            <i class="fas fa-chart-bar"></i> Pollutants from Coal Plant
+            <!-- Collapse Button -->
+            <button id="collapseBtn" class="collapse-btn">-</button>
+        </h2>
+    
+        <!-- Dropdown for selecting Per Year / Per Day -->
+        <div id="dataFrequency">
+            <select id="frequencySelect">
+                <option value="year">Per Year</option>
+                <option value="day">Per Day</option>
+            </select>
+        </div>
+    
+        <div id="chartContent">
             <!-- Plant Name and Country Info -->
             <div id="plantInfo"></div>
-            <canvas id="pollutantChart" width="400"></canvas>
+    
+            <!-- Canvas for the two charts -->
+            <canvas id="pollutantChart1" width="400"></canvas>
+            <canvas id="pollutantChart2" width="400"></canvas>
+    
+            <!-- Hover text -->
             <p id="hoverText">Hover over a Data and Check Details about Pollutants</p>
         </div>
+    
+        <!-- Expand Button (Initially hidden) -->
+        <button id="expandBtn" class="expand-btn" style="display:none;">Expand</button>
     </div>
-
+    
 
 
     <!---------------------------------------------------------- Navigation Buttons (Bottom) ------------------------------------------------------->
