@@ -79,6 +79,18 @@
         <label for="dark-v11">Dark</label><br>
     </div>
 
+    <!-------------------------------------------------------- Continent Switch Button ------------------------------------------------>
+    <div id="areaChange" title="Move to Africa">
+        <i class="fas fa-globe-africa"></i>
+    </div>
+
+    <!-- Loading spinner (add this inside the <body> of your HTML) -->
+    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading layers...</p>
+    </div>
+
+
     <!----------------------------------------------------------------- Map ----------------------------------------------------------------------->
 
     <div id="map"></div>
@@ -109,11 +121,6 @@
             <div class="legend-key" style="background-color:black;"></div>
             <span>GPW</span>
         </div>
-
-
-
-
-
 
 
         <!-- Population Grid -->
@@ -148,7 +155,8 @@
             </div>
         </div>
 
-    
+
+
 
         <!-- Brick Kilns Hexagonal Grid -->
         <!-- <div class="legend-section">
@@ -192,9 +200,9 @@
 
 
 
-        <!-- Brick Kilns Legend (Main Checkbox) -->
+        <!-- Brick Kilns Legend (Density Checkbox) -->
         <div class="legend-section">
-            <input id="toggleBrickKilns" type="checkbox" name="brick_kilns" unchecked>
+            <input id="toggleBrickKilnsGrid" type="checkbox" name="brick_kilns" unchecked>
             <span>Brick Kiln Density IGP</span><br>
             <div class="row kiln-colors"></div>
             <div class="row kiln-labels">
@@ -207,7 +215,7 @@
         </div>
 
         <!-- Child Checkboxes for individual countries (initially hidden) -->
-        <div id="brickKilnCountries" style="display: none; padding-left: 20px;">
+        <div id="BrickKilnsGrid" style="display: none; padding-left: 20px;">
             <div class="legend-section">
                 <input id="toggleHexGridPAK" type="checkbox" name="hex_grid" unchecked>
                 <span>Pakistan</span>
@@ -221,6 +229,31 @@
                 <span>Bangladesh</span>
             </div>
         </div>
+
+        <!-- Brick Kilns Legend (Main Checkbox) -->
+        <div class="legend-section">
+            <input id="toggleBrickKilns" type="checkbox" name="brick_kilns" unchecked>
+            <div class="legend-key" style="background-color:green;"></div>
+            <span>Brick Kilns</span>
+        </div>
+
+        <div id="brickKilnCountries" style="display: none; padding-left: 20px;">
+            <div class="legend-section">
+                <input id="toggleBKPK" type="checkbox" name="BKPK" unchecked>
+                <span>Pakistan</span>
+            </div>
+            <div class="legend-section">
+                <input id="toggleBKIND" type="checkbox" name="BKIND" unchecked>
+                <span>India</span>
+            </div>
+            <div class="legend-section">
+                <input id="toggleBKBAN" type="checkbox" name="BKBAN" unchecked>
+                <span>Bangladesh</span>
+            </div>
+        </div>
+
+
+    </div>
 
 
 
@@ -250,7 +283,7 @@
             <!-- Collapse Button -->
             <button id="collapseBtn" class="collapse-btn">-</button>
         </h2>
-    
+
         <!-- Dropdown for selecting Per Year / Per Day -->
         <div id="dataFrequency">
             <select id="frequencySelect">
@@ -258,23 +291,23 @@
                 <option value="day">Per Day</option>
             </select>
         </div>
-    
+
         <div id="chartContent">
             <!-- Plant Name and Country Info -->
             <div id="plantInfo"></div>
-    
+
             <!-- Canvas for the two charts -->
             <canvas id="pollutantChart1" width="400"></canvas>
             <canvas id="pollutantChart2" width="400"></canvas>
-    
+
             <!-- Hover text -->
             <p id="hoverText">Hover over a Data and Check Details about Pollutants</p>
         </div>
-    
+
         <!-- Expand Button (Initially hidden) -->
         <button id="expandBtn" class="expand-btn" style="display:none;">Expand</button>
     </div>
-    
+
 
 
     <!---------------------------------------------------------- Navigation Buttons (Bottom) ------------------------------------------------------->
