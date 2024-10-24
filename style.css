@@ -245,6 +245,28 @@ html {
     transition: font-size 0.3s ease;
 }
 
+#aggregateTool {
+    position: absolute;
+    top: 270px;
+    right: 10px;
+    background: white;
+    padding: 9px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    z-index: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    
+}
+
+#aggregateTool i {
+    font-size: 20px;
+}
+
+
 /* Loading spinner styles */
 .loading-spinner {
     position: absolute;
