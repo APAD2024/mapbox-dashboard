@@ -63,7 +63,7 @@
 
     </div>
 
-    <!------------------------------------------------------------- Basemap Menu ------------------------------------------------------->
+    <!------------------------------------------------------------- Basemap Menu ------------------------------------------------------------------>
     <div id="menuButton"><i class="fas fa-globe"></i></div>
     <div id="menu">
         <button class="closeButton">&times;</button>
@@ -79,7 +79,7 @@
         <label for="dark-v11">Dark</label><br>
     </div>
 
-    <!-------------------------------------------------------- Continent Switch Button ------------------------------------------------>
+    <!-------------------------------------------------------- Continent Switch Button ------------------------------------------------------------->
     <div id="areaChange" title="Move to Africa">
         <i class="fas fa-globe-africa"></i>
     </div>
@@ -90,7 +90,11 @@
         <p>Loading layers...</p>
     </div>
 
-
+    <!-------------------------------------------------------------- Aggregate Tool Button -------------------------------------------------------->
+    <div id="aggregateTool" title="Aggregate Data">
+        <i class="fas fa-calculator"></i>
+    </div>
+    
     <!----------------------------------------------------------------- Map ----------------------------------------------------------------------->
 
     <div id="map"></div>
@@ -120,6 +124,27 @@
             <input id="toggleGPW" type="checkbox" name="GP" unchecked>
             <div class="legend-key" style="background-color:black;"></div>
             <span>GPW</span>
+        </div>
+         <!-- Brick Kilns Legend (Main Checkbox) -->
+         <div class="legend-section">
+            <input id="toggleBrickKilns" type="checkbox" name="brick_kilns" unchecked>
+            <div class="legend-key" style="background-color:green;"></div>
+            <span>Brick Kilns</span>
+        </div>
+
+        <div id="brickKilnCountries" style="display: none; padding-left: 20px;">
+            <div class="legend-section">
+                <input id="toggleBKPK" type="checkbox" name="BKPK" unchecked>
+                <span>Pakistan</span>
+            </div>
+            <div class="legend-section">
+                <input id="toggleBKIND" type="checkbox" name="BKIND" unchecked>
+                <span>India</span>
+            </div>
+            <div class="legend-section">
+                <input id="toggleBKBAN" type="checkbox" name="BKBAN" unchecked>
+                <span>Bangladesh</span>
+            </div>
         </div>
 
 
@@ -230,27 +255,7 @@
             </div>
         </div>
 
-        <!-- Brick Kilns Legend (Main Checkbox) -->
-        <div class="legend-section">
-            <input id="toggleBrickKilns" type="checkbox" name="brick_kilns" unchecked>
-            <div class="legend-key" style="background-color:green;"></div>
-            <span>Brick Kilns</span>
-        </div>
-
-        <div id="brickKilnCountries" style="display: none; padding-left: 20px;">
-            <div class="legend-section">
-                <input id="toggleBKPK" type="checkbox" name="BKPK" unchecked>
-                <span>Pakistan</span>
-            </div>
-            <div class="legend-section">
-                <input id="toggleBKIND" type="checkbox" name="BKIND" unchecked>
-                <span>India</span>
-            </div>
-            <div class="legend-section">
-                <input id="toggleBKBAN" type="checkbox" name="BKBAN" unchecked>
-                <span>Bangladesh</span>
-            </div>
-        </div>
+       
 
 
     </div>
