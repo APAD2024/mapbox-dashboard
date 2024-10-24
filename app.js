@@ -14,7 +14,7 @@ const map = new mapboxgl.Map({
 // Add navigation control (zoom and rotation) to the top-right corner
 map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-let populationLayer, fossilFuelLayer, coalLayer, gpwLayer, pollutantLayer, boundaryLayer, brick_kilns_PK_hex, brick_kilns_IND_hex, brick_kilns_BAN_hex ;
+let populationLayer, fossilFuelLayer, coalLayer, gpwLayer, pollutantLayer, boundaryLayer, brick_kilns_PK_hex, brick_kilns_IND_hex, brick_kilns_BAN_hex;
 
 const menuButton = document.getElementById('menuButton');
 const menu = document.getElementById('menu');
@@ -35,7 +35,7 @@ const layerIds = [
 
 // -----------------------------------------------------------LAYERS LOADING-----------------------------------------------------------
 
-// Reusable function to add data layers
+// Reusable function to add data layers with fetch and lazy loading
 function addDataLayers() {
     // Population raster layer
     if (!map.getSource('population')) {
@@ -53,187 +53,236 @@ function addDataLayers() {
         });
     }
 
-    // Fossil fuel layer
+    // Lazy load Fossil fuel layer
     if (!map.getSource('fossil_fuel')) {
-        map.addSource('fossil_fuel', {
-            type: 'geojson',
-            data: 'https://gist.githubusercontent.com/bilalpervaiz/597c50eff1747c1a3c8c948bef6ccc19/raw/6984d3a37d75dc8ca7489ee031377b2d57da67d2/fossil_fuel.geojson'
-        });
-        fossilFuelLayer = map.addLayer({
-            'id': 'fossil',
-            'type': 'circle',
-            'source': 'fossil_fuel',
-            'paint': {
-                'circle-radius': 5,
-                'circle-stroke-width': 2,
-                'circle-color': 'blue',
-                'circle-stroke-color': 'white'
-            },
-            layout: {
-                visibility: 'none'
-            }
-        });
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/bilalpervaiz/597c50eff1747c1a3c8c948bef6ccc19/raw/6984d3a37d75dc8ca7489ee031377b2d57da67d2/fossil_fuel.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('fossil_fuel', {
+                    type: 'geojson',
+                    data: data
+                });
+                fossilFuelLayer = map.addLayer({
+                    'id': 'fossil',
+                    'type': 'circle',
+                    'source': 'fossil_fuel',
+                    'paint': {
+                        'circle-radius': 5,
+                        'circle-stroke-width': 2,
+                        'circle-color': 'blue',
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'none'
+                    }
+                });
 
-        // Popup for fossil fuel layer
-        map.on('click', 'fossil', (e) => {
-            const properties = e.features[0].properties;
-            const cleanedOriginalI = properties.original_i.replace(/{|}/g, '');
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(`<div class="popup-table"><h3>${cleanedOriginalI}</h3></div>`)
-                .addTo(map);
-        });
+                if (!aggregateToolEnabled) {
+                    // Popup for fossil fuel layer
+                    map.on('click', 'fossil', (e) => {
+                        const properties = e.features[0].properties;
+                        const cleanedOriginalI = properties.original_i.replace(/{|}/g, '');
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(`<div class="popup-table"><h3>${cleanedOriginalI}</h3></div>`)
+                            .addTo(map);
+                    });
+                }
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Fossil Fuel data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
     }
 
-    // Add the source for the Coal IGP layer (without clustering)
+    // Lazy load Coal IGP layer
     if (!map.getSource('coal_IGP')) {
-        map.addSource('coal_IGP', {
-            type: 'geojson',
-            data: 'https://gist.githubusercontent.com/Mseher/f1608007d5c4d041a8d67496e30b7458/raw/33e4507a54439aeba9889eb7fb39d2614fc1ba66/IGP_Coal_Plants.geojson',
-        });
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/f1608007d5c4d041a8d67496e30b7458/raw/33e4507a54439aeba9889eb7fb39d2614fc1ba66/IGP_Coal_Plants.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('coal_IGP', {
+                    type: 'geojson',
+                    data: data,
+                });
+                coalLayer = map.addLayer({
+                    'id': 'coal',
+                    'type': 'circle',
+                    'source': 'coal_IGP',
+                    'paint': {
+                        'circle-radius': 7,
+                        'circle-stroke-width': 2,
+                        'circle-color': '#616161',  // Add # for hex color
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'visible'
+                    }
+                });
 
-
-
-        coalLayer = map.addLayer({
-            'id': 'coal',
-            'type': 'circle',
-            'source': 'coal_IGP',
-            'paint': {
-                'circle-radius': 7,
-                'circle-stroke-width': 2,
-                'circle-color': '#616161',  // Add # for hex color
-                'circle-stroke-color': 'white'
-            },
-            layout: {
-                visibility: 'visible'
-            }
-        });
-
-        // Popup for the coal layer
-        map.on('click', 'coal', (e) => {  // Use 'coal' as the layer ID
-            const properties = e.features[0].properties;
-            const popupContent = `
-                <div class="popup-table">
-                    <h3>${properties.plnt_nm}, ${properties.country}</h3>
-                    <table>
-                        <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
-                        <tr><th>PM<sub>10</sub></th><td>${properties.p10_tn_}</td></tr>
-                        <tr><th>PM<sub>2.5</sub></th><td>${properties.p25_tn_}</td></tr>
-                        <tr><th>NO<sub>2</sub></th><td>${properties.nx_tn_y}</td></tr>
-                        <tr><th>SO<sub>2</sub></th><td>${properties.sx_tn_y}</td></tr>
-                    </table>
-                </div>
-            `;
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(popupContent)
-                .addTo(map);
-        });
+                if (!aggregateToolEnabled) {
+                    // Popup for the coal layer
+                    map.on('click', 'coal', (e) => {
+                        const properties = e.features[0].properties;
+                        const popupContent = `
+                        <div class="popup-table">
+                            <h3>${properties.plnt_nm}, ${properties.country}</h3>
+                            <table>
+                                <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
+                                <tr><th>PM<sub>10</sub></th><td>${properties.p10_tn_}</td></tr>
+                                <tr><th>PM<sub>2.5</sub></th><td>${properties.p25_tn_}</td></tr>
+                                <tr><th>NO<sub>2</sub></th><td>${properties.nx_tn_y}</td></tr>
+                                <tr><th>SO<sub>2</sub></th><td>${properties.sx_tn_y}</td></tr>
+                            </table>
+                        </div>
+                        `;
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(popupContent)
+                            .addTo(map);
+                    });
+                }
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Coal data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
     }
 
-    // GPW layer
+    // Lazy load GPW layer
     if (!map.getSource('GPW')) {
-        map.addSource('GPW', {
-            type: 'geojson',
-            data: 'https://gist.githubusercontent.com/bilalpervaiz/e2c93d2017fc1ed90f9a6d5259701a5e/raw/4dd19fe557d29b9268f11e233169948e95c24803/GPW.geojson'
-        });
-        gpwLayer = map.addLayer({
-            'id': 'GP',
-            'type': 'circle',
-            'source': 'GPW',
-            'paint': {
-                'circle-radius': 5,
-                'circle-stroke-width': 2,
-                'circle-color': 'black',
-                'circle-stroke-color': 'white'
-            },
-            layout: {
-                visibility: 'none'
-            }
-        });
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/bilalpervaiz/e2c93d2017fc1ed90f9a6d5259701a5e/raw/4dd19fe557d29b9268f11e233169948e95c24803/GPW.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('GPW', {
+                    type: 'geojson',
+                    data: data
+                });
+                gpwLayer = map.addLayer({
+                    'id': 'GP',
+                    'type': 'circle',
+                    'source': 'GPW',
+                    'paint': {
+                        'circle-radius': 5,
+                        'circle-stroke-width': 2,
+                        'circle-color': 'black',
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'none'
+                    }
+                });
 
-        // Popup for GPW layer
-        map.on('click', 'GP', (e) => {
-            const properties = e.features[0].properties;
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(`<div class="popup-table"><h3>${properties.name}</h3></div>`)
-                .addTo(map);
-        });
+                if (!aggregateToolEnabled) {
+                    // Popup for GPW layer
+                    map.on('click', 'GP', (e) => {
+                        const properties = e.features[0].properties;
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(`<div class="popup-table"><h3>${properties.name}</h3></div>`)
+                            .addTo(map);
+                    });
+                }
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading GPW data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
     }
 
     // Indian plain layer
     if (!map.getSource('indian_plain')) {
-        map.addSource('indian_plain', {
-            type: 'geojson',
-            data: 'https://gist.githubusercontent.com/Mseher/d2fe2c380fc19ab797d17c0116b11876/raw/3c37088e53623fcc8c9479159ad0fe8c6b89ed3f/IGP_boundary.geojson'
-        });
-        boundaryLayer = map.addLayer({
-            'id': 'indian',
-            'type': 'line',
-            'source': 'indian_plain',
-            'paint': {
-                'line-color': 'black',
-                'line-width': 1
-            }
-        });
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/d2fe2c380fc19ab797d17c0116b11876/raw/3c37088e53623fcc8c9479159ad0fe8c6b89ed3f/IGP_boundary.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('indian_plain', {
+                    type: 'geojson',
+                    data: data
+                });
+                boundaryLayer = map.addLayer({
+                    'id': 'indian',
+                    'type': 'line',
+                    'source': 'indian_plain',
+                    'paint': {
+                        'line-color': 'black',
+                        'line-width': 1
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Indian plain data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
     }
 
     // Pollutant decay heatmap layer
     if (!map.getSource('pollutant_decay')) {
-        map.addSource('pollutant_decay', {
-            type: 'geojson',
-            data: 'https://gist.githubusercontent.com/bilalpervaiz/97a2ce64252ad5a095c9222f4c9ae5b1/raw/4fcc0590f9b28e13a369fb93f4f0ff00410844a6/pollutant_decay.geojson'
-        });
-        pollutantLayer = map.addLayer({
-            'id': 'pollutant',
-            'type': 'heatmap',
-            'source': 'pollutant_decay',
-            'maxzoom': 12,
-            layout: {
-                visibility: 'none'
-            },
-            'paint': {
-                'heatmap-weight': {
-                    'property': 'decay_PM10_1',
-                    'type': 'exponential',
-                    'stops': [
-                        [0.030291835876543865, 0],
-                        [3.332101946419825, 1]
-                    ]
-                },
-                'heatmap-color': [
-                    'interpolate',
-                    ['linear'],
-                    ['heatmap-density'],
-                    0, 'rgba(255,255,178,0)',
-                    0.2, 'rgb(254,204,92)',
-                    0.4, 'rgb(253,141,60)',
-                    0.6, 'rgb(240,59,32)',
-                    0.8, 'rgb(189,0,38)'
-                ],
-                'heatmap-radius': {
-                    'stops': [
-                        [11, 15],
-                        [15, 20]
-                    ]
-                },
-                'heatmap-opacity': {
-                    'default': 1,
-                    'stops': [
-                        [14, 1],
-                        [15, 0]
-                    ]
-                }
-            }
-        });
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/bilalpervaiz/97a2ce64252ad5a095c9222f4c9ae5b1/raw/4fcc0590f9b28e13a369fb93f4f0ff00410844a6/pollutant_decay.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('pollutant_decay', {
+                    type: 'geojson',
+                    data: data
+                });
+                pollutantLayer = map.addLayer({
+                    'id': 'pollutant',
+                    'type': 'heatmap',
+                    'source': 'pollutant_decay',
+                    'maxzoom': 12,
+                    layout: {
+                        visibility: 'none'
+                    },
+                    'paint': {
+                        'heatmap-weight': {
+                            'property': 'decay_PM10_1',
+                            'type': 'exponential',
+                            'stops': [
+                                [0.030291835876543865, 0],
+                                [3.332101946419825, 1]
+                            ]
+                        },
+                        'heatmap-color': [
+                            'interpolate',
+                            ['linear'],
+                            ['heatmap-density'],
+                            0, 'rgba(255,255,178,0)',
+                            0.2, 'rgb(254,204,92)',
+                            0.4, 'rgb(253,141,60)',
+                            0.6, 'rgb(240,59,32)',
+                            0.8, 'rgb(189,0,38)'
+                        ],
+                        'heatmap-radius': {
+                            'stops': [
+                                [11, 15],
+                                [15, 20]
+                            ]
+                        },
+                        'heatmap-opacity': {
+                            'default': 1,
+                            'stops': [
+                                [14, 1],
+                                [15, 0]
+                            ]
+                        }
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Pollutant Decay data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
     }
-
-   
-    
-
-    
 }
+
 
 
 function loadBrickKilnLayerPKhex() {
@@ -292,12 +341,13 @@ function loadBrickKilnLayerPKhex() {
                     }
                 });
 
-                // Add a click event to display a popup with brick kiln density details
-                map.on('click', 'brick_kilns_PK', (e) => {
-                    const properties = e.features[0].properties;
+                if (!aggregateToolEnabled) {
+                    // Add a click event to display a popup with brick kiln density details
+                    map.on('click', 'brick_kilns_PK', (e) => {
+                        const properties = e.features[0].properties;
 
-                    // Prepare the popup content displaying only the density/count
-                    const popupContent = `
+                        // Prepare the popup content displaying only the density/count
+                        const popupContent = `
                     <div class="popup-table">
                         <h3>Brick Kiln Density / 10 km</h3>
                         <table>
@@ -305,22 +355,24 @@ function loadBrickKilnLayerPKhex() {
                         </table>
                     </div>`;
 
-                    // Display the popup
-                    new mapboxgl.Popup()
-                        .setLngLat(e.lngLat)
-                        .setHTML(popupContent)
-                        .addTo(map);
-                });
+                        // Display the popup
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(popupContent)
+                            .addTo(map);
+                    });
 
-                // Change the cursor to pointer when hovering over the grid
-                map.on('mouseenter', 'brick_kilns_PK', () => {
-                    map.getCanvas().style.cursor = 'pointer';
-                });
+                    // Change the cursor to pointer when hovering over the grid
+                    map.on('mouseenter', 'brick_kilns_PK', () => {
+                        map.getCanvas().style.cursor = 'pointer';
+                    });
 
-                // Reset the cursor when leaving the grid
-                map.on('mouseleave', 'brick_kilns_PK', () => {
-                    map.getCanvas().style.cursor = '';
-                });
+                    // Reset the cursor when leaving the grid
+                    map.on('mouseleave', 'brick_kilns_PK', () => {
+                        map.getCanvas().style.cursor = '';
+                    });
+                }
+
             })
             .catch(error => {
                 console.error('Error loading Brick Kiln Hex data for Pakistan:', error);
@@ -386,10 +438,11 @@ function loadBrickKilnLayerINDhex() {
                     }
                 });
 
-                // Add popup click event
-                map.on('click', 'brick_kilns_IND', (e) => {
-                    const properties = e.features[0].properties;
-                    const popupContent = `
+                if (!aggregateToolEnabled) {
+                    // Add popup click event
+                    map.on('click', 'brick_kilns_IND', (e) => {
+                        const properties = e.features[0].properties;
+                        const popupContent = `
                     <div class="popup-table">
                         <h3>Brick Kiln Density / 10 km</h3>
                         <table>
@@ -397,23 +450,25 @@ function loadBrickKilnLayerINDhex() {
                         </table>
                     </div>`;
 
-                    new mapboxgl.Popup()
-                        .setLngLat(e.lngLat)
-                        .setHTML(popupContent)
-                        .addTo(map);
-                });
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(popupContent)
+                            .addTo(map);
+                    });
 
-                // Change cursor to pointer when hovering over the grid
-                map.on('mouseenter', 'brick_kilns_IND', () => {
-                    map.getCanvas().style.cursor = 'pointer';
-                });
+                    // Change cursor to pointer when hovering over the grid
+                    map.on('mouseenter', 'brick_kilns_IND', () => {
+                        map.getCanvas().style.cursor = 'pointer';
+                    });
 
-                map.on('mouseleave', 'brick_kilns_IND', () => {
-                    map.getCanvas().style.cursor = '';
-                });
+                    map.on('mouseleave', 'brick_kilns_IND', () => {
+                        map.getCanvas().style.cursor = '';
+                    });
+                }
+
 
                 hideLoadingSpinner();
-                
+
             }).catch(error => {
                 console.error('Error loading Brick Kiln Hex data for India:', error);
                 hideLoadingSpinner();
@@ -475,10 +530,11 @@ function loadBrickKilnLayerBANhex() {
                     }
                 });
 
-                // Add popup click event
-                map.on('click', 'brick_kilns_BAN', (e) => {
-                    const properties = e.features[0].properties;
-                    const popupContent = `
+                if (!aggregateToolEnabled) {
+                    // Add popup click event
+                    map.on('click', 'brick_kilns_BAN', (e) => {
+                        const properties = e.features[0].properties;
+                        const popupContent = `
                     <div class="popup-table">
                         <h3>Brick Kiln Density / 10 km</h3>
                         <table>
@@ -486,21 +542,24 @@ function loadBrickKilnLayerBANhex() {
                         </table>
                     </div>`;
 
-                    new mapboxgl.Popup()
-                        .setLngLat(e.lngLat)
-                        .setHTML(popupContent)
-                        .addTo(map);
-                });
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(popupContent)
+                            .addTo(map);
+                    });
 
-                map.on('mouseenter', 'brick_kilns_BAN', () => {
-                    map.getCanvas().style.cursor = 'pointer';
-                });
+                    map.on('mouseenter', 'brick_kilns_BAN', () => {
+                        map.getCanvas().style.cursor = 'pointer';
+                    });
 
-                map.on('mouseleave', 'brick_kilns_BAN', () => {
-                    map.getCanvas().style.cursor = '';
-                });
+                    map.on('mouseleave', 'brick_kilns_BAN', () => {
+                        map.getCanvas().style.cursor = '';
+                    });
+                }
+
+
                 hideLoadingSpinner();
-                
+
             }).catch(error => {
                 console.error('Error loading Brick Kiln Hex data for Bangladesh:', error);
                 hideLoadingSpinner();
@@ -536,14 +595,17 @@ function loadBrickKilnLayerPK() {
                     }
                 });
 
-                // Popup for BK_PK layer
-                map.on('click', 'BK_PK', (e) => {
-                    const properties = e.features[0].properties;
-                    new mapboxgl.Popup()
-                        .setLngLat(e.lngLat)
-                        .setHTML(`<div class="popup-table"><h3>${properties.brickid}</h3></div>`)
-                        .addTo(map);
-                });
+                if (!aggregateToolEnabled) {
+                    // Popup for BK_PK layer
+                    map.on('click', 'BK_PK', (e) => {
+                        const properties = e.features[0].properties;
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(`<div class="popup-table"><h3>${properties.brickid}</h3></div>`)
+                            .addTo(map);
+                    });
+                }
+
 
                 brickKilnPKLoaded = true;
                 logLayerVisibility(['BK_PK']); // Log the visibility
@@ -584,14 +646,17 @@ function loadBrickKilnLayerIND() {
                     }
                 });
 
-                // Popup for BK_IND layer
-                map.on('click', 'BK_IND', (e) => {
-                    const properties = e.features[0].properties;
-                    new mapboxgl.Popup()
-                        .setLngLat(e.lngLat)
-                        .setHTML(`<div class="popup-table"><h3>${properties.type}</h3></div>`)
-                        .addTo(map);
-                });
+                if (!aggregateToolEnabled) {
+                    // Popup for BK_IND layer
+                    map.on('click', 'BK_IND', (e) => {
+                        const properties = e.features[0].properties;
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(`<div class="popup-table"><h3>${properties.type}</h3></div>`)
+                            .addTo(map);
+                    });
+                }
+
 
                 brickKilnINDLoaded = true;
                 logLayerVisibility(['BK_IND']); // Log the visibility
@@ -632,14 +697,17 @@ function loadBrickKilnLayerBAN() {
                     }
                 });
 
-                // Popup for BK_BAN layer
-                map.on('click', 'BK_BAN', (e) => {
-                    const properties = e.features[0].properties;
-                    new mapboxgl.Popup()
-                        .setLngLat(e.lngLat)
-                        .setHTML(`<div class="popup-table"><h3>${properties.type}</h3></div>`)
-                        .addTo(map);
-                });
+                if (!aggregateToolEnabled) {
+                    // Popup for BK_BAN layer
+                    map.on('click', 'BK_BAN', (e) => {
+                        const properties = e.features[0].properties;
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(`<div class="popup-table"><h3>${properties.type}</h3></div>`)
+                            .addTo(map);
+                    });
+                }
+
 
                 brickKilnBANLoaded = true;
                 logLayerVisibility(['BK_BAN']); // Log the visibility
@@ -704,7 +772,7 @@ for (const input of inputs) {
         map.once('style.load', () => {
             addDataLayers(); // Re-add the custom layers after the new style is loaded
             restoreLayerVisibility(); // Restore visibility settings
-            
+
             // Re-add Brick Kiln layers only if their respective checkboxes are checked
             if (document.getElementById('toggleBKPK').checked) loadBrickKilnLayerPK();
             if (document.getElementById('toggleBKIND').checked) loadBrickKilnLayerIND();
@@ -716,8 +784,8 @@ for (const input of inputs) {
             if (document.getElementById('toggleHexGridBAN').checked) loadBrickKilnLayerBANhex();
 
             // Log the visibility status of all layers after layers are fully loaded
-            logLayerVisibility(['coal', 'BK_PK', 'BK_IND', 'BK_BAN','brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'population', 'fossil', 'GP']);
-            
+            logLayerVisibility(['coal', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'population', 'fossil', 'GP']);
+
             hideLoadingSpinner(); // Hide the loading spinner after everything is done
         });
 
@@ -737,7 +805,7 @@ let layerVisibility = {};
 
 
 function saveLayerVisibility() {
-    
+
     layerIds.forEach(layerId => {
         if (map.getLayer(layerId)) {
             const visibility = map.getLayoutProperty(layerId, 'visibility');
@@ -765,7 +833,7 @@ const zoomLevel = 4;  // Common zoom level for both regions
 // Add event listener for button click
 document.getElementById('areaChange').addEventListener('click', () => {
     const currentCenter = map.getCenter();
-    
+
     // Check if the map is currently centered around Africa or Asia
     if (Math.abs(currentCenter.lng - africaCenter[0]) < 5 && Math.abs(currentCenter.lat - africaCenter[1]) < 5) {
         // If the map is in Africa, shift to Asia
@@ -791,6 +859,248 @@ document.getElementById('areaChange').addEventListener('click', () => {
         document.getElementById('areaChange').setAttribute('title', 'Move to Asia');
     }
 });
+
+// -----------------------------------------------------------AGGREGATE TOOL-----------------------------------------------------------
+
+// Toggle the Aggregate Tool
+let aggregateToolEnabled = false;
+const aggregateButton = document.getElementById('aggregateTool');
+
+// Event listener to enable/disable the Aggregate Tool
+aggregateButton.addEventListener('click', () => {
+    aggregateToolEnabled = !aggregateToolEnabled;
+
+    if (aggregateToolEnabled) {
+        aggregateButton.style.backgroundColor = '#d3d3d3'; // Change color to indicate active state
+        map.getCanvas().style.cursor = 'crosshair'; // Change cursor to crosshair
+        closePopups(); // Close existing popups for other layers
+        console.log("Aggregate Tool enabled");
+    } else {
+        aggregateButton.style.backgroundColor = 'white'; // Reset color
+        map.getCanvas().style.cursor = ''; // Reset cursor
+        console.log("Aggregate Tool disabled");
+    }
+});
+
+// Close all open popups
+function closePopups() {
+    const popups = document.getElementsByClassName('mapboxgl-popup');
+    while (popups.length) {
+        popups[0].remove();
+    }
+}
+// Aggregate Tool logic - directly using coal, brick kilns, fossil fuel, and GPW layers
+map.on('click', (e) => {
+    if (aggregateToolEnabled) {
+        const clickCoordinates = [e.lngLat.lng, e.lngLat.lat];
+        const bufferRadius = 100; // 100 km buffer
+
+        // Create a 100 km buffer around the clicked point
+        const buffer = turf.buffer(turf.point(clickCoordinates), bufferRadius, { units: 'kilometers' });
+
+        let popupContent = `
+            <div class="popup-table">
+                <h3>Aggregated Data (100 km buffer)</h3>
+        `;
+
+        // 1. Aggregate brick kilns (all regions: Pakistan, India, Bangladesh) within the buffer
+        const brickKilnsSources = ['bk_pk', 'bk_ind', 'bk_ban'];
+        let totalBrickKilns = 0;
+
+        if (map.getLayer('BK_PK') || map.getLayer('BK_IND') || map.getLayer('BK_BAN')) {
+            brickKilnsSources.forEach(sourceId => {
+                const source = map.getSource(sourceId) ? map.getSource(sourceId)._data : null;
+                if (source) {
+                    const brickKilns = turf.pointsWithinPolygon(source, buffer);
+                    totalBrickKilns += brickKilns.features.length;
+                }
+            });
+
+            // if (totalBrickKilns > 0) {
+            //     popupContent += `<p>Brick Kilns: ${totalBrickKilns}</p>`;
+            // }
+        }
+
+        // 2. Aggregate coal plants within the buffer
+        let totalCoalEmissions = {
+            nox: 0,
+            so2: 0,
+            pm10: 0,
+            pm25: 0
+        };
+        let totalCoalPlants = 0;
+
+        if (map.getLayer('coal')) {
+            const coalVisibility = map.getLayoutProperty('coal', 'visibility');
+            if (coalVisibility === 'visible') {
+                const coalLayerFeatures = map.queryRenderedFeatures({ layers: ['coal'] });
+
+                coalLayerFeatures.forEach((feature) => {
+                    const coalPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon(coalPoint, buffer)) {
+                        totalCoalEmissions.nox += feature.properties.nx_tn_y || 0;
+                        totalCoalEmissions.so2 += feature.properties.sx_tn_y || 0;
+                        totalCoalEmissions.pm10 += feature.properties.p10_tn_ || 0;
+                        totalCoalEmissions.pm25 += feature.properties.p25_tn_ || 0;
+                        totalCoalPlants++; // Count coal plants within the buffer
+                    }
+                });
+
+                // if (totalCoalEmissions.nox || totalCoalEmissions.so2 || totalCoalEmissions.pm10 || totalCoalEmissions.pm25) {
+                //     popupContent += `
+                //         <p>NO₂ Emissions: ${totalCoalEmissions.nox.toFixed(2)} tons/year</p>
+                //         <p>SO₂ Emissions: ${totalCoalEmissions.so2.toFixed(2)} tons/year</p>
+                //         <p>PM₁₀ Emissions: ${totalCoalEmissions.pm10.toFixed(2)} tons/year</p>
+                //         <p>PM₂.₅ Emissions: ${totalCoalEmissions.pm25.toFixed(2)} tons/year</p>
+                //     `;
+                // }
+            }
+        }
+
+        // 3. Aggregate fossil fuel data within the buffer
+        let fossilFuelCount = 0;
+        if (map.getLayer('fossil')) {
+            const fossilFuelVisibility = map.getLayoutProperty('fossil', 'visibility');
+            if (fossilFuelVisibility === 'visible') {
+                const fossilFuelLayerFeatures = map.queryRenderedFeatures({ layers: ['fossil'] });
+
+                fossilFuelLayerFeatures.forEach((feature) => {
+                    const fossilFuelPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon(fossilFuelPoint, buffer)) {
+                        fossilFuelCount += 1;
+                    }
+                });
+
+                // if (fossilFuelCount > 0) {
+                //     popupContent += `<p>Fossil Fuel Points: ${fossilFuelCount}</p>`;
+                // }
+            }
+        }
+
+        // 4. Aggregate GPW data (population or area) within the buffer
+        let totalPopulation = 0;
+        let totalGPWPoints = 0;
+        if (map.getLayer('GP')) {
+            const gpwVisibility = map.getLayoutProperty('GP', 'visibility');
+            if (gpwVisibility === 'visible') {
+                const gpwLayerFeatures = map.queryRenderedFeatures({ layers: ['GP'] });
+
+                gpwLayerFeatures.forEach((feature) => {
+                    const gpwPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon(gpwPoint, buffer)) {
+                        totalPopulation += feature.properties.area_new || 0; // Sum the area values (replace with population if available)
+                        totalGPWPoints++; // Count GPW points
+                    }
+                });
+
+                // if (totalPopulation > 0) {
+                //     popupContent += `<p>Total Population (GPW): ${totalPopulation}</p>`;
+                // }
+            }
+        }
+
+        // End the popup content and add canvas for the charts
+        popupContent += `
+            <canvas id="emissionsChart" width="250" height="250"></canvas>
+            <canvas id="countsChart" width="250" height="250"></canvas>
+            </div>
+        `;
+
+        // Display the popup with the canvas for the charts
+        new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(popupContent)
+            .addTo(map);
+
+        // Use Chart.js to create a pie chart after the popup is added to the DOM
+        setTimeout(() => {
+            // Emissions Chart
+            const emissionsCtx = document.getElementById('emissionsChart').getContext('2d');
+            new Chart(emissionsCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['NO₂ (Coal)', 'SO₂ (Coal)', 'PM₁₀ (Coal)', 'PM₂.₅ (Coal)'],
+                    datasets: [{
+                        label: 'Emissions (tons/year)',
+                        data: [
+                            totalCoalEmissions.nox.toFixed(2),
+                            totalCoalEmissions.so2.toFixed(2),
+                            totalCoalEmissions.pm10.toFixed(2),
+                            totalCoalEmissions.pm25.toFixed(2)
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)', // NO₂ color
+                            'rgba(54, 162, 235, 0.6)', // SO₂ color
+                            'rgba(255, 206, 86, 0.6)', // PM₁₀ color
+                            'rgba(75, 192, 192, 0.6)'  // PM₂.₅ color
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+
+            // Counts Chart for brick kilns, coal plants, GPW points, fossil fuel points
+            const countsCtx = document.getElementById('countsChart').getContext('2d');
+            new Chart(countsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Brick Kilns', 'Coal Plants', 'GPW Points', 'Fossil Fuel Points'],
+                    datasets: [{
+                        label: 'Counts',
+                        data: [totalBrickKilns, totalCoalPlants, totalGPWPoints, fossilFuelCount],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.6)',  // Brick Kilns
+                            'rgba(54, 162, 235, 0.6)',  // Coal Plants
+                            'rgba(153, 102, 255, 0.6)', // GPW Points
+                            'rgba(255, 159, 64, 0.6)'   // Fossil Fuel Points
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        }, 100);  // Small timeout to ensure the charts are rendered after the popup
+
+    }
+});
+
+
+
+
+
+
 
 
 // --------------------------------------------------------GEOCODER INITIALIZATION----------------------------------------------------
@@ -884,7 +1194,7 @@ document.getElementById('toggleBrickKilns').addEventListener('change', (e) => {
             map.setLayoutProperty('BK_BAN', 'visibility', 'none');
         }
     }
-    
+
     // Set the child checkboxes
     document.getElementById('toggleBKPK').checked = e.target.checked;
     document.getElementById('toggleBKIND').checked = e.target.checked;
@@ -1089,35 +1399,35 @@ frequencySelect.addEventListener('change', () => {
 
 // Hover information display with chart
 map.on('mousemove', (event) => {
-    if(map.getLayer('coal')){
+    if (map.getLayer('coal')) {
         const states = map.queryRenderedFeatures(event.point, { layers: ['coal'] });
 
-    if (states.length) {
-        const properties = states[0].properties;
-        const pm10 = properties.p10_tn_;
-        const pm25 = properties.p25_tn_;
-        const so2 = properties.sx_tn_y;
-        const no2 = properties.nx_tn_y;
-        const plantName = properties.plnt_nm;
-        const country = properties.country;
+        if (states.length) {
+            const properties = states[0].properties;
+            const pm10 = properties.p10_tn_;
+            const pm25 = properties.p25_tn_;
+            const so2 = properties.sx_tn_y;
+            const no2 = properties.nx_tn_y;
+            const plantName = properties.plnt_nm;
+            const country = properties.country;
 
-        document.getElementById('plantInfo').innerHTML = `<h3>${plantName}, ${country}</h3>`;
+            document.getElementById('plantInfo').innerHTML = `<h3>${plantName}, ${country}</h3>`;
 
-        // Update global variables with the latest pollutant data
-        lastPm10 = pm10;
-        lastPm25 = pm25;
-        lastSo2 = so2;
-        lastNo2 = no2;
+            // Update global variables with the latest pollutant data
+            lastPm10 = pm10;
+            lastPm25 = pm25;
+            lastSo2 = so2;
+            lastNo2 = no2;
 
-        // Update the charts with the latest data
-        updatePollutantCharts(pm10, pm25, so2, no2);
+            // Update the charts with the latest data
+            updatePollutantCharts(pm10, pm25, so2, no2);
 
-        document.getElementById('hoverText').style.display = 'none';
-    } else {
-        document.getElementById('hoverText').style.display = 'block';
+            document.getElementById('hoverText').style.display = 'none';
+        } else {
+            document.getElementById('hoverText').style.display = 'block';
+        }
     }
-    }
-    
+
 });
 
 // Initialize the charts with default values when the page loads
