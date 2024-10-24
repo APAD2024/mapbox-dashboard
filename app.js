@@ -23,7 +23,12 @@ const legend = document.getElementById('legend');
 const filterButton = document.getElementById('filtersearch');
 const filterPanel = document.getElementById('filterPanel');
 
-
+let brickKilnPKLoaded = false;
+let brickKilnINDLoaded = false;
+let brickKilnBANLoaded = false;
+const layerIds = [
+    'coal', 'population', 'fossil', 'GP', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN'
+];
 
 // -------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
 
@@ -98,6 +103,9 @@ function addDataLayers() {
                 'circle-stroke-width': 2,
                 'circle-color': '#616161',  // Add # for hex color
                 'circle-stroke-color': 'white'
+            },
+            layout: {
+                visibility: 'visible'
             }
         });
 
@@ -329,7 +337,7 @@ function loadBrickKilnLayerINDhex() {
     if (!map.getSource('brick_kilns_IND_hex')) {
         showLoadingSpinner();
 
-        fetch('https://gist.githubusercontent.com/Mseher/f6ce0d67ab61afb40a13c085a15a4138/raw/067eee317090a50358a6966a05e43ca490914e97/brick_kilns_IND.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/88e68ac3a33a756195fbde4ec207ef25/raw/3412f65c4ae4430c98e2363b8cd324fbc0c2a0de/brick_kilns_IND.geojson')
             .then(response => response.json())
             .then(data => {
                 const bbox = turf.bbox(data);
@@ -502,7 +510,6 @@ function loadBrickKilnLayerBANhex() {
     }
 }
 
-
 // Lazy load Pakistan Brick Kilns layer
 function loadBrickKilnLayerPK() {
     if (!map.getSource('bk_pk')) {
@@ -538,6 +545,8 @@ function loadBrickKilnLayerPK() {
                         .addTo(map);
                 });
 
+                brickKilnPKLoaded = true;
+                logLayerVisibility(['BK_PK']); // Log the visibility
                 hideLoadingSpinner(); // Hide the spinner when the layer is loaded
             })
             .catch(error => {
@@ -553,7 +562,7 @@ function loadBrickKilnLayerPK() {
 function loadBrickKilnLayerIND() {
     if (!map.getSource('bk_ind')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/f6ce0d67ab61afb40a13c085a15a4138/raw/067eee317090a50358a6966a05e43ca490914e97/brick_kilns_IND.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/88e68ac3a33a756195fbde4ec207ef25/raw/3412f65c4ae4430c98e2363b8cd324fbc0c2a0de/brick_kilns_IND.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('bk_ind', {
@@ -584,6 +593,8 @@ function loadBrickKilnLayerIND() {
                         .addTo(map);
                 });
 
+                brickKilnINDLoaded = true;
+                logLayerVisibility(['BK_IND']); // Log the visibility
                 hideLoadingSpinner(); // Hide the spinner when the layer is loaded
             })
             .catch(error => {
@@ -630,6 +641,8 @@ function loadBrickKilnLayerBAN() {
                         .addTo(map);
                 });
 
+                brickKilnBANLoaded = true;
+                logLayerVisibility(['BK_BAN']); // Log the visibility
                 hideLoadingSpinner(); // Hide the spinner when the layer is loaded
             })
             .catch(error => {
@@ -640,6 +653,7 @@ function loadBrickKilnLayerBAN() {
         map.setLayoutProperty('BK_BAN', 'visibility', 'visible');
     }
 }
+
 // Function to show the loading spinner
 function showLoadingSpinner() {
     document.getElementById('loadingSpinner').style.display = 'block';
@@ -650,10 +664,17 @@ function hideLoadingSpinner() {
     document.getElementById('loadingSpinner').style.display = 'none';
 }
 
-
-
-// Load data layers when map is initialized
-map.on('load', addDataLayers);
+// Function to log the visibility status of specified layers
+function logLayerVisibility(layers) {
+    layers.forEach(layerId => {
+        if (map.getLayer(layerId)) {
+            const visibility = map.getLayoutProperty(layerId, 'visibility');
+            console.log(`Layer: ${layerId}, Visibility: ${visibility}`);
+        } else {
+            console.log(`Layer: ${layerId} does not exist or hasn't been loaded yet.`);
+        }
+    });
+}
 
 // -----------------------------------------------------------BASEMAP MENU-----------------------------------------------------------
 
@@ -661,11 +682,11 @@ map.on('load', addDataLayers);
 menuButton.onclick = () => {
     menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
 };
-
 // Save layer visibility before changing base map style and restore after style load
 const layerList = document.getElementById('menu');
 const inputs = layerList.getElementsByTagName('input');
 
+// Handle basemap switching and reloading custom layers based on toggle state
 for (const input of inputs) {
     input.onclick = (layer) => {
         // Save the current visibility of layers
@@ -675,17 +696,29 @@ for (const input of inputs) {
         showLoadingSpinner();
 
         const style = `mapbox://styles/mapbox/${layer.target.value}`;
-        
+
         // Change the basemap style and force a full reload
         map.setStyle(style);
 
-        // When the new style is fully loaded, re-add data layers and restore visibility
+        // Use 'once' to ensure the new style is fully loaded before proceeding
         map.once('style.load', () => {
-            addDataLayers(); // Re-add the custom layers after new style is loaded
+            addDataLayers(); // Re-add the custom layers after the new style is loaded
             restoreLayerVisibility(); // Restore visibility settings
+            
+            // Re-add Brick Kiln layers only if their respective checkboxes are checked
+            if (document.getElementById('toggleBKPK').checked) loadBrickKilnLayerPK();
+            if (document.getElementById('toggleBKIND').checked) loadBrickKilnLayerIND();
+            if (document.getElementById('toggleBKBAN').checked) loadBrickKilnLayerBAN();
 
-            // Hide the loading spinner once all layers are added back
-            hideLoadingSpinner();
+            // Load hexagonal Brick Kiln layers based on their toggle state
+            if (document.getElementById('toggleHexGridPAK').checked) loadBrickKilnLayerPKhex();
+            if (document.getElementById('toggleHexGridIND').checked) loadBrickKilnLayerINDhex();
+            if (document.getElementById('toggleHexGridBAN').checked) loadBrickKilnLayerBANhex();
+
+            // Log the visibility status of all layers after layers are fully loaded
+            logLayerVisibility(['coal', 'BK_PK', 'BK_IND', 'BK_BAN','brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'population', 'fossil', 'GP']);
+            
+            hideLoadingSpinner(); // Hide the loading spinner after everything is done
         });
 
         // Hide the menu after style switch
@@ -694,19 +727,17 @@ for (const input of inputs) {
 }
 
 
-
-// Load data layers when map is initialized
+// Load data layers when the map is initialized
 map.on('load', addDataLayers);
+
 
 // -----------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
 
 let layerVisibility = {};
 
-function saveLayerVisibility() {
-    const layerIds = [
-        'coal', 'population', 'fossil', 'GP', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN'
-    ];
 
+function saveLayerVisibility() {
+    
     layerIds.forEach(layerId => {
         if (map.getLayer(layerId)) {
             const visibility = map.getLayoutProperty(layerId, 'visibility');
@@ -1143,6 +1174,9 @@ function coalPollutantFilter(pollutant, country = '') {
                 'circle-stroke-width': 2,
                 'circle-color': '#616161', // Default gray color
                 'circle-stroke-color': 'white'
+            },
+            layout: {
+                visibility: 'visible'
             }
         });
     } else {
@@ -1248,6 +1282,9 @@ function coalPollutantFilter(pollutant, country = '') {
                     ['get', pollutant],
                     ...radiusStops.flat()
                 ]
+            },
+            layout: {
+                visibility: 'visible'
             }
         });
         updatePollutantLegend(legendTitle, colorStops, radiusStops);
