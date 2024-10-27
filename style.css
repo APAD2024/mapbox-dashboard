@@ -484,7 +484,7 @@ html {
     position: absolute;
     top: 70px;
     left: 50px;
-    background: white;
+    background: linear-gradient(to bottom right, #f4f4f9, #e0e4e9);
     /* Soft white background */
     color: #2e2e2e;
     /* Green text */

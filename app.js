@@ -81,12 +81,14 @@ function addDataLayers() {
                 if (!aggregateToolEnabled) {
                     // Popup for fossil fuel layer
                     map.on('click', 'fossil', (e) => {
-                        const properties = e.features[0].properties;
-                        const cleanedOriginalI = properties.original_i.replace(/{|}/g, '');
-                        new mapboxgl.Popup()
-                            .setLngLat(e.lngLat)
-                            .setHTML(`<div class="popup-table"><h3>${cleanedOriginalI}</h3></div>`)
-                            .addTo(map);
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            const cleanedOriginalI = properties.original_i.replace(/{|}/g, '');
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`<div class="popup-table"><h3>${cleanedOriginalI}</h3></div>`)
+                                .addTo(map);
+                        }
                     });
                 }
                 hideLoadingSpinner(); // Hide the spinner after loading
@@ -125,25 +127,28 @@ function addDataLayers() {
                 if (!aggregateToolEnabled) {
                     // Popup for the coal layer
                     map.on('click', 'coal', (e) => {
-                        const properties = e.features[0].properties;
-                        const popupContent = `
-                        <div class="popup-table">
-                            <h3>${properties.plnt_nm}, ${properties.country}</h3>
-                            <table>
-                                <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
-                                <tr><th>PM<sub>10</sub></th><td>${properties.p10_tn_}</td></tr>
-                                <tr><th>PM<sub>2.5</sub></th><td>${properties.p25_tn_}</td></tr>
-                                <tr><th>NO<sub>2</sub></th><td>${properties.nx_tn_y}</td></tr>
-                                <tr><th>SO<sub>2</sub></th><td>${properties.sx_tn_y}</td></tr>
-                            </table>
-                        </div>
-                        `;
-                        new mapboxgl.Popup()
-                            .setLngLat(e.lngLat)
-                            .setHTML(popupContent)
-                            .addTo(map);
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            const popupContent = `
+                            <div class="popup-table">
+                                <h3>${properties.plnt_nm}, ${properties.country}</h3>
+                                <table>
+                                    <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties.p10_tn_}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties.p25_tn_}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties.nx_tn_y}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties.sx_tn_y}</td></tr>
+                                </table>
+                            </div>
+                            `;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(popupContent)
+                                .addTo(map);
+                        }
                     });
                 }
+
                 hideLoadingSpinner(); // Hide the spinner after loading
             })
             .catch(error => {
@@ -177,14 +182,18 @@ function addDataLayers() {
                     }
                 });
 
+
+
                 if (!aggregateToolEnabled) {
-                    // Popup for GPW layer
+                    // Popup for the coal layer
                     map.on('click', 'GP', (e) => {
-                        const properties = e.features[0].properties;
-                        new mapboxgl.Popup()
-                            .setLngLat(e.lngLat)
-                            .setHTML(`<div class="popup-table"><h3>${properties.name}</h3></div>`)
-                            .addTo(map);
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`<div class="popup-table"><h3>${properties.name}</h3></div>`)
+                                .addTo(map);
+                        }
                     });
                 }
                 hideLoadingSpinner(); // Hide the spinner after loading
@@ -344,10 +353,11 @@ function loadBrickKilnLayerPKhex() {
                 if (!aggregateToolEnabled) {
                     // Add a click event to display a popup with brick kiln density details
                     map.on('click', 'brick_kilns_PK', (e) => {
-                        const properties = e.features[0].properties;
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
 
-                        // Prepare the popup content displaying only the density/count
-                        const popupContent = `
+                            // Prepare the popup content displaying only the density/count
+                            const popupContent = `
                     <div class="popup-table">
                         <h3>Brick Kiln Density / 10 km</h3>
                         <table>
@@ -355,11 +365,13 @@ function loadBrickKilnLayerPKhex() {
                         </table>
                     </div>`;
 
-                        // Display the popup
-                        new mapboxgl.Popup()
-                            .setLngLat(e.lngLat)
-                            .setHTML(popupContent)
-                            .addTo(map);
+                            // Display the popup
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(popupContent)
+                                .addTo(map);
+                        }
+
                     });
 
                     // Change the cursor to pointer when hovering over the grid
@@ -438,22 +450,25 @@ function loadBrickKilnLayerINDhex() {
                     }
                 });
 
-                if (!aggregateToolEnabled) {
+                if (aggregateToolEnabled == false) {
                     // Add popup click event
                     map.on('click', 'brick_kilns_IND', (e) => {
-                        const properties = e.features[0].properties;
-                        const popupContent = `
-                    <div class="popup-table">
-                        <h3>Brick Kiln Density / 10 km</h3>
-                        <table>
-                            <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
-                        </table>
-                    </div>`;
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            const popupContent = `
+                            <div class="popup-table">
+                                <h3>Brick Kiln Density / 10 km</h3>
+                                <table>
+                                    <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
+                                </table>
+                            </div>`;
 
-                        new mapboxgl.Popup()
-                            .setLngLat(e.lngLat)
-                            .setHTML(popupContent)
-                            .addTo(map);
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(popupContent)
+                                .addTo(map);
+                        }
+
                     });
 
                     // Change cursor to pointer when hovering over the grid
@@ -467,7 +482,6 @@ function loadBrickKilnLayerINDhex() {
                 }
 
 
-                hideLoadingSpinner();
 
             }).catch(error => {
                 console.error('Error loading Brick Kiln Hex data for India:', error);
@@ -533,19 +547,22 @@ function loadBrickKilnLayerBANhex() {
                 if (!aggregateToolEnabled) {
                     // Add popup click event
                     map.on('click', 'brick_kilns_BAN', (e) => {
-                        const properties = e.features[0].properties;
-                        const popupContent = `
-                    <div class="popup-table">
-                        <h3>Brick Kiln Density / 10 km</h3>
-                        <table>
-                            <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
-                        </table>
-                    </div>`;
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            const popupContent = `
+                        <div class="popup-table">
+                            <h3>Brick Kiln Density / 10 km</h3>
+                            <table>
+                                <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
+                            </table>
+                        </div>`;
 
-                        new mapboxgl.Popup()
-                            .setLngLat(e.lngLat)
-                            .setHTML(popupContent)
-                            .addTo(map);
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(popupContent)
+                                .addTo(map);
+                        }
+
                     });
 
                     map.on('mouseenter', 'brick_kilns_BAN', () => {
@@ -558,7 +575,6 @@ function loadBrickKilnLayerBANhex() {
                 }
 
 
-                hideLoadingSpinner();
 
             }).catch(error => {
                 console.error('Error loading Brick Kiln Hex data for Bangladesh:', error);
@@ -588,7 +604,8 @@ function loadBrickKilnLayerPK() {
                         'circle-radius': 2,
                         'circle-stroke-width': 0,
                         'circle-color': 'green',
-                        'circle-stroke-color': 'white'
+                        'circle-stroke-color': 'white',
+                        'fill-opacity': 0.5
                     },
                     layout: {
                         visibility: 'visible'
@@ -598,11 +615,14 @@ function loadBrickKilnLayerPK() {
                 if (!aggregateToolEnabled) {
                     // Popup for BK_PK layer
                     map.on('click', 'BK_PK', (e) => {
-                        const properties = e.features[0].properties;
-                        new mapboxgl.Popup()
-                            .setLngLat(e.lngLat)
-                            .setHTML(`<div class="popup-table"><h3>${properties.brickid}</h3></div>`)
-                            .addTo(map);
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`<div class="popup-table"><h3>${properties.brickid}</h3></div>`)
+                                .addTo(map);
+                        }
+
                     });
                 }
 
@@ -639,7 +659,8 @@ function loadBrickKilnLayerIND() {
                         'circle-radius': 2,
                         'circle-stroke-width': 0,
                         'circle-color': 'green',
-                        'circle-stroke-color': 'white'
+                        'circle-stroke-color': 'white',
+                        'fill-opacity': 0.5
                     },
                     layout: {
                         visibility: 'visible'
@@ -649,11 +670,14 @@ function loadBrickKilnLayerIND() {
                 if (!aggregateToolEnabled) {
                     // Popup for BK_IND layer
                     map.on('click', 'BK_IND', (e) => {
-                        const properties = e.features[0].properties;
-                        new mapboxgl.Popup()
-                            .setLngLat(e.lngLat)
-                            .setHTML(`<div class="popup-table"><h3>${properties.type}</h3></div>`)
-                            .addTo(map);
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`<div class="popup-table"><h3>${properties.type}</h3></div>`)
+                                .addTo(map);
+                        }
+
                     });
                 }
 
@@ -690,7 +714,8 @@ function loadBrickKilnLayerBAN() {
                         'circle-radius': 2,
                         'circle-stroke-width': 0,
                         'circle-color': 'green',
-                        'circle-stroke-color': 'white'
+                        'circle-stroke-color': 'white',
+                        'fill-opacity': 0.5
                     },
                     layout: {
                         visibility: 'visible'
@@ -700,11 +725,14 @@ function loadBrickKilnLayerBAN() {
                 if (!aggregateToolEnabled) {
                     // Popup for BK_BAN layer
                     map.on('click', 'BK_BAN', (e) => {
-                        const properties = e.features[0].properties;
+                        if (!aggregateToolEnabled){
+                            const properties = e.features[0].properties;
                         new mapboxgl.Popup()
                             .setLngLat(e.lngLat)
                             .setHTML(`<div class="popup-table"><h3>${properties.type}</h3></div>`)
                             .addTo(map);
+                        }
+                        
                     });
                 }
 
@@ -885,10 +913,11 @@ aggregateButton.addEventListener('click', () => {
 // Close all open popups
 function closePopups() {
     const popups = document.getElementsByClassName('mapboxgl-popup');
-    while (popups.length) {
-        popups[0].remove();
+    for (let i = 0; i < popups.length; i++) {
+        popups[i].remove();
     }
 }
+
 // Aggregate Tool logic - directly using coal, brick kilns, fossil fuel, and GPW layers
 map.on('click', (e) => {
     if (aggregateToolEnabled) {

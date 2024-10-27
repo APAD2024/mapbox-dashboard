@@ -94,7 +94,7 @@
     <div id="aggregateTool" title="Aggregate Data">
         <i class="fas fa-calculator"></i>
     </div>
-    
+
     <!----------------------------------------------------------------- Map ----------------------------------------------------------------------->
 
     <div id="map"></div>
@@ -106,7 +106,7 @@
 
 
         <!-- Coal IGP -->
-        <div class="legend-section">
+        <div class="legend-section" id="legend-coal" draggable="true">
             <div>
                 <input id="toggleCoal" type="checkbox" name="coal" checked>
                 <div class="legend-key" style="background-color: #616161;"></div>
@@ -115,41 +115,43 @@
         </div>
 
         <!-- Fossil Fuel and GPW  -->
-        <div class="legend-section">
+        <div class="legend-section" id="legend-fossil" draggable="true">
             <input id="toggleFossil" type="checkbox" name="fossil" unchecked>
             <div class="legend-key" style="background-color: blue;"></div>
             <span>Fossil Fuel</span>
         </div>
-        <div class="legend-section">
+        <div class="legend-section" id="legend-gpw" draggable="true">
             <input id="toggleGPW" type="checkbox" name="GP" unchecked>
             <div class="legend-key" style="background-color:black;"></div>
             <span>GPW</span>
         </div>
-         <!-- Brick Kilns Legend (Main Checkbox) -->
-         <div class="legend-section">
+        <!-- Brick Kilns Legend (Main Checkbox) -->
+        <div class="legend-section" id="legend-brickKiln" draggable="true">
             <input id="toggleBrickKilns" type="checkbox" name="brick_kilns" unchecked>
             <div class="legend-key" style="background-color:green;"></div>
             <span>Brick Kilns</span>
+
+            <div id="brickKilnCountries" style="display: none; padding-left: 20px;">
+                <div class="legend-section">
+                    <input id="toggleBKPK" type="checkbox" name="BKPK" unchecked>
+                    <span>Pakistan</span>
+                </div>
+                <div class="legend-section">
+                    <input id="toggleBKIND" type="checkbox" name="BKIND" unchecked>
+                    <span>India</span>
+                </div>
+                <div class="legend-section">
+                    <input id="toggleBKBAN" type="checkbox" name="BKBAN" unchecked>
+                    <span>Bangladesh</span>
+                </div>
+            </div>
         </div>
 
-        <div id="brickKilnCountries" style="display: none; padding-left: 20px;">
-            <div class="legend-section">
-                <input id="toggleBKPK" type="checkbox" name="BKPK" unchecked>
-                <span>Pakistan</span>
-            </div>
-            <div class="legend-section">
-                <input id="toggleBKIND" type="checkbox" name="BKIND" unchecked>
-                <span>India</span>
-            </div>
-            <div class="legend-section">
-                <input id="toggleBKBAN" type="checkbox" name="BKBAN" unchecked>
-                <span>Bangladesh</span>
-            </div>
-        </div>
+
 
 
         <!-- Population Grid -->
-        <div class="legend-section">
+        <div class="legend-section" id="legend-population" draggable="true">
             <div>
                 <input id="togglepop" type="checkbox" name="population" unchecked>
                 <span>Population Grid</span> <br />
@@ -167,7 +169,7 @@
         </div>
 
         <!-- Pollutant Decay -->
-        <div class="legend-section">
+        <div class="legend-section" id="legend-populationDecay" draggable="true">
             <input id="toggledecay" type="checkbox" name="population" unchecked>
             <span>Pollutant Decay</span><br>
             <div class="rowdecay colorsdecay"></div>
@@ -226,7 +228,7 @@
 
 
         <!-- Brick Kilns Legend (Density Checkbox) -->
-        <div class="legend-section">
+        <div class="legend-section" id="legend-brickKilnGrid" draggable="true">
             <input id="toggleBrickKilnsGrid" type="checkbox" name="brick_kilns" unchecked>
             <span>Brick Kiln Density IGP</span><br>
             <div class="row kiln-colors"></div>
@@ -237,25 +239,27 @@
                 <div class="label"></div>
                 <div class="label">50+</div>
             </div>
+
+            <!-- Child Checkboxes for individual countries (initially hidden) -->
+            <div id="BrickKilnsGrid" style="display: none; padding-left: 20px;">
+                <div class="legend-section">
+                    <input id="toggleHexGridPAK" type="checkbox" name="hex_grid" unchecked>
+                    <span>Pakistan</span>
+                </div>
+                <div class="legend-section">
+                    <input id="toggleHexGridIND" type="checkbox" name="bk_ind" unchecked>
+                    <span>India</span>
+                </div>
+                <div class="legend-section">
+                    <input id="toggleHexGridBAN" type="checkbox" name="bk_ban" unchecked>
+                    <span>Bangladesh</span>
+                </div>
+            </div>
         </div>
 
-        <!-- Child Checkboxes for individual countries (initially hidden) -->
-        <div id="BrickKilnsGrid" style="display: none; padding-left: 20px;">
-            <div class="legend-section">
-                <input id="toggleHexGridPAK" type="checkbox" name="hex_grid" unchecked>
-                <span>Pakistan</span>
-            </div>
-            <div class="legend-section">
-                <input id="toggleHexGridIND" type="checkbox" name="bk_ind" unchecked>
-                <span>India</span>
-            </div>
-            <div class="legend-section">
-                <input id="toggleHexGridBAN" type="checkbox" name="bk_ban" unchecked>
-                <span>Bangladesh</span>
-            </div>
-        </div>
 
-       
+
+
 
 
     </div>
