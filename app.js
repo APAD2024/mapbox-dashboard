@@ -850,6 +850,91 @@ function restoreLayerVisibility() {
     });
 }
 
+// ----------------------------------------------------------------DRAGGABLE LEGEND-----------------------------------------------------------
+
+// Define a mapping for legend section IDs to actual layer IDs in the map
+const layerGroups = {
+    'legend-brickKiln': ['bk_pk', 'bk_ind', 'bk_ban'], // Layers related to Brick Kiln
+    'legend-brickKilnHex': ['bk_hex'],                 // Layers related to Brick Kiln Hex
+    // Add other layer group mappings here if needed
+};
+
+// Initialize drag-related variables
+let draggedElement = null;
+
+// Enable dragging on the legend items
+document.querySelectorAll('.legend-section').forEach(item => {
+    item.addEventListener('dragstart', function (e) {
+        draggedElement = e.target;  // Store the dragged element
+        e.dataTransfer.effectAllowed = 'move';
+    });
+
+    item.addEventListener('dragover', function (e) {
+        e.preventDefault();  // Allow dropping
+        e.dataTransfer.dropEffect = 'move';
+    });
+
+    item.addEventListener('drop', function (e) {
+        e.preventDefault();
+        if (draggedElement !== this) {
+            // Swap the dragged element with the drop target
+            const legend = document.getElementById('legend');
+            const draggingIndex = Array.from(legend.children).indexOf(draggedElement);
+            const targetIndex = Array.from(legend.children).indexOf(this);
+
+            // Reorder in the DOM
+            if (draggingIndex > targetIndex) {
+                legend.insertBefore(draggedElement, this);
+            } else {
+                legend.insertBefore(draggedElement, this.nextSibling);
+            }
+
+            // Update the map layer order to match the new order in the legend
+            reorderMapLayers();
+        }
+    });
+});
+
+// Function to reorder map layers based on the new legend order
+function reorderMapLayers() {
+    const layerOrder = [];
+
+    // Get the order of layers from the legend
+    document.querySelectorAll('.legend-section').forEach((item) => {
+        const legendId = item.id; // Get the legend section ID
+        
+        // Check if the legend section is part of a grouped layer (like Brick Kilns)
+        if (layerGroups[legendId]) {
+            // If it's a group, add all the layers in that group
+            layerOrder.push(...layerGroups[legendId]);
+        } else {
+            // Otherwise, just add the layer corresponding to the legend item
+            const layerId = legendId.replace('legend-', ''); // Extract layer ID from legend item
+            layerOrder.push(layerId);
+        }
+    });
+
+    // Loop through the layers in reverse to reorder the map layers (top to bottom)
+    for (let i = layerOrder.length - 1; i >= 0; i--) {
+        const layerId = layerOrder[i];
+        if (map.getLayer(layerId)) {
+            map.moveLayer(layerId);
+        }
+    }
+}
+
+// Function to apply visibility after reordering
+function applyLayerVisibility() {
+    document.querySelectorAll('.legend-section input[type="checkbox"]').forEach(input => {
+        const layerId = input.name; // Match the checkbox name to layer ID
+        const isVisible = input.checked ? 'visible' : 'none';
+        
+        if (map.getLayer(layerId)) {
+            map.setLayoutProperty(layerId, 'visibility', isVisible);
+        }
+    });
+}
+
 
 // -----------------------------------------------------------AREA CHANGE-----------------------------------------------------------
 
