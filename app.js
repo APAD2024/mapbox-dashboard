@@ -27,7 +27,7 @@ let brickKilnPKLoaded = false;
 let brickKilnINDLoaded = false;
 let brickKilnBANLoaded = false;
 const layerIds = [
-    'coal', 'population', 'fossil', 'GP', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN'
+    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN'
 ];
 
 // -------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
@@ -168,7 +168,7 @@ function addDataLayers() {
                     data: data
                 });
                 gpwLayer = map.addLayer({
-                    'id': 'GP',
+                    'id': 'gpw',
                     'type': 'circle',
                     'source': 'GPW',
                     'paint': {
@@ -186,7 +186,7 @@ function addDataLayers() {
 
                 if (!aggregateToolEnabled) {
                     // Popup for the coal layer
-                    map.on('click', 'GP', (e) => {
+                    map.on('click', 'gpw', (e) => {
                         if (!aggregateToolEnabled) {
                             const properties = e.features[0].properties;
                             new mapboxgl.Popup()
@@ -799,7 +799,9 @@ for (const input of inputs) {
         // Use 'once' to ensure the new style is fully loaded before proceeding
         map.once('style.load', () => {
             addDataLayers(); // Re-add the custom layers after the new style is loaded
-            restoreLayerVisibility(); // Restore visibility settings
+            map.once('idle', () => {
+                restoreLayerVisibility(); // Restore visibility only when the map is idle
+            });
 
             // Re-add Brick Kiln layers only if their respective checkboxes are checked
             if (document.getElementById('toggleBKPK').checked) loadBrickKilnLayerPK();
@@ -812,8 +814,8 @@ for (const input of inputs) {
             if (document.getElementById('toggleHexGridBAN').checked) loadBrickKilnLayerBANhex();
 
             // Log the visibility status of all layers after layers are fully loaded
-            logLayerVisibility(['coal', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'population', 'fossil', 'GP']);
-
+            logLayerVisibility(['coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN']);
+            
             hideLoadingSpinner(); // Hide the loading spinner after everything is done
         });
 
@@ -850,12 +852,10 @@ function restoreLayerVisibility() {
     });
 }
 
-// ----------------------------------------------------------------DRAGGABLE LEGEND-----------------------------------------------------------
-
 // Define a mapping for legend section IDs to actual layer IDs in the map
 const layerGroups = {
-    'legend-brickKiln': ['bk_pk', 'bk_ind', 'bk_ban'], // Layers related to Brick Kiln
-    'legend-brickKilnHex': ['bk_hex'],                 // Layers related to Brick Kiln Hex
+    'legend-brickKiln': ['BK_PK', 'BK_IND', 'BK_BAN'], // Layers related to Brick Kiln
+    'legend-brickKilnGrid': ['brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN'], // Hex layers for Brick Kiln Density
     // Add other layer group mappings here if needed
 };
 
@@ -865,12 +865,12 @@ let draggedElement = null;
 // Enable dragging on the legend items
 document.querySelectorAll('.legend-section').forEach(item => {
     item.addEventListener('dragstart', function (e) {
-        draggedElement = e.target;  // Store the dragged element
+        draggedElement = e.target; // Store the dragged element
         e.dataTransfer.effectAllowed = 'move';
     });
 
     item.addEventListener('dragover', function (e) {
-        e.preventDefault();  // Allow dropping
+        e.preventDefault(); // Allow dropping
         e.dataTransfer.dropEffect = 'move';
     });
 
@@ -919,16 +919,19 @@ function reorderMapLayers() {
         const layerId = layerOrder[i];
         if (map.getLayer(layerId)) {
             map.moveLayer(layerId);
+            console.log('Layer Order:', layerOrder);
+console.log('Applying visibility to:', layerId);
+
         }
     }
 }
 
-// Function to apply visibility after reordering
+// Apply visibility settings based on legend input states
 function applyLayerVisibility() {
     document.querySelectorAll('.legend-section input[type="checkbox"]').forEach(input => {
         const layerId = input.name; // Match the checkbox name to layer ID
         const isVisible = input.checked ? 'visible' : 'none';
-        
+
         if (map.getLayer(layerId)) {
             map.setLayoutProperty(layerId, 'visibility', isVisible);
         }
@@ -1094,10 +1097,10 @@ map.on('click', (e) => {
         // 4. Aggregate GPW data (population or area) within the buffer
         let totalPopulation = 0;
         let totalGPWPoints = 0;
-        if (map.getLayer('GP')) {
-            const gpwVisibility = map.getLayoutProperty('GP', 'visibility');
+        if (map.getLayer('gpw')) {
+            const gpwVisibility = map.getLayoutProperty('gpw', 'visibility');
             if (gpwVisibility === 'visible') {
-                const gpwLayerFeatures = map.queryRenderedFeatures({ layers: ['GP'] });
+                const gpwLayerFeatures = map.queryRenderedFeatures({ layers: ['gpw'] });
 
                 gpwLayerFeatures.forEach((feature) => {
                     const gpwPoint = turf.point(feature.geometry.coordinates);
@@ -1243,7 +1246,7 @@ document.getElementById('toggleCoal').addEventListener('change', (e) => {
 });
 
 document.getElementById('toggleGPW').addEventListener('change', (e) => {
-    map.setLayoutProperty('GP', 'visibility', e.target.checked ? 'visible' : 'none');
+    map.setLayoutProperty('gpw', 'visibility', e.target.checked ? 'visible' : 'none');
 });
 document.getElementById('togglepop').addEventListener('change', (e) => {
     map.setLayoutProperty('population', 'visibility', e.target.checked ? 'visible' : 'none');
