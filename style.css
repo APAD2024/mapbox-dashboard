@@ -245,6 +245,35 @@ html {
     transition: font-size 0.3s ease;
 }
 
+/* Tooltip Styling */
+#tooltip {
+    position: fixed;
+    top: 70px; /* Adjust this value based on the height of your header */
+    left: 50%; /* Center it horizontally */
+    transform: translateX(-50%); /* Offset by half its width for true centering */
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    z-index: 1000;
+    display: none; /* Hidden by default */
+    color: #4b6151; /* Text color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for visibility */
+}
+
+
+/* CSS class to show the tooltip */
+.tooltip-visible {
+    display: block;
+}
+
+/* CSS class to hide the tooltip */
+.tooltip-hidden {
+    display: none;
+}
+
+
+
 #aggregateTool {
     position: absolute;
     top: 270px;
@@ -480,6 +509,8 @@ html {
     justify-content: center;
 }
 
+
+
 #legend {
     position: absolute;
     top: 70px;
@@ -497,6 +528,16 @@ html {
     font-family: 'Open Sans', sans-serif;
     display: none;
 }
+
+#legend h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #2a2a2b; /* Adjust as needed */
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
 
 
 .legend-section {

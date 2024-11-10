@@ -27,7 +27,7 @@ let brickKilnPKLoaded = false;
 let brickKilnINDLoaded = false;
 let brickKilnBANLoaded = false;
 const layerIds = [
-    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN'
+    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'coal_africa'
 ];
 
 // -------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
@@ -153,6 +153,63 @@ function addDataLayers() {
             })
             .catch(error => {
                 console.error('Error loading Coal data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Lazy load Coal IGP layer
+    if (!map.getSource('coal_Afc')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/68149ec584b5f3662a38f6f098595464/raw/f1bf50d43a7be5b16c7129953998800e29e6ff58/coal_Plants_Africa_geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('coal_Afc', {
+                    type: 'geojson',
+                    data: data,
+                });
+                coalLayer = map.addLayer({
+                    'id': 'coal_africa',
+                    'type': 'circle',
+                    'source': 'coal_Afc',
+                    'paint': {
+                        'circle-radius': 7,
+                        'circle-stroke-width': 2,
+                        'circle-color': '#616161',  // Add # for hex color
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'visible'
+                    }
+                });
+
+                if (!aggregateToolEnabled) {
+                    // Popup for the coal layer
+                    map.on('click', 'coal_africa', (e) => {
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            const popupContent = `
+                            <div class="popup-table">
+                                <h3>${properties.plant_name}, ${properties.country}</h3>
+                                <table>
+                                    <tr><th>Daily Production</th><td>${properties.daily_prod}</td></tr>
+                                    <tr><th>Capacity</th><td>${properties.cap_mw} mega watt</td></tr>
+                                    <tr><th>Status</th><td>${properties.status}</td></tr>
+                                    <tr><th>Heat Rate</th><td>${properties.heat_rate}</td></tr>
+                                </table>
+                            </div>
+                            `;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(popupContent)
+                                .addTo(map);
+                        }
+                    });
+                }
+
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Africa Coal data:', error);
                 hideLoadingSpinner(); // Hide the spinner even if there is an error
             });
     }
@@ -585,6 +642,21 @@ function loadBrickKilnLayerBANhex() {
     }
 }
 
+
+function reportPoint(brickid, lng, lat) {
+    const reportURL = 'https://forms.gle/cr2TzX3Fjt8bXVRv8';
+    const params = `BrickID: ${brickid}, Longitude: ${lng}, Latitude: ${lat}`;
+    
+    // Copy parameters to the clipboard
+    navigator.clipboard.writeText(params).then(() => {
+        alert('Parameters copied to clipboard.');
+        // Redirect to the report form
+        window.open(reportURL, '_blank');
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
 // Lazy load Pakistan Brick Kilns layer
 function loadBrickKilnLayerPK() {
     if (!map.getSource('bk_pk')) {
@@ -617,12 +689,20 @@ function loadBrickKilnLayerPK() {
                     map.on('click', 'BK_PK', (e) => {
                         if (!aggregateToolEnabled) {
                             const properties = e.features[0].properties;
+                            const popupContent = `
+                                <div class="popup-table">
+                                    <h3>${properties.brickid}</h3>
+                                    <button id="reportButton" onclick="reportPoint('${properties.brickid}', '${e.lngLat.lng}', '${e.lngLat.lat}')">
+                                        Report This Point
+                                    </button>
+                                </div>
+                            `;
+                    
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
-                                .setHTML(`<div class="popup-table"><h3>${properties.brickid}</h3></div>`)
+                                .setHTML(popupContent)
                                 .addTo(map);
                         }
-
                     });
                 }
 
@@ -674,7 +754,10 @@ function loadBrickKilnLayerIND() {
                             const properties = e.features[0].properties;
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
-                                .setHTML(`<div class="popup-table"><h3>${properties.type}</h3></div>`)
+                                .setHTML(`<div class="popup-table"><h3>${properties.type}</h3>
+                                    <button id="reportButton" onclick="reportPoint('${properties.brickid}', '${e.lngLat.lng}', '${e.lngLat.lat}')">
+                                        Report This Point
+                                    </button></div>`)
                                 .addTo(map);
                         }
 
@@ -725,14 +808,17 @@ function loadBrickKilnLayerBAN() {
                 if (!aggregateToolEnabled) {
                     // Popup for BK_BAN layer
                     map.on('click', 'BK_BAN', (e) => {
-                        if (!aggregateToolEnabled){
+                        if (!aggregateToolEnabled) {
                             const properties = e.features[0].properties;
-                        new mapboxgl.Popup()
-                            .setLngLat(e.lngLat)
-                            .setHTML(`<div class="popup-table"><h3>${properties.type}</h3></div>`)
-                            .addTo(map);
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`<div class="popup-table"><h3>${properties.type}</h3>
+                                    <button id="reportButton" onclick="reportPoint('${properties.brickid}', '${e.lngLat.lng}', '${e.lngLat.lat}')">
+                                        Report This Point
+                                    </button></div>`)
+                                .addTo(map);
                         }
-                        
+
                     });
                 }
 
@@ -805,17 +891,17 @@ for (const input of inputs) {
 
             // Re-add Brick Kiln layers only if their respective checkboxes are checked
             if (document.getElementById('toggleBKPK').checked) loadBrickKilnLayerPK();
-            if (document.getElementById('toggleBKIND').checked) loadBrickKilnLayerIND();
+            // if (document.getElementById('toggleBKIND').checked) loadBrickKilnLayerIND();
             if (document.getElementById('toggleBKBAN').checked) loadBrickKilnLayerBAN();
 
             // Load hexagonal Brick Kiln layers based on their toggle state
             if (document.getElementById('toggleHexGridPAK').checked) loadBrickKilnLayerPKhex();
-            if (document.getElementById('toggleHexGridIND').checked) loadBrickKilnLayerINDhex();
+            // if (document.getElementById('toggleHexGridIND').checked) loadBrickKilnLayerINDhex();
             if (document.getElementById('toggleHexGridBAN').checked) loadBrickKilnLayerBANhex();
 
             // Log the visibility status of all layers after layers are fully loaded
-            logLayerVisibility(['coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN']);
-            
+            logLayerVisibility(['coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'coal_africa']);
+
             hideLoadingSpinner(); // Hide the loading spinner after everything is done
         });
 
@@ -895,6 +981,7 @@ document.querySelectorAll('.legend-section').forEach(item => {
     });
 });
 
+
 // Function to reorder map layers based on the new legend order
 function reorderMapLayers() {
     const layerOrder = [];
@@ -902,7 +989,7 @@ function reorderMapLayers() {
     // Get the order of layers from the legend
     document.querySelectorAll('.legend-section').forEach((item) => {
         const legendId = item.id; // Get the legend section ID
-        
+
         // Check if the legend section is part of a grouped layer (like Brick Kilns)
         if (layerGroups[legendId]) {
             // If it's a group, add all the layers in that group
@@ -920,7 +1007,7 @@ function reorderMapLayers() {
         if (map.getLayer(layerId)) {
             map.moveLayer(layerId);
             console.log('Layer Order:', layerOrder);
-console.log('Applying visibility to:', layerId);
+            console.log('Applying visibility to:', layerId);
 
         }
     }
@@ -966,7 +1053,7 @@ document.getElementById('areaChange').addEventListener('click', () => {
         // If the map is in Asia, shift to Africa
         map.flyTo({
             center: africaCenter,
-            zoom: zoomLevel,
+            zoom: 2,
             essential: true
         });
 
@@ -979,6 +1066,7 @@ document.getElementById('areaChange').addEventListener('click', () => {
 // -----------------------------------------------------------AGGREGATE TOOL-----------------------------------------------------------
 
 // Toggle the Aggregate Tool
+const tooltip = document.getElementById('tooltip');
 let aggregateToolEnabled = false;
 const aggregateButton = document.getElementById('aggregateTool');
 
@@ -987,13 +1075,24 @@ aggregateButton.addEventListener('click', () => {
     aggregateToolEnabled = !aggregateToolEnabled;
 
     if (aggregateToolEnabled) {
+
         aggregateButton.style.backgroundColor = '#d3d3d3'; // Change color to indicate active state
         map.getCanvas().style.cursor = 'crosshair'; // Change cursor to crosshair
+
+        document.getElementById('tooltip').style.display = 'block';
+
+
         closePopups(); // Close existing popups for other layers
         console.log("Aggregate Tool enabled");
+
     } else {
+
         aggregateButton.style.backgroundColor = 'white'; // Reset color
         map.getCanvas().style.cursor = ''; // Reset cursor
+
+        document.getElementById('tooltip').style.display = 'none';
+        clearBuffer();
+
         console.log("Aggregate Tool disabled");
     }
 });
@@ -1006,6 +1105,12 @@ function closePopups() {
     }
 }
 
+// Function to clear the buffer layer from the map
+function clearBuffer() {
+    if (map.getLayer('bufferLayer')) map.removeLayer('bufferLayer');
+    if (map.getSource('bufferSource')) map.removeSource('bufferSource');
+}
+
 // Aggregate Tool logic - directly using coal, brick kilns, fossil fuel, and GPW layers
 map.on('click', (e) => {
     if (aggregateToolEnabled) {
@@ -1014,6 +1119,22 @@ map.on('click', (e) => {
 
         // Create a 100 km buffer around the clicked point
         const buffer = turf.buffer(turf.point(clickCoordinates), bufferRadius, { units: 'kilometers' });
+
+         // Add the buffer to the map as a new layer
+         clearBuffer(); // Clear any existing buffer
+         map.addSource('bufferSource', {
+             type: 'geojson',
+             data: buffer
+         });
+         map.addLayer({
+             id: 'bufferLayer',
+             type: 'fill',
+             source: 'bufferSource',
+             paint: {
+                 'fill-color': 'rgba(128, 128, 128, 0.5)', // Light gray fill with 50% transparency
+                 'fill-outline-color': 'black'             // Black outline
+             }
+         });
 
         let popupContent = `
             <div class="popup-table">
@@ -1245,6 +1366,10 @@ document.getElementById('toggleCoal').addEventListener('change', (e) => {
     map.setLayoutProperty('coal', 'visibility', e.target.checked ? 'visible' : 'none');
 });
 
+document.getElementById('toggleCoal').addEventListener('change', (e) => {
+    map.setLayoutProperty('coal_africa', 'visibility', e.target.checked ? 'visible' : 'none');
+});
+
 document.getElementById('toggleGPW').addEventListener('change', (e) => {
     map.setLayoutProperty('gpw', 'visibility', e.target.checked ? 'visible' : 'none');
 });
@@ -1266,15 +1391,15 @@ document.getElementById('toggleBKPK').addEventListener('change', (e) => {
 });
 
 // Event listener for toggling India's Brick Kilns layer
-document.getElementById('toggleBKIND').addEventListener('change', (e) => {
-    if (e.target.checked) {
-        loadBrickKilnLayerIND();  // Load the layer if it doesn't exist
-    } else {
-        if (map.getLayer('BK_IND')) {
-            map.setLayoutProperty('BK_IND', 'visibility', 'none');
-        }
-    }
-});
+// document.getElementById('toggleBKIND').addEventListener('change', (e) => {
+//     if (e.target.checked) {
+//         loadBrickKilnLayerIND();  // Load the layer if it doesn't exist
+//     } else {
+//         if (map.getLayer('BK_IND')) {
+//             map.setLayoutProperty('BK_IND', 'visibility', 'none');
+//         }
+//     }
+// });
 
 // Event listener for toggling Bangladesh's Brick Kilns layer
 document.getElementById('toggleBKBAN').addEventListener('change', (e) => {
@@ -1297,16 +1422,16 @@ document.getElementById('toggleBrickKilns').addEventListener('change', (e) => {
     if (e.target.checked) {
         // Load the brick kiln layers if they are toggled on
         loadBrickKilnLayerPK();
-        loadBrickKilnLayerIND();
+        // loadBrickKilnLayerIND();
         loadBrickKilnLayerBAN();
     } else {
         // Hide the layers if they are already loaded
         if (map.getLayer('BK_PK')) {
             map.setLayoutProperty('BK_PK', 'visibility', 'none');
         }
-        if (map.getLayer('BK_IND')) {
-            map.setLayoutProperty('BK_IND', 'visibility', 'none');
-        }
+        // if (map.getLayer('BK_IND')) {
+        //     map.setLayoutProperty('BK_IND', 'visibility', 'none');
+        // }
         if (map.getLayer('BK_BAN')) {
             map.setLayoutProperty('BK_BAN', 'visibility', 'none');
         }
@@ -1314,7 +1439,7 @@ document.getElementById('toggleBrickKilns').addEventListener('change', (e) => {
 
     // Set the child checkboxes
     document.getElementById('toggleBKPK').checked = e.target.checked;
-    document.getElementById('toggleBKIND').checked = e.target.checked;
+    // document.getElementById('toggleBKIND').checked = e.target.checked;
     document.getElementById('toggleBKBAN').checked = e.target.checked;
 });
 
@@ -1329,15 +1454,15 @@ document.getElementById('toggleHexGridPAK').addEventListener('change', (e) => {
     }
 });
 
-document.getElementById('toggleHexGridIND').addEventListener('change', (e) => {
-    if (e.target.checked) {
-        loadBrickKilnLayerINDhex();  // Load the layer if it doesn't exist
-    } else {
-        if (map.getLayer('brick_kilns_IND')) {
-            map.setLayoutProperty('brick_kilns_IND', 'visibility', 'none');
-        }
-    }
-});
+// document.getElementById('toggleHexGridIND').addEventListener('change', (e) => {
+//     if (e.target.checked) {
+//         loadBrickKilnLayerINDhex();  // Load the layer if it doesn't exist
+//     } else {
+//         if (map.getLayer('brick_kilns_IND')) {
+//             map.setLayoutProperty('brick_kilns_IND', 'visibility', 'none');
+//         }
+//     }
+// });
 
 document.getElementById('toggleHexGridBAN').addEventListener('change', (e) => {
     if (e.target.checked) {
@@ -1359,16 +1484,16 @@ document.getElementById('toggleBrickKilnsGrid').addEventListener('change', (e) =
     if (e.target.checked) {
         // Load the brick kiln layers if they are toggled on
         loadBrickKilnLayerPKhex();
-        loadBrickKilnLayerINDhex();
+        // loadBrickKilnLayerINDhex();
         loadBrickKilnLayerBANhex();
     } else {
         // Hide the layers if they are already loaded
         if (map.getLayer('brick_kilns_PK')) {
             map.setLayoutProperty('brick_kilns_PK', 'visibility', 'none');
         }
-        if (map.getLayer('brick_kilns_IND')) {
-            map.setLayoutProperty('brick_kilns_IND', 'visibility', 'none');
-        }
+        // if (map.getLayer('brick_kilns_IND')) {
+        //     map.setLayoutProperty('brick_kilns_IND', 'visibility', 'none');
+        // }
         if (map.getLayer('brick_kilns_BAN')) {
             map.setLayoutProperty('brick_kilns_BAN', 'visibility', 'none');
         }
@@ -1376,11 +1501,14 @@ document.getElementById('toggleBrickKilnsGrid').addEventListener('change', (e) =
 
     // If the main checkbox is checked, set all child checkboxes to checked and show all layers
     document.getElementById('toggleHexGridPAK').checked = e.target.checked;
-    document.getElementById('toggleHexGridIND').checked = e.target.checked;
+    // document.getElementById('toggleHexGridIND').checked = e.target.checked;
     document.getElementById('toggleHexGridBAN').checked = e.target.checked;
 
 });
 
+document.getElementById('toggleCoalAfrica').addEventListener('change', (e) => {
+    map.setLayoutProperty('coal_africa', 'visibility', e.target.checked ? 'visible' : 'none');
+});
 
 
 
