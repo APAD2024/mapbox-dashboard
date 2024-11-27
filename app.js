@@ -467,7 +467,7 @@ function loadBrickKilnLayerPKhex() {
         showLoadingSpinner(); // Show the spinner while loading
 
         // Fetch the brick kilns GeoJSON data and create a hexagonal grid
-        fetch('https://gist.githubusercontent.com/Mseher/0ae4ba3043e59d022b589dd276d12b7b/raw/df694ea1568f030c555f675f297c245c56d965eb/Brick_Kilns_IGP_PK-Main.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/3108d1d4657055e076db666991d1aee8/raw/1426bc19a52d77346bef953f52cc00a45c5aaa41/Brick_Kilns_IGP_PK-Main.geojson')
             .then(response => response.json())
             .then(data => {
                 // Get the bounding box of the points
@@ -772,7 +772,7 @@ function reportPoint(brickid, lng, lat) {
 function loadBrickKilnLayerPK() {
     if (!map.getSource('bk_pk')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/0ae4ba3043e59d022b589dd276d12b7b/raw/df694ea1568f030c555f675f297c245c56d965eb/Brick_Kilns_IGP_PK-Main.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/3108d1d4657055e076db666991d1aee8/raw/1426bc19a52d77346bef953f52cc00a45c5aaa41/Brick_Kilns_IGP_PK-Main.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('bk_pk', {
