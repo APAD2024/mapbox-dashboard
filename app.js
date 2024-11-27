@@ -37,6 +37,142 @@ const layerIds = [
 
 // Reusable function to add data layers with fetch and lazy loading
 function addDataLayers() {
+
+    // Indian plain layer
+    if (!map.getSource('indian_plain')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/d2fe2c380fc19ab797d17c0116b11876/raw/3c37088e53623fcc8c9479159ad0fe8c6b89ed3f/IGP_boundary.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('indian_plain', {
+                    type: 'geojson',
+                    data: data
+                });
+                boundaryLayer = map.addLayer({
+                    'id': 'indian',
+                    'type': 'line',
+                    'source': 'indian_plain',
+                    'paint': {
+                        'line-color': 'black',
+                        'line-width': 1
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Indian plain data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Congo Adm Boundary
+    if (!map.getSource('COD_Adm_boundary')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/731408a10cc9e5ed36c5fb5a1982dc1c/raw/7779b1c68faa84685e3a3eef631afa675d78f209/COD_adm_0.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('COD_Adm_boundary', {
+                    type: 'geojson',
+                    data: data
+                });
+                boundaryLayer = map.addLayer({
+                    'id': 'COD_Adm',
+                    'type': 'line',
+                    'source': 'COD_Adm_boundary',
+                    'paint': {
+                        'line-color': 'black',
+                        'line-width': 1
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Congo Adm Boundary:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Ghana Adm Boundary
+    if (!map.getSource('GHA_Adm_boundary')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/7fb33392e9c0adb358ad2a553f5eba5a/raw/3cbbe1c37ae215b6281f69f890e6641e0d73527e/GHA_adm_0.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('GHA_Adm_boundary', {
+                    type: 'geojson',
+                    data: data
+                });
+                boundaryLayer = map.addLayer({
+                    'id': 'GHA_Adm',
+                    'type': 'line',
+                    'source': 'GHA_Adm_boundary',
+                    'paint': {
+                        'line-color': 'black',
+                        'line-width': 1
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Ghana Adm Boundary:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Nigeria Adm Boundary
+    if (!map.getSource('NGA_Adm_boundary')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/359c899443ff3d0e31ea1eb3610227b6/raw/3f33451383fc0d5967e680fc1038b85d60bf1a76/NGA_adm_0.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('NGA_Adm_boundary', {
+                    type: 'geojson',
+                    data: data
+                });
+                boundaryLayer = map.addLayer({
+                    'id': 'NGA_Adm',
+                    'type': 'line',
+                    'source': 'NGA_Adm_boundary',
+                    'paint': {
+                        'line-color': 'black',
+                        'line-width': 1
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Nigeria Adm Boundary:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Uganda Adm Boundary
+    if (!map.getSource('UGA_Adm_boundary')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/542c13b528a18c3d13d43eb390efe47f/raw/7f60e28ef3b7e9df2a1f3a4f745856debff9832e/UGA_adm_0.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('UGA_Adm_boundary', {
+                    type: 'geojson',
+                    data: data
+                });
+                boundaryLayer = map.addLayer({
+                    'id': 'UGA_Adm',
+                    'type': 'line',
+                    'source': 'UGA_Adm_boundary',
+                    'paint': {
+                        'line-color': 'black',
+                        'line-width': 1
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Uganda Adm Boundary:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
     // Population raster layer
     if (!map.getSource('population')) {
         map.addSource('population', {
@@ -261,32 +397,7 @@ function addDataLayers() {
             });
     }
 
-    // Indian plain layer
-    if (!map.getSource('indian_plain')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/d2fe2c380fc19ab797d17c0116b11876/raw/3c37088e53623fcc8c9479159ad0fe8c6b89ed3f/IGP_boundary.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('indian_plain', {
-                    type: 'geojson',
-                    data: data
-                });
-                boundaryLayer = map.addLayer({
-                    'id': 'indian',
-                    'type': 'line',
-                    'source': 'indian_plain',
-                    'paint': {
-                        'line-color': 'black',
-                        'line-width': 1
-                    }
-                });
-                hideLoadingSpinner(); // Hide the spinner after loading
-            })
-            .catch(error => {
-                console.error('Error loading Indian plain data:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    }
+    
 
     // Pollutant decay heatmap layer
     if (!map.getSource('pollutant_decay')) {
@@ -356,7 +467,7 @@ function loadBrickKilnLayerPKhex() {
         showLoadingSpinner(); // Show the spinner while loading
 
         // Fetch the brick kilns GeoJSON data and create a hexagonal grid
-        fetch('https://gist.githubusercontent.com/Mseher/ff38ecf6b4b365bfbaf1de99506685a3/raw/9907737c8ff94dbc896286df6fcf975307e538d6/brick_kilns_PK.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/0ae4ba3043e59d022b589dd276d12b7b/raw/df694ea1568f030c555f675f297c245c56d965eb/Brick_Kilns_IGP_PK-Main.geojson')
             .then(response => response.json())
             .then(data => {
                 // Get the bounding box of the points
@@ -458,7 +569,7 @@ function loadBrickKilnLayerINDhex() {
     if (!map.getSource('brick_kilns_IND_hex')) {
         showLoadingSpinner();
 
-        fetch('https://gist.githubusercontent.com/Mseher/88e68ac3a33a756195fbde4ec207ef25/raw/3412f65c4ae4430c98e2363b8cd324fbc0c2a0de/brick_kilns_IND.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/5ff795ba99dade57695c8ddad13f6f67/raw/f89f59a115bae6f8272c14ab9f4cad3b632c8b88/Brick_kilns_IND-Main.geojson')
             .then(response => response.json())
             .then(data => {
                 const bbox = turf.bbox(data);
@@ -553,7 +664,7 @@ function loadBrickKilnLayerBANhex() {
     if (!map.getSource('brick_kilns_BAN_hex')) {
         showLoadingSpinner();
 
-        fetch('https://gist.githubusercontent.com/Mseher/10ad98920682d586ce53ff7610359fd5/raw/696a9005623f2f99308f5096c4782b232d388010/brick_kilns_BAN.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/76b075d7dc87ffb9c41af0d86e62f16e/raw/05c72c51f8b8f88cfbbfd6e85cbda7a185ca99f0/Brick_Kilns_IGP_BAN-Main.geojson')
             .then(response => response.json())
             .then(data => {
                 const bbox = turf.bbox(data);
@@ -646,7 +757,7 @@ function loadBrickKilnLayerBANhex() {
 function reportPoint(brickid, lng, lat) {
     const reportURL = 'https://forms.gle/cr2TzX3Fjt8bXVRv8';
     const params = `BrickID: ${brickid}, Longitude: ${lng}, Latitude: ${lat}`;
-    
+
     // Copy parameters to the clipboard
     navigator.clipboard.writeText(params).then(() => {
         alert('Parameters copied to clipboard.');
@@ -661,7 +772,7 @@ function reportPoint(brickid, lng, lat) {
 function loadBrickKilnLayerPK() {
     if (!map.getSource('bk_pk')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/ff38ecf6b4b365bfbaf1de99506685a3/raw/9907737c8ff94dbc896286df6fcf975307e538d6/brick_kilns_PK.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/0ae4ba3043e59d022b589dd276d12b7b/raw/df694ea1568f030c555f675f297c245c56d965eb/Brick_Kilns_IGP_PK-Main.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('bk_pk', {
@@ -673,7 +784,14 @@ function loadBrickKilnLayerPK() {
                     'type': 'circle',
                     'source': 'bk_pk',
                     'paint': {
-                        'circle-radius': 2,
+                        'circle-radius': [
+                            'interpolate',
+                            ['linear'], // Interpolation method
+                            ['zoom'],  // Based on zoom level
+                            5, 2,      // At zoom level 5, circle size is 2
+                            10, 5,     // At zoom level 10, circle size is 5
+                            15, 10     // At zoom level 15, circle size is 10
+                        ],
                         'circle-stroke-width': 0,
                         'circle-color': 'green',
                         'circle-stroke-color': 'white',
@@ -691,13 +809,13 @@ function loadBrickKilnLayerPK() {
                             const properties = e.features[0].properties;
                             const popupContent = `
                                 <div class="popup-table">
-                                    <h3>${properties.brickid}</h3>
-                                    <button id="reportButton" onclick="reportPoint('${properties.brickid}', '${e.lngLat.lng}', '${e.lngLat.lat}')">
+                                    <h3>${properties.id}</h3>
+                                    <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lng}', '${e.lngLat.lat}')">
                                         Report This Point
                                     </button>
                                 </div>
                             `;
-                    
+
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(popupContent)
@@ -724,7 +842,7 @@ function loadBrickKilnLayerPK() {
 function loadBrickKilnLayerIND() {
     if (!map.getSource('bk_ind')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/88e68ac3a33a756195fbde4ec207ef25/raw/3412f65c4ae4430c98e2363b8cd324fbc0c2a0de/brick_kilns_IND.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/5ff795ba99dade57695c8ddad13f6f67/raw/f89f59a115bae6f8272c14ab9f4cad3b632c8b88/Brick_kilns_IND-Main.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('bk_ind', {
@@ -736,7 +854,14 @@ function loadBrickKilnLayerIND() {
                     'type': 'circle',
                     'source': 'bk_ind',
                     'paint': {
-                        'circle-radius': 2,
+                        'circle-radius': [
+                            'interpolate',
+                            ['linear'], // Interpolation method
+                            ['zoom'],  // Based on zoom level
+                            5, 2,      // At zoom level 5, circle size is 2
+                            10, 5,     // At zoom level 10, circle size is 5
+                            15, 10     // At zoom level 15, circle size is 10
+                        ],
                         'circle-stroke-width': 0,
                         'circle-color': 'green',
                         'circle-stroke-color': 'white',
@@ -754,8 +879,8 @@ function loadBrickKilnLayerIND() {
                             const properties = e.features[0].properties;
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
-                                .setHTML(`<div class="popup-table"><h3>${properties.type}</h3>
-                                    <button id="reportButton" onclick="reportPoint('${properties.brickid}', '${e.lngLat.lng}', '${e.lngLat.lat}')">
+                                .setHTML(`<div class="popup-table"><h3>${properties.id}</h3>
+                                    <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lng}', '${e.lngLat.lat}')">
                                         Report This Point
                                     </button></div>`)
                                 .addTo(map);
@@ -782,7 +907,7 @@ function loadBrickKilnLayerIND() {
 function loadBrickKilnLayerBAN() {
     if (!map.getSource('bk_ban')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/10ad98920682d586ce53ff7610359fd5/raw/696a9005623f2f99308f5096c4782b232d388010/brick_kilns_BAN.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/76b075d7dc87ffb9c41af0d86e62f16e/raw/05c72c51f8b8f88cfbbfd6e85cbda7a185ca99f0/Brick_Kilns_IGP_BAN-Main.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('bk_ban', {
@@ -794,7 +919,14 @@ function loadBrickKilnLayerBAN() {
                     'type': 'circle',
                     'source': 'bk_ban',
                     'paint': {
-                        'circle-radius': 2,
+                        'circle-radius': [
+                            'interpolate',
+                            ['linear'], // Interpolation method
+                            ['zoom'],  // Based on zoom level
+                            5, 2,      // At zoom level 5, circle size is 2
+                            10, 5,     // At zoom level 10, circle size is 5
+                            15, 10     // At zoom level 15, circle size is 10
+                        ],
                         'circle-stroke-width': 0,
                         'circle-color': 'green',
                         'circle-stroke-color': 'white',
@@ -812,8 +944,8 @@ function loadBrickKilnLayerBAN() {
                             const properties = e.features[0].properties;
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
-                                .setHTML(`<div class="popup-table"><h3>${properties.type}</h3>
-                                    <button id="reportButton" onclick="reportPoint('${properties.brickid}', '${e.lngLat.lng}', '${e.lngLat.lat}')">
+                                .setHTML(`<div class="popup-table"><h3>${properties.id}</h3>
+                                    <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lng}', '${e.lngLat.lat}')">
                                         Report This Point
                                     </button></div>`)
                                 .addTo(map);
@@ -888,15 +1020,15 @@ for (const input of inputs) {
             map.once('idle', () => {
                 restoreLayerVisibility(); // Restore visibility only when the map is idle
             });
-
+            
             // Re-add Brick Kiln layers only if their respective checkboxes are checked
             if (document.getElementById('toggleBKPK').checked) loadBrickKilnLayerPK();
-            // if (document.getElementById('toggleBKIND').checked) loadBrickKilnLayerIND();
+            if (document.getElementById('toggleBKIND').checked) loadBrickKilnLayerIND();
             if (document.getElementById('toggleBKBAN').checked) loadBrickKilnLayerBAN();
 
             // Load hexagonal Brick Kiln layers based on their toggle state
             if (document.getElementById('toggleHexGridPAK').checked) loadBrickKilnLayerPKhex();
-            // if (document.getElementById('toggleHexGridIND').checked) loadBrickKilnLayerINDhex();
+            if (document.getElementById('toggleHexGridIND').checked) loadBrickKilnLayerINDhex();
             if (document.getElementById('toggleHexGridBAN').checked) loadBrickKilnLayerBANhex();
 
             // Log the visibility status of all layers after layers are fully loaded
@@ -1053,7 +1185,7 @@ document.getElementById('areaChange').addEventListener('click', () => {
         // If the map is in Asia, shift to Africa
         map.flyTo({
             center: africaCenter,
-            zoom: 2,
+            zoom: 3,
             essential: true
         });
 
@@ -1120,21 +1252,21 @@ map.on('click', (e) => {
         // Create a 100 km buffer around the clicked point
         const buffer = turf.buffer(turf.point(clickCoordinates), bufferRadius, { units: 'kilometers' });
 
-         // Add the buffer to the map as a new layer
-         clearBuffer(); // Clear any existing buffer
-         map.addSource('bufferSource', {
-             type: 'geojson',
-             data: buffer
-         });
-         map.addLayer({
-             id: 'bufferLayer',
-             type: 'fill',
-             source: 'bufferSource',
-             paint: {
-                 'fill-color': 'rgba(128, 128, 128, 0.5)', // Light gray fill with 50% transparency
-                 'fill-outline-color': 'black'             // Black outline
-             }
-         });
+        // Add the buffer to the map as a new layer
+        clearBuffer(); // Clear any existing buffer
+        map.addSource('bufferSource', {
+            type: 'geojson',
+            data: buffer
+        });
+        map.addLayer({
+            id: 'bufferLayer',
+            type: 'fill',
+            source: 'bufferSource',
+            paint: {
+                'fill-color': 'rgba(128, 128, 128, 0.5)', // Light gray fill with 50% transparency
+                'fill-outline-color': 'black'             // Black outline
+            }
+        });
 
         let popupContent = `
             <div class="popup-table">
@@ -1364,6 +1496,7 @@ document.getElementById('toggleFossil').addEventListener('change', (e) => {
 
 document.getElementById('toggleCoal').addEventListener('change', (e) => {
     map.setLayoutProperty('coal', 'visibility', e.target.checked ? 'visible' : 'none');
+    
 });
 
 document.getElementById('toggleCoal').addEventListener('change', (e) => {
@@ -1391,15 +1524,15 @@ document.getElementById('toggleBKPK').addEventListener('change', (e) => {
 });
 
 // Event listener for toggling India's Brick Kilns layer
-// document.getElementById('toggleBKIND').addEventListener('change', (e) => {
-//     if (e.target.checked) {
-//         loadBrickKilnLayerIND();  // Load the layer if it doesn't exist
-//     } else {
-//         if (map.getLayer('BK_IND')) {
-//             map.setLayoutProperty('BK_IND', 'visibility', 'none');
-//         }
-//     }
-// });
+document.getElementById('toggleBKIND').addEventListener('change', (e) => {
+    if (e.target.checked) {
+        loadBrickKilnLayerIND();  // Load the layer if it doesn't exist
+    } else {
+        if (map.getLayer('BK_IND')) {
+            map.setLayoutProperty('BK_IND', 'visibility', 'none');
+        }
+    }
+});
 
 // Event listener for toggling Bangladesh's Brick Kilns layer
 document.getElementById('toggleBKBAN').addEventListener('change', (e) => {
@@ -1422,16 +1555,16 @@ document.getElementById('toggleBrickKilns').addEventListener('change', (e) => {
     if (e.target.checked) {
         // Load the brick kiln layers if they are toggled on
         loadBrickKilnLayerPK();
-        // loadBrickKilnLayerIND();
+        loadBrickKilnLayerIND();
         loadBrickKilnLayerBAN();
     } else {
         // Hide the layers if they are already loaded
         if (map.getLayer('BK_PK')) {
             map.setLayoutProperty('BK_PK', 'visibility', 'none');
         }
-        // if (map.getLayer('BK_IND')) {
-        //     map.setLayoutProperty('BK_IND', 'visibility', 'none');
-        // }
+        if (map.getLayer('BK_IND')) {
+            map.setLayoutProperty('BK_IND', 'visibility', 'none');
+        }
         if (map.getLayer('BK_BAN')) {
             map.setLayoutProperty('BK_BAN', 'visibility', 'none');
         }
@@ -1439,7 +1572,7 @@ document.getElementById('toggleBrickKilns').addEventListener('change', (e) => {
 
     // Set the child checkboxes
     document.getElementById('toggleBKPK').checked = e.target.checked;
-    // document.getElementById('toggleBKIND').checked = e.target.checked;
+    document.getElementById('toggleBKIND').checked = e.target.checked;
     document.getElementById('toggleBKBAN').checked = e.target.checked;
 });
 
@@ -1454,15 +1587,15 @@ document.getElementById('toggleHexGridPAK').addEventListener('change', (e) => {
     }
 });
 
-// document.getElementById('toggleHexGridIND').addEventListener('change', (e) => {
-//     if (e.target.checked) {
-//         loadBrickKilnLayerINDhex();  // Load the layer if it doesn't exist
-//     } else {
-//         if (map.getLayer('brick_kilns_IND')) {
-//             map.setLayoutProperty('brick_kilns_IND', 'visibility', 'none');
-//         }
-//     }
-// });
+document.getElementById('toggleHexGridIND').addEventListener('change', (e) => {
+    if (e.target.checked) {
+        loadBrickKilnLayerINDhex();  // Load the layer if it doesn't exist
+    } else {
+        if (map.getLayer('brick_kilns_IND')) {
+            map.setLayoutProperty('brick_kilns_IND', 'visibility', 'none');
+        }
+    }
+});
 
 document.getElementById('toggleHexGridBAN').addEventListener('change', (e) => {
     if (e.target.checked) {
@@ -1484,16 +1617,16 @@ document.getElementById('toggleBrickKilnsGrid').addEventListener('change', (e) =
     if (e.target.checked) {
         // Load the brick kiln layers if they are toggled on
         loadBrickKilnLayerPKhex();
-        // loadBrickKilnLayerINDhex();
+        loadBrickKilnLayerINDhex();
         loadBrickKilnLayerBANhex();
     } else {
         // Hide the layers if they are already loaded
         if (map.getLayer('brick_kilns_PK')) {
             map.setLayoutProperty('brick_kilns_PK', 'visibility', 'none');
         }
-        // if (map.getLayer('brick_kilns_IND')) {
-        //     map.setLayoutProperty('brick_kilns_IND', 'visibility', 'none');
-        // }
+        if (map.getLayer('brick_kilns_IND')) {
+            map.setLayoutProperty('brick_kilns_IND', 'visibility', 'none');
+        }
         if (map.getLayer('brick_kilns_BAN')) {
             map.setLayoutProperty('brick_kilns_BAN', 'visibility', 'none');
         }
@@ -1501,7 +1634,7 @@ document.getElementById('toggleBrickKilnsGrid').addEventListener('change', (e) =
 
     // If the main checkbox is checked, set all child checkboxes to checked and show all layers
     document.getElementById('toggleHexGridPAK').checked = e.target.checked;
-    // document.getElementById('toggleHexGridIND').checked = e.target.checked;
+    document.getElementById('toggleHexGridIND').checked = e.target.checked;
     document.getElementById('toggleHexGridBAN').checked = e.target.checked;
 
 });
