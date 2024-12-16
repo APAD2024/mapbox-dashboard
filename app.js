@@ -27,7 +27,7 @@ let brickKilnPKLoaded = false;
 let brickKilnINDLoaded = false;
 let brickKilnBANLoaded = false;
 const layerIds = [
-    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'coal_africa'
+    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'coal_africa', 'cement_africa'
 ];
 
 // -------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
@@ -293,10 +293,10 @@ function addDataLayers() {
             });
     }
 
-    // Lazy load Coal IGP layer
+    // Lazy load Coal Africa layer
     if (!map.getSource('coal_Afc')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/68149ec584b5f3662a38f6f098595464/raw/f1bf50d43a7be5b16c7129953998800e29e6ff58/coal_Plants_Africa_geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/68149ec584b5f3662a38f6f098595464/raw/a53f5f3e7061d79b366fa2dc822df9d9e1731116/coal_Plants_Africa_geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('coal_Afc', {
@@ -327,10 +327,11 @@ function addDataLayers() {
                             <div class="popup-table">
                                 <h3>${properties.plant_name}, ${properties.country}</h3>
                                 <table>
-                                    <tr><th>Daily Production</th><td>${properties.daily_prod}</td></tr>
-                                    <tr><th>Capacity</th><td>${properties.cap_mw} mega watt</td></tr>
-                                    <tr><th>Status</th><td>${properties.status}</td></tr>
-                                    <tr><th>Heat Rate</th><td>${properties.heat_rate}</td></tr>
+                                    <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties.pm10}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties.pm25}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties.nox}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties.sox}</td></tr>
                                 </table>
                             </div>
                             `;
@@ -346,6 +347,69 @@ function addDataLayers() {
             })
             .catch(error => {
                 console.error('Error loading Africa Coal data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Lazy load CCement Africa layer
+    if (!map.getSource('cement_Afc')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/3c778bdbd8464ddc939b41c87e145bbc/raw/c605634a3e418b2a52a2125a3943d432d688755f/cement_africa.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('cement_Afc', {
+                    type: 'geojson',
+                    data: data,
+                });
+                coalLayer = map.addLayer({
+                    'id': 'cement_africa',
+                    'type': 'circle',
+                    'source': 'cement_Afc',
+                    'paint': {
+                        'circle-radius': 5,
+                        'circle-stroke-width': 0.5,
+                        'circle-color': 'purple',  // Add # for hex color
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'none'
+                    }
+                });
+
+                if (!aggregateToolEnabled) {
+                    // Popup for the coal layer
+                    map.on('click', 'cement_africa', (e) => {
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0]?.properties || {}; // Ensure properties exist
+                            console.log(properties); // Debugging: Log properties to verify
+                        
+                            const popupContent = `
+                            <div class="popup-table">
+                                <h3>${properties.city || 'Unknown City'}, ${properties.state || 'Unknown State'}, ${properties.country || 'Unknown Country'}</h3>
+                                <table>
+                                    <tr><th>Sub Region</th><td>${properties.sub_region || 'N/A'}</td></tr>
+                                    <tr><th>Plant Type</th><td>${properties.plant_type || 'N/A'}</td></tr>
+                                    <tr><th>Status</th><td>${properties.status || 'N/A'}</td></tr>
+                                    <tr><th>Production Type</th><td>${properties.production_type || 'N/A'}</td></tr>
+                                    <tr><th>Capacity</th><td>${properties.capacity || 'N/A'} mega watt</td></tr>
+                                </table>
+                            </div>
+                            `;
+                        
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(popupContent)
+                                .addTo(map);
+                        }
+                       
+                    });
+                    
+                }
+
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Africa Cement data:', error);
                 hideLoadingSpinner(); // Hide the spinner even if there is an error
             });
     }
@@ -1032,7 +1096,7 @@ for (const input of inputs) {
             if (document.getElementById('toggleHexGridBAN').checked) loadBrickKilnLayerBANhex();
 
             // Log the visibility status of all layers after layers are fully loaded
-            logLayerVisibility(['coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'coal_africa']);
+            logLayerVisibility(['coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'coal_africa', 'cement_africa']);
 
             hideLoadingSpinner(); // Hide the loading spinner after everything is done
         });
@@ -1185,7 +1249,7 @@ document.getElementById('areaChange').addEventListener('click', () => {
         // If the map is in Asia, shift to Africa
         map.flyTo({
             center: africaCenter,
-            zoom: 3,
+            zoom: 4,
             essential: true
         });
 
@@ -1196,6 +1260,14 @@ document.getElementById('areaChange').addEventListener('click', () => {
 });
 
 // -----------------------------------------------------------AGGREGATE TOOL-----------------------------------------------------------
+
+
+// Determine active area
+function getActiveArea() {
+    const currentCenter = map.getCenter();
+    const isAfrica = Math.abs(currentCenter.lng - africaCenter[0]) < 5 && Math.abs(currentCenter.lat - africaCenter[1]) < 5;
+    return isAfrica ? 'africa' : 'asia';
+}
 
 // Toggle the Aggregate Tool
 const tooltip = document.getElementById('tooltip');
@@ -1246,6 +1318,7 @@ function clearBuffer() {
 // Aggregate Tool logic - directly using coal, brick kilns, fossil fuel, and GPW layers
 map.on('click', (e) => {
     if (aggregateToolEnabled) {
+        const activeArea = getActiveArea();
         const clickCoordinates = [e.lngLat.lng, e.lngLat.lat];
         const bufferRadius = 100; // 100 km buffer
 
@@ -1316,6 +1389,7 @@ map.on('click', (e) => {
                     }
                 });
 
+
                 // if (totalCoalEmissions.nox || totalCoalEmissions.so2 || totalCoalEmissions.pm10 || totalCoalEmissions.pm25) {
                 //     popupContent += `
                 //         <p>NO₂ Emissions: ${totalCoalEmissions.nox.toFixed(2)} tons/year</p>
@@ -1324,6 +1398,50 @@ map.on('click', (e) => {
                 //         <p>PM₂.₅ Emissions: ${totalCoalEmissions.pm25.toFixed(2)} tons/year</p>
                 //     `;
                 // }
+            }
+        }
+
+        if (map.getLayer('coal_africa')) {
+            const coalVisibility = map.getLayoutProperty('coal_africa', 'visibility');
+            if (coalVisibility === 'visible') {
+                const coalLayerFeatures = map.queryRenderedFeatures({ layers: ['coal_africa'] });
+
+                coalLayerFeatures.forEach((feature) => {
+                    const coalPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon(coalPoint, buffer)) {
+                        totalCoalEmissions.nox += feature.properties.nox || 0;
+                        totalCoalEmissions.so2 += feature.properties.sox || 0;
+                        totalCoalEmissions.pm10 += feature.properties.pm10 || 0;
+                        totalCoalEmissions.pm25 += feature.properties.pm25 || 0;
+                        totalCoalPlants++; // Count coal plants within the buffer
+                    }
+                });
+
+              
+            }
+        }
+
+        if (totalCoalPlants > 0) {
+            popupContent += `<p>Coal Points: ${totalCoalPlants}</p>`;
+        }
+
+        // 3. Aggregate africa cement data within the buffer
+        let cementAfricaCount = 0;
+        if (map.getLayer('cement_africa')) {
+            const cementAfricaVisibility = map.getLayoutProperty('cement_africa', 'visibility');
+            if (cementAfricaVisibility === 'visible') {
+                const cementAfricaFeatures = map.queryRenderedFeatures({ layers: ['cement_africa'] });
+
+                cementAfricaFeatures.forEach((feature) => {
+                    const cementAfricaPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon(cementAfricaPoint, buffer)) {
+                        cementAfricaCount += 1;
+                    }
+                });
+
+                if (cementAfricaCount > 0) {
+                    popupContent += `<p>Cement Points: ${cementAfricaCount}</p>`;
+                }
             }
         }
 
@@ -1341,9 +1459,9 @@ map.on('click', (e) => {
                     }
                 });
 
-                // if (fossilFuelCount > 0) {
-                //     popupContent += `<p>Fossil Fuel Points: ${fossilFuelCount}</p>`;
-                // }
+                if (fossilFuelCount > 0) {
+                    popupContent += `<p>Fossil Fuel Points: ${fossilFuelCount}</p>`;
+                }
             }
         }
 
@@ -1363,16 +1481,15 @@ map.on('click', (e) => {
                     }
                 });
 
-                // if (totalPopulation > 0) {
-                //     popupContent += `<p>Total Population (GPW): ${totalPopulation}</p>`;
-                // }
+                if (totalGPWPoints > 0) {
+                    popupContent += `<p>Total GPW Points: ${totalGPWPoints}</p>`;
+                }
             }
         }
 
         // End the popup content and add canvas for the charts
         popupContent += `
             <canvas id="emissionsChart" width="250" height="250"></canvas>
-            <canvas id="countsChart" width="250" height="250"></canvas>
             </div>
         `;
 
@@ -1499,9 +1616,11 @@ document.getElementById('toggleCoal').addEventListener('change', (e) => {
     
 });
 
-document.getElementById('toggleCoal').addEventListener('change', (e) => {
+document.getElementById('toggleCoalAfrica').addEventListener('change', (e) => {
     map.setLayoutProperty('coal_africa', 'visibility', e.target.checked ? 'visible' : 'none');
 });
+
+
 
 document.getElementById('toggleGPW').addEventListener('change', (e) => {
     map.setLayoutProperty('gpw', 'visibility', e.target.checked ? 'visible' : 'none');
@@ -1644,7 +1763,9 @@ document.getElementById('toggleCoalAfrica').addEventListener('change', (e) => {
 });
 
 
-
+document.getElementById('toggleCementAfrica').addEventListener('change', (e) => {
+    map.setLayoutProperty('cement_africa', 'visibility', e.target.checked ? 'visible' : 'none');
+});
 
 
 // Legend  toggling (close button)
