@@ -1002,12 +1002,12 @@ function loadBrickKilnLayerPK() {
                                 <div class="popup-table">
                                     <h3>${properties.id}</h3>
                                     <table>
-                                        <tr><th>Pollutant</th><td> kg/season</td></tr>
-                                        <tr><th>PM<sub>10</sub></th><td>${properties['pm10s(kg)']}</td></tr>
-                                        <tr><th>PM<sub>2.5</sub></th><td>${properties['pm2.5s(kg)']}</td></tr>
-                                        <tr><th>NO<sub>2</sub></th><td>${properties['noxs(kg)']}</td></tr>
-                                        <tr><th>SO<sub>2</sub></th><td>${properties['soxs(kg)']}</td></tr>
-                                    </table>
+                                    <tr><th>Pollutant</th><td> kg/season</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10s(kg)']}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm2.5s(kg)']}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties['noxs(kg)']}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties['soxs(kg)']}</td></tr>
+                                </table>
                                     <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
                                     </button>
@@ -1077,10 +1077,21 @@ function loadBrickKilnLayerIND() {
                             const properties = e.features[0].properties;
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
-                                .setHTML(`<div class="popup-table"><h3>${properties.id}</h3>
-                                    <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lng}', '${e.lngLat.lat}')">
+                                .setHTML(`
+                                    <div class="popup-table">
+                                    <h3>${properties.id}</h3>
+                                    <table>
+                                    <tr><th>Pollutant</th><td> kg/season</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10s(kg)']}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm2.5s(kg)']}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties['noxs(kg)']}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties['soxs(kg)']}</td></tr>
+                                </table>
+                                    <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
-                                    </button></div>`)
+                                    </button>
+                                </div>
+                                    `)
                                 .addTo(map);
                         }
 
@@ -1143,15 +1154,15 @@ function loadBrickKilnLayerBAN() {
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
-                                     <div class="popup-table">
+                                    <div class="popup-table">
                                     <h3>${properties.id}</h3>
                                     <table>
-                                        <tr><th>Pollutant</th><td> kg/season</td></tr>
-                                        <tr><th>PM<sub>10</sub></th><td>${properties['pm10s(kg)']}</td></tr>
-                                        <tr><th>PM<sub>2.5</sub></th><td>${properties['pm2.5s(kg)']}</td></tr>
-                                        <tr><th>NO<sub>2</sub></th><td>${properties['noxs(kg)']}</td></tr>
-                                        <tr><th>SO<sub>2</sub></th><td>${properties['soxs(kg)']}</td></tr>
-                                    </table>
+                                    <tr><th>Pollutant</th><td> kg/season</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10s(kg)']}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm2.5s(kg)']}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties['noxs(kg)']}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties['soxs(kg)']}</td></tr>
+                                </table>
                                     <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
                                     </button>
@@ -1220,19 +1231,16 @@ function loadBrickKilnLayerDRC() {
                                 .setLngLat(e.lngLat)
                                 .setHTML(
                                     `
-                                     <div class="popup-table">
-                                    <h3>${properties.id}</h3>
-                                    <table>
-                                        <tr><th>Pollutant</th><td> kg/season</td></tr>
-                                        <tr><th>PM<sub>10</sub></th><td>${properties['pm10s(kg)']}</td></tr>
-                                        <tr><th>PM<sub>2.5</sub></th><td>${properties['pm2.5s(kg)']}</td></tr>
-                                        <tr><th>NO<sub>2</sub></th><td>${properties['noxs(kg)']}</td></tr>
-                                        <tr><th>SO<sub>2</sub></th><td>${properties['soxs(kg)']}</td></tr>
-                                    </table>
-                                    <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
-                                        Report This Point
-                                    </button>
-                                </div>
+                                    <div class="popup-table">
+                                        <h3>${properties.name}</h3>
+                                        <table>
+                                            <tr><th>Description</th></tr>
+                                            <tr><td>${properties.query}</td></tr>
+                                        </table>
+                                        <button id="reportButton" onclick="reportPoint( '${e.lngLat.lon}', '${e.lngLat.lat}')">
+                                            Report This Point
+                                        </button>
+                                    </div>
                                     `)
                                 .addTo(map);
                         }
