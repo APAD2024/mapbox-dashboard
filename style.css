@@ -261,7 +261,6 @@ html {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for visibility */
 }
 
-
 /* CSS class to show the tooltip */
 .tooltip-visible {
     display: block;
@@ -272,8 +271,7 @@ html {
     display: none;
 }
 
-
-
+/* Aggregate Tool Button Styling */
 #aggregateTool {
     position: absolute;
     top: 270px;
@@ -288,13 +286,36 @@ html {
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    
 }
 
 #aggregateTool i {
     font-size: 20px;
 }
 
+/* Buffer Size Dropdown Styling */
+#bufferSizeSelector {
+    position: absolute;
+    top: 320px; /* Position below the aggregate tool button */
+    right: 10px; /* Align with the aggregate tool */
+    background: white;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    padding: 5px;
+    z-index: 1;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    color: #4b6151; /* Match tooltip text color */
+}
+
+.bufferSizeSelector-hidden{
+    display: none;
+}
+
+.bufferSizeSelector-visible{
+    display: block;
+}
 
 /* Loading spinner styles */
 .loading-spinner {

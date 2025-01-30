@@ -90,20 +90,34 @@
         <p>Loading layers...</p>
     </div>
 
-    <!-------------------------------------------------------------- Aggregate Tool Button -------------------------------------------------------->
+    <!-------------------------------------------------------------- Aggregate Tool -------------------------------------------------------->
     <!-- Tooltip Element -->
     <div id="tooltip" class="tooltip-hidden">
         Turn on the layers to see aggregated pollutant data.
     </div>
-    <div id="aggregateTool" title="Aggregate Data">
-        <i class="fas fa-calculator"></i>
+
+    <!-- Aggregate Tool -->
+    <div id="aggregateToolContainer">
+        <!-- Aggregate Tool Button -->
+        <div id="aggregateTool" title="Aggregate Data">
+            <i class="fas fa-calculator"></i>
+        </div>
+
+        <!-- Buffer Size Dropdown -->
+        <select id="bufferSizeSelector" title="Select Buffer Size" class="bufferSizeSelector-hidden">
+            <option value="5">5 km</option>
+            <option value="10">10 km</option>
+            <option value="20">20 km</option>
+            <option value="100" selected>100 km</option>
+        </select>
     </div>
+
 
     <!----------------------------------------------------------------- Map ----------------------------------------------------------------------->
 
     <div id="map"></div>
 
-        <!------------------------------------------------------------- Legend Layers ----------------------------------------------------------------->
+    <!------------------------------------------------------------- Legend Layers ----------------------------------------------------------------->
     <div id="legendButton"><i class="fas fa-layer-group"></i></div>
     <div id="legend">
         <button class="closeButton">&times;</button>
@@ -214,8 +228,8 @@
         <!-- Africa Region -->
         <h3>Africa Region</h3>
 
-         <!-- Brick Kilns Legend (Main Checkbox) -->
-         <div class="legend-section" id="legend-brickKiln-afc" draggable="true">
+        <!-- Brick Kilns Legend (Main Checkbox) -->
+        <div class="legend-section" id="legend-brickKiln-afc" draggable="true">
             <input id="toggleBrickKilnsAFC" type="checkbox" name="brick_kilns_afc">
             <div class="legend-key" style="background-color:green;"></div>
             <span>Brick Kilns</span>
@@ -241,23 +255,23 @@
             </div>
         </div>
 
-         <!-- Paper Pulp Africa -->
-         <div class="legend-section" id="legend-africa-paperPulp" draggable="true">
-            <input id="togglePaperPulpAfrica" type="checkbox" name="paper-pulp-africa" >
+        <!-- Paper Pulp Africa -->
+        <div class="legend-section" id="legend-africa-paperPulp" draggable="true">
+            <input id="togglePaperPulpAfrica" type="checkbox" name="paper-pulp-africa">
             <div class="legend-key" style="background-color: rgb(112, 206, 202);"></div>
             <span>Paper Pulp</span>
         </div>
 
         <!-- Steel Plants Africa -->
         <div class="legend-section" id="legend-africa-steel" draggable="true">
-            <input id="toggleSteelAfrica" type="checkbox" name="steel-africa" >
+            <input id="toggleSteelAfrica" type="checkbox" name="steel-africa">
             <div class="legend-key" style="background-color: rgb(24, 54, 84);"></div>
             <span>Steel Plants</span>
         </div>
 
         <!-- CEment Africa -->
         <div class="legend-section" id="legend-cement-africa" draggable="true">
-            <input id="toggleCementAfrica" type="checkbox" name="cement-africa" >
+            <input id="toggleCementAfrica" type="checkbox" name="cement-africa">
             <div class="legend-key" style="background-color: purple;"></div>
             <span>Cement</span>
         </div>
@@ -269,17 +283,17 @@
             <span>Coal</span>
         </div>
 
-       
 
-        
 
-    
+
+
+
     </div>
 
 
 
-        </div>
-        </div>
+    </div>
+    </div>
 
 
 
