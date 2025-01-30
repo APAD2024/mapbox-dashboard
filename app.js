@@ -1085,7 +1085,7 @@ function loadBrickKilnLayerIND() {
                                     <tr><th>PM<sub>10</sub></th><td>${properties['pm10s_kg_']}</td></tr>
                                     <tr><th>PM<sub>2.5</sub></th><td>${properties['pm2_5s_kg_']}</td></tr>
                                     <tr><th>NO<sub>2</sub></th><td>${properties['noxs_kg_']}</td></tr>
-                                    <tr><th>SO<sub>2</sub></th><td>${properties['soxs_kg_)']}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties['soxs_kg_']}</td></tr>
                                 </table>
                                     <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
