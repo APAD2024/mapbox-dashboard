@@ -2192,9 +2192,7 @@ document.getElementById('toggleBrickKilns').addEventListener('change', (e) => {
     // Show or hide the country-specific checkboxes
     document.getElementById('brickKilnCountries').style.display = e.target.checked ? 'block' : 'none';
 
-     // Show or hide the country-specific checkboxes
-     document.getElementById('brickKilnAfcCountries').style.display = e.target.checked ? 'block' : 'none';
-
+   
     if (e.target.checked) {
         // Load the brick kiln layers if they are toggled on
         loadBrickKilnLayerPK();
