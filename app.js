@@ -8,7 +8,7 @@ const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/light-v11', // style URL
     center: [78.8181577, 28.7650135], // starting position
-    zoom: 4 // starting zoom
+    zoom: 5 // starting zoom
 });
 
 // Add navigation control (zoom and rotation) to the top-right corner
@@ -27,7 +27,7 @@ let brickKilnPKLoaded = false;
 let brickKilnINDLoaded = false;
 let brickKilnBANLoaded = false;
 const layerIds = [
-    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 
+    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'plastic_waste_IGP', 'solid_waste_IGP',
     'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA'
 ];
 
@@ -185,7 +185,7 @@ function addDataLayers() {
             'source': 'population',
             'type': 'raster',
             layout: {
-                visibility: 'none' // Initial visibility
+                visibility: 'visible' // Initial visibility
             }
         });
     }
@@ -211,7 +211,7 @@ function addDataLayers() {
                         'circle-stroke-color': 'white'
                     },
                     layout: {
-                        visibility: 'none'
+                        visibility: 'visible'
                     }
                 });
 
@@ -239,7 +239,7 @@ function addDataLayers() {
     // Lazy load Coal IGP layer
     if (!map.getSource('coal_IGP')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/f1608007d5c4d041a8d67496e30b7458/raw/33e4507a54439aeba9889eb7fb39d2614fc1ba66/IGP_Coal_Plants.geojson')
+        fetch('https://gist.githubusercontent.com/Mseher/f1608007d5c4d041a8d67496e30b7458/raw/7340a32fa2fea659dfffb8c14c680c85ff690111/IGP_Coal_Plants.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('coal_IGP', {
@@ -251,7 +251,7 @@ function addDataLayers() {
                     'type': 'circle',
                     'source': 'coal_IGP',
                     'paint': {
-                        'circle-radius': 7,
+                        'circle-radius': 5,
                         'circle-stroke-width': 2,
                         'circle-color': '#616161',  // Add # for hex color
                         'circle-stroke-color': 'white'
@@ -268,13 +268,13 @@ function addDataLayers() {
                             const properties = e.features[0].properties;
                             const popupContent = `
                             <div class="popup-table">
-                                <h3>${properties.plnt_nm}, ${properties.country}</h3>
+                                <h3>${properties.plant_name}, ${properties.country}</h3>
                                 <table>
                                     <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
-                                    <tr><th>PM<sub>10</sub></th><td>${properties.p10_tn_}</td></tr>
-                                    <tr><th>PM<sub>2.5</sub></th><td>${properties.p25_tn_}</td></tr>
-                                    <tr><th>NO<sub>2</sub></th><td>${properties.nx_tn_y}</td></tr>
-                                    <tr><th>SO<sub>2</sub></th><td>${properties.sx_tn_y}</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties.p10_tn_y}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties.p25_tn_y}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties.nox_tn_y}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties.so2_tn_y}</td></tr>
                                 </table>
                             </div>
                             `;
@@ -290,6 +290,452 @@ function addDataLayers() {
             })
             .catch(error => {
                 console.error('Error loading Coal data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    
+
+    // Lazy load GPW layer
+    if (!map.getSource('GPW')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/bilalpervaiz/e2c93d2017fc1ed90f9a6d5259701a5e/raw/4dd19fe557d29b9268f11e233169948e95c24803/GPW.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('GPW', {
+                    type: 'geojson',
+                    data: data
+                });
+                gpwLayer = map.addLayer({
+                    'id': 'gpw',
+                    'type': 'circle',
+                    'source': 'GPW',
+                    'paint': {
+                        'circle-radius': 5,
+                        'circle-stroke-width': 2,
+                        'circle-color': 'black',
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'visible'
+                    }
+                });
+
+
+
+                if (!aggregateToolEnabled) {
+                    // Popup for the coal layer
+                    map.on('click', 'gpw', (e) => {
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`<div class="popup-table"><h3>${properties.name}</h3></div>`)
+                                .addTo(map);
+                        }
+                    });
+                }
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading GPW data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Lazy load Cement IGP layer
+    if (!map.getSource('cementIGP')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/084621ff3c494a2f5a72c3985821432d/raw/2aef1eb06e4cc801aa1cd5547a463683a57eef80/cement_igp.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('cementIGP', {
+                    type: 'geojson',
+                    data: data
+                });
+                gpwLayer = map.addLayer({
+                    'id': 'cement_IGP',
+                    'type': 'circle',
+                    'source': 'cementIGP',
+                    'paint': {
+                        'circle-radius': 5,
+                        'circle-stroke-width': 0.5,
+                        'circle-color': 'purple',  // Add # for hex color
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'none'
+                    }
+                });
+
+
+
+                if (!aggregateToolEnabled) {
+                    // Popup for the coal layer
+                    map.on('click', 'cement_IGP', (e) => {
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`
+                                     <div class="popup-table">
+                                    <h3>${properties.plant_name}, ${properties.country}</h3>
+                                        <table>
+                                            <tr><th>State</th><td>${properties.state}</td></tr>
+                                            <tr><th>Region</th><td>${properties.region}</td></tr>
+                                            <tr><th>Sub Region</th><td>${properties.sub_region}</td></tr>
+                                            <tr><th>Status</th><td>${properties.status}</td></tr>
+                                        </table>
+                                    </div>
+                                    `)
+                                .addTo(map);
+                        }
+                    });
+                }
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Cement IGP data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+
+    // Lazy load Oil Gas Refining layer
+    if (!map.getSource('oilgasIGP')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/27d0c9675491802841d2c65edca2c0f8/raw/30663fcd041e76d6c19b2105f0431d5c7f5b11b2/oil_gas_igp.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('oilgasIGP', {
+                    type: 'geojson',
+                    data: data
+                });
+                gpwLayer = map.addLayer({
+                    'id': 'oil_gas_IGP',
+                    'type': 'circle',
+                    'source': 'oilgasIGP',
+                    'paint': {
+                        'circle-radius': 5,
+                        'circle-stroke-width': 2,
+                        'circle-color': 'brown',  // Add # for hex color
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'visible'
+                    }
+                });
+
+
+
+                if (!aggregateToolEnabled) {
+                    // Popup for the coal layer
+                    map.on('click', 'oil_gas_IGP', (e) => {
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`
+                                     <div class="popup-table">
+                                    <h3>${properties.source_nam}</h3>
+                                        <table>
+                                            <tr><th>Gas</th><td>${properties.gas}</td></tr>
+                                            <tr><th>Capacity</th><td>${properties.capacity_f}</td></tr>
+                                            <tr><th>Country</th><td>${properties.iso3_count}</td></tr>
+                                        </table>
+                                    </div>
+                                    `)
+                                .addTo(map);
+                        }
+                    });
+                }
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Oil and Gas Refining IGP data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+
+    // Lazy load Paper Pulp IGP layer
+    if (!map.getSource('paperPulpIGP')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/8c774bef4ca09be557ca1b53710a8b35/raw/687f999eafa84ec12e5fb160d027d2887808fc40/paper_pulp_igp.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('paperPulpIGP', {
+                    type: 'geojson',
+                    data: data
+                });
+                gpwLayer = map.addLayer({
+                    'id': 'paper_pulp_IGP',
+                    'type': 'circle',
+                    'source': 'paperPulpIGP',
+                    'paint': {
+                        'circle-radius': 5,
+                        'circle-stroke-width': 2,
+                        'circle-color': 'rgb(112, 206, 202)',  // Add # for hex color
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'visible'
+                    }
+                });
+
+
+
+                if (!aggregateToolEnabled) {
+                    // Popup for the coal layer
+                    map.on('click', 'paper_pulp_IGP', (e) => {
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`
+                                     <div class="popup-table">
+                                    <h3>${properties.plant_name}, ${properties.city}</h3>
+                                        <table>
+                                            <tr><th>Plant Type</th><td>${properties.plant_type}</td></tr>
+                                            <tr><th>Status</th><td>${properties.status}</td></tr>
+                                            <tr><th>Capacity</th><td>${properties.capacity_p}</td></tr>
+                                        </table>
+                                    </div>
+                                    `)
+                                .addTo(map);
+                        }
+                    });
+                }
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Paper Pulp IGP data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Lazy load Steel IGP layer
+    if (!map.getSource('steelIGP')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/7134493862bf31e262412731b2253a65/raw/fceb6e9877e4bfe203bb2a21660a3ae36ba5adc6/steel_IGP.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('steelIGP', {
+                    type: 'geojson',
+                    data: data
+                });
+                gpwLayer = map.addLayer({
+                    'id': 'steel_IGP',
+                    'type': 'circle',
+                    'source': 'steelIGP',
+                    'paint': {
+                        'circle-radius': 5,
+                        'circle-stroke-width': 2,
+                        'circle-color': 'rgb(24, 54, 84)',  // Add # for hex color
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'visible'
+                    }
+                });
+
+
+
+                if (!aggregateToolEnabled) {
+                    // Popup for the coal layer
+                    map.on('click', 'steel_IGP', (e) => {
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`
+                                     <div class="popup-table">
+                                    <h3>${properties.city}, ${properties.country}</h3>
+                                        <table>
+                                            <tr><th>Plant Type</th><td>${properties.plant_type}</td></tr>
+                                            <tr><th>Status</th><td>${properties.status}</td></tr>
+                                            <tr><th>Capacity</th><td>${properties.capacity_p}</td></tr>
+                                        </table>
+                                    </div>
+                                    `)
+                                .addTo(map);
+                        }
+                    });
+                }
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Steel IGP data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Lazy load  Plastic Waste IGP layer
+    if (!map.getSource('plasticWasteIGP')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/e00828d1f608b0eccd3c595acb0b5063/raw/1445bbfc749a509325784efc1f5a3299c2f7a528/plastic_waste_IGP.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('plasticWasteIGP', {
+                    type: 'geojson',
+                    data: data
+                });
+                gpwLayer = map.addLayer({
+                    'id': 'plastic_waste_IGP',
+                    'type': 'circle',
+                    'source': 'plasticWasteIGP',
+                    'paint': {
+                        'circle-radius': 5,
+                        'circle-stroke-width': 2,
+                        'circle-color': 'rgb(165, 146, 23)',  // Add # for hex color
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'visible'
+                    }
+                });
+
+
+
+                if (!aggregateToolEnabled) {
+                    // Popup for the coal layer
+                    map.on('click', 'plastic_waste_IGP', (e) => {
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`
+                                     <div class="popup-table">
+                                    <h3>${properties.name}</h3>
+                                        <table>
+                                            <tr><th>Area</th><td>${properties.area}</td></tr>
+                                            <tr><th>Country</th><td>${properties.country}</td></tr>
+                                        </table>
+                                    </div>
+                                    `)
+                                .addTo(map);
+                        }
+                    });
+                }
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Plastic Waste IGP data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+    
+     // Lazy load  Plastic Waste IGP layer
+     if (!map.getSource('solidWasteIGP')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/cd7115dc6a27c5771fcbf22480eb781c/raw/cbd1ba2cf0952b3d911daf888dd87fe80b301c7a/solid_waste_disposal_IGP.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('solidWasteIGP', {
+                    type: 'geojson',
+                    data: data
+                });
+                gpwLayer = map.addLayer({
+                    'id': 'solid_waste_IGP',
+                    'type': 'circle',
+                    'source': 'solidWasteIGP',
+                    'paint': {
+                        'circle-radius': 5,
+                        'circle-stroke-width': 2,
+                        'circle-color': 'rgb(206, 131, 19)',  // Add # for hex color
+                        'circle-stroke-color': 'white'
+                    },
+                    layout: {
+                        visibility: 'visible'
+                    }
+                });
+
+
+
+                if (!aggregateToolEnabled) {
+                    // Popup for the coal layer
+                    map.on('click', 'solid_waste_IGP', (e) => {
+                        if (!aggregateToolEnabled) {
+                            const properties = e.features[0].properties;
+                            new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(`
+                                     <div class="popup-table">
+                                    <h3>${properties.asset_type}</h3>
+                                        <table>
+                                            <tr><th>Status</th><td>${properties.status}</td></tr>
+                                            <tr><th>Country</th><td>${properties.country}</td></tr>
+                                        </table>
+                                    </div>
+                                    `)
+                                .addTo(map);
+                        }
+                    });
+                }
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Solid Waste IGP data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Pollutant decay heatmap layer
+    if (!map.getSource('pollutant_decay')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/bilalpervaiz/97a2ce64252ad5a095c9222f4c9ae5b1/raw/4fcc0590f9b28e13a369fb93f4f0ff00410844a6/pollutant_decay.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('pollutant_decay', {
+                    type: 'geojson',
+                    data: data
+                });
+                pollutantLayer = map.addLayer({
+                    'id': 'pollutant',
+                    'type': 'heatmap',
+                    'source': 'pollutant_decay',
+                    'maxzoom': 12,
+                    layout: {
+                        visibility: 'none'
+                    },
+                    'paint': {
+                        'heatmap-weight': {
+                            'property': 'decay_PM10_1',
+                            'type': 'exponential',
+                            'stops': [
+                                [0.030291835876543865, 0],
+                                [3.332101946419825, 1]
+                            ]
+                        },
+                        'heatmap-color': [
+                            'interpolate',
+                            ['linear'],
+                            ['heatmap-density'],
+                            0, 'rgba(255,255,178,0)',
+                            0.2, 'rgb(254,204,92)',
+                            0.4, 'rgb(253,141,60)',
+                            0.6, 'rgb(240,59,32)',
+                            0.8, 'rgb(189,0,38)'
+                        ],
+                        'heatmap-radius': {
+                            'stops': [
+                                [11, 15],
+                                [15, 20]
+                            ]
+                        },
+                        'heatmap-opacity': {
+                            'default': 1,
+                            'stops': [
+                                [14, 1],
+                                [15, 0]
+                            ]
+                        }
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Pollutant Decay data:', error);
                 hideLoadingSpinner(); // Hide the spinner even if there is an error
             });
     }
@@ -352,7 +798,7 @@ function addDataLayers() {
             });
     }
 
-    // Lazy load CCement Africa layer
+    // Lazy load Cement Africa layer
     if (!map.getSource('cement_Afc')) {
         showLoadingSpinner(); // Show the spinner while loading
         fetch('https://gist.githubusercontent.com/Mseher/3c778bdbd8464ddc939b41c87e145bbc/raw/c605634a3e418b2a52a2125a3943d432d688755f/cement_africa.geojson')
@@ -373,7 +819,7 @@ function addDataLayers() {
                         'circle-stroke-color': 'white'
                     },
                     layout: {
-                        visibility: 'none'
+                        visibility: 'visible'
                     }
                 });
 
@@ -437,7 +883,7 @@ function addDataLayers() {
                         'circle-stroke-color': 'white'
                     },
                     layout: {
-                        visibility: 'none'
+                        visibility: 'visible'
                     }
                 });
 
@@ -500,7 +946,7 @@ function addDataLayers() {
                         'circle-stroke-color': 'white'
                     },
                     layout: {
-                        visibility: 'none'
+                        visibility: 'visible'
                     }
                 });
 
@@ -537,115 +983,6 @@ function addDataLayers() {
             })
             .catch(error => {
                 console.error('Error loading Africa Steel Plants data:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    }
-
-    // Lazy load GPW layer
-    if (!map.getSource('GPW')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/bilalpervaiz/e2c93d2017fc1ed90f9a6d5259701a5e/raw/4dd19fe557d29b9268f11e233169948e95c24803/GPW.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('GPW', {
-                    type: 'geojson',
-                    data: data
-                });
-                gpwLayer = map.addLayer({
-                    'id': 'gpw',
-                    'type': 'circle',
-                    'source': 'GPW',
-                    'paint': {
-                        'circle-radius': 5,
-                        'circle-stroke-width': 2,
-                        'circle-color': 'black',
-                        'circle-stroke-color': 'white'
-                    },
-                    layout: {
-                        visibility: 'none'
-                    }
-                });
-
-
-
-                if (!aggregateToolEnabled) {
-                    // Popup for the coal layer
-                    map.on('click', 'gpw', (e) => {
-                        if (!aggregateToolEnabled) {
-                            const properties = e.features[0].properties;
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(`<div class="popup-table"><h3>${properties.name}</h3></div>`)
-                                .addTo(map);
-                        }
-                    });
-                }
-                hideLoadingSpinner(); // Hide the spinner after loading
-            })
-            .catch(error => {
-                console.error('Error loading GPW data:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    }
-
-    
-
-    // Pollutant decay heatmap layer
-    if (!map.getSource('pollutant_decay')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/bilalpervaiz/97a2ce64252ad5a095c9222f4c9ae5b1/raw/4fcc0590f9b28e13a369fb93f4f0ff00410844a6/pollutant_decay.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('pollutant_decay', {
-                    type: 'geojson',
-                    data: data
-                });
-                pollutantLayer = map.addLayer({
-                    'id': 'pollutant',
-                    'type': 'heatmap',
-                    'source': 'pollutant_decay',
-                    'maxzoom': 12,
-                    layout: {
-                        visibility: 'none'
-                    },
-                    'paint': {
-                        'heatmap-weight': {
-                            'property': 'decay_PM10_1',
-                            'type': 'exponential',
-                            'stops': [
-                                [0.030291835876543865, 0],
-                                [3.332101946419825, 1]
-                            ]
-                        },
-                        'heatmap-color': [
-                            'interpolate',
-                            ['linear'],
-                            ['heatmap-density'],
-                            0, 'rgba(255,255,178,0)',
-                            0.2, 'rgb(254,204,92)',
-                            0.4, 'rgb(253,141,60)',
-                            0.6, 'rgb(240,59,32)',
-                            0.8, 'rgb(189,0,38)'
-                        ],
-                        'heatmap-radius': {
-                            'stops': [
-                                [11, 15],
-                                [15, 20]
-                            ]
-                        },
-                        'heatmap-opacity': {
-                            'default': 1,
-                            'stops': [
-                                [14, 1],
-                                [15, 0]
-                            ]
-                        }
-                    }
-                });
-                hideLoadingSpinner(); // Hide the spinner after loading
-            })
-            .catch(error => {
-                console.error('Error loading Pollutant Decay data:', error);
                 hideLoadingSpinner(); // Hide the spinner even if there is an error
             });
     }
@@ -1557,8 +1894,9 @@ for (const input of inputs) {
             if (document.getElementById('toggleHexGridBAN').checked) loadBrickKilnLayerBANhex();
 
             // Log the visibility status of all layers after layers are fully loaded
-            logLayerVisibility(['coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 
-                'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_NGA' ,'brick_kilns_UGA']);
+            logLayerVisibility([ 'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_igp', 'oil_gas_igp', 'paper_pulp_igp', 'steel_igp', 'plastic_waste_igp', 'solid_waste_igp',
+                'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA'
+            ]);
 
             hideLoadingSpinner(); // Hide the loading spinner after everything is done
         });
@@ -1622,7 +1960,7 @@ document.querySelectorAll('.legend-section').forEach(item => {
         e.preventDefault();
         if (draggedElement !== this) {
             // Swap the dragged element with the drop target
-            const legend = document.getElementById('legend');
+            const legend = document.getElementById('legend-drag');
             const draggingIndex = Array.from(legend.children).indexOf(draggedElement);
             const targetIndex = Array.from(legend.children).indexOf(this);
 
@@ -1683,43 +2021,82 @@ function applyLayerVisibility() {
     });
 }
 
+// Get all collapsible headers
+const headers = document.querySelectorAll('.collapsible-header');
+
+headers.forEach(header => {
+    header.addEventListener('click', () => {
+        const content = header.nextElementSibling;
+
+        // Toggle visibility of content
+        if (content.style.display === 'none' || content.style.display === '') {
+            content.style.display = 'block';
+        } else {
+            content.style.display = 'none';
+        }
+    });
+});
+
+
 
 // -----------------------------------------------------------AREA CHANGE-----------------------------------------------------------
-
-// Add this to your JavaScript (inside app.js or another script file)
 const africaCenter = [20.0, 5.0];  // Longitude, Latitude for Africa
 const asiaCenter = [78.8181577, 28.7650135];  // Longitude, Latitude for South Asia
 const zoomLevel = 4;  // Common zoom level for both regions
 
-// Add event listener for button click
+// Add event listener for the area change button
 document.getElementById('areaChange').addEventListener('click', () => {
     const currentCenter = map.getCenter();
 
     // Check if the map is currently centered around Africa or Asia
     if (Math.abs(currentCenter.lng - africaCenter[0]) < 5 && Math.abs(currentCenter.lat - africaCenter[1]) < 5) {
-        // If the map is in Africa, shift to Asia
+        // If the map is in Africa, shift to Asia (IGP Region)
         map.flyTo({
             center: asiaCenter,
             zoom: zoomLevel,
             essential: true
         });
 
-        // Change the icon to "Asia" (globe icon can be used)
+        // Change the icon and title to Africa
         document.getElementById('areaChange').innerHTML = '<i class="fas fa-globe-asia"></i>';
         document.getElementById('areaChange').setAttribute('title', 'Move to Africa');
+
+        // Show IGP Region legend and hide Africa Region legend
+        document.querySelector('.collapsible-content.igp').style.display = 'block';
+        document.querySelector('.collapsible-content.africa').style.display = 'none';
     } else {
-        // If the map is in Asia, shift to Africa
+        // If the map is in Asia (IGP Region), shift to Africa
         map.flyTo({
             center: africaCenter,
-            zoom: 4,
+            zoom: zoomLevel,
             essential: true
         });
 
-        // Change the icon to "Africa"
+        // Change the icon and title to Asia
         document.getElementById('areaChange').innerHTML = '<i class="fas fa-globe-africa"></i>';
         document.getElementById('areaChange').setAttribute('title', 'Move to Asia');
+
+        // Show Africa Region legend and hide IGP Region legend
+        document.querySelector('.collapsible-content.africa').style.display = 'block';
+        document.querySelector('.collapsible-content.igp').style.display = 'none';
     }
 });
+
+// Initialize the correct legend visibility on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const currentCenter = map.getCenter();
+
+    if (Math.abs(currentCenter.lng - africaCenter[0]) < 5 && Math.abs(currentCenter.lat - africaCenter[1]) < 5) {
+        // Map starts in Africa
+        document.querySelector('.collapsible-content.africa').style.display = 'block';
+        document.querySelector('.collapsible-content.igp').style.display = 'none';
+    } else {
+        // Map starts in Asia (IGP Region)
+        document.querySelector('.collapsible-content.igp').style.display = 'block';
+        document.querySelector('.collapsible-content.africa').style.display = 'none';
+    }
+});
+
 
 // -----------------------------------------------------------AGGREGATE TOOL-----------------------------------------------------------
 
@@ -1735,6 +2112,7 @@ function getActiveArea() {
 const tooltip = document.getElementById('tooltip');
 let aggregateToolEnabled = false;
 const aggregateButton = document.getElementById('aggregateTool');
+const bufferSizeSelector = document.getElementById('bufferSizeSelector');
 
 // Event listener to enable/disable the Aggregate Tool
 aggregateButton.addEventListener('click', () => {
@@ -1784,10 +2162,21 @@ map.on('click', (e) => {
     if (aggregateToolEnabled) {
         const activeArea = getActiveArea();
         const clickCoordinates = [e.lngLat.lng, e.lngLat.lat];
-        const bufferRadius = 100; // 100 km buffer
+       // Get buffer size from dropdown and ensure valid number
+       const bufferRadius = parseFloat(bufferSizeSelector.value);
+       if (isNaN(bufferRadius) || bufferRadius <= 0) {
+           console.error("Invalid buffer size selected.");
+           return;
+       }
 
-        // Create a 100 km buffer around the clicked point
-        const buffer = turf.buffer(turf.point(clickCoordinates), bufferRadius, { units: 'kilometers' });
+       // Generate the buffer using Turf.js with the selected size
+       const buffer = turf.buffer(turf.point(clickCoordinates), bufferRadius, { units: 'kilometers' });
+
+       // Check if the buffer is valid
+       if (!buffer || buffer.geometry.coordinates.length === 0) {
+           console.error("Buffer generation failed.");
+           return;
+       }
 
         // Add the buffer to the map as a new layer
         clearBuffer(); // Clear any existing buffer
@@ -1807,7 +2196,7 @@ map.on('click', (e) => {
 
         let popupContent = `
             <div class="popup-table">
-                <h3>Aggregated Data (100 km buffer)</h3>
+                <h3>Aggregated Data (${bufferRadius} km buffer)</h3>
         `;
 
       // 1. Aggregate brick kilns based on visibility
@@ -1862,23 +2251,13 @@ map.on('click', (e) => {
                 coalLayerFeatures.forEach((feature) => {
                     const coalPoint = turf.point(feature.geometry.coordinates);
                     if (turf.booleanPointInPolygon(coalPoint, buffer)) {
-                        totalCoalEmissions.nox += feature.properties.nx_tn_y || 0;
-                        totalCoalEmissions.so2 += feature.properties.sx_tn_y || 0;
-                        totalCoalEmissions.pm10 += feature.properties.p10_tn_ || 0;
-                        totalCoalEmissions.pm25 += feature.properties.p25_tn_ || 0;
+                        totalCoalEmissions.nox += feature.properties.nox_tn_y || 0;
+                        totalCoalEmissions.so2 += feature.properties.so2_tn_y || 0;
+                        totalCoalEmissions.pm10 += feature.properties.p10_tn_y || 0;
+                        totalCoalEmissions.pm25 += feature.properties.p25_tn_y || 0;
                         totalCoalPlants++; // Count coal plants within the buffer
                     }
                 });
-
-
-                // if (totalCoalEmissions.nox || totalCoalEmissions.so2 || totalCoalEmissions.pm10 || totalCoalEmissions.pm25) {
-                //     popupContent += `
-                //         <p>NO₂ Emissions: ${totalCoalEmissions.nox.toFixed(2)} tons/year</p>
-                //         <p>SO₂ Emissions: ${totalCoalEmissions.so2.toFixed(2)} tons/year</p>
-                //         <p>PM₁₀ Emissions: ${totalCoalEmissions.pm10.toFixed(2)} tons/year</p>
-                //         <p>PM₂.₅ Emissions: ${totalCoalEmissions.pm25.toFixed(2)} tons/year</p>
-                //     `;
-                // }
             }
         }
 
@@ -1902,9 +2281,30 @@ map.on('click', (e) => {
             }
         }
 
-        if (totalCoalPlants > 0) {
-            popupContent += `<p>Coal Points: ${totalCoalPlants}</p>`;
+        // if (totalCoalPlants > 0) {
+        //     popupContent += `<p>Coal Points: ${totalCoalPlants}</p>`;
+        // }
+
+        // 2. Aggregate cement IGP data within the buffer
+        let cementIGPCount = 0;
+        if (map.getLayer('cement_IGP')) {
+            const  cementIGPVisibility = map.getLayoutProperty('cement_IGP', 'visibility');
+            if ( cementIGPVisibility === 'visible') {
+                const  cementIGPFeatures = map.queryRenderedFeatures({ layers: ['cement_IGP'] });
+
+                cementIGPFeatures.forEach((feature) => {
+                    const  cementIGPPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon( cementIGPPoint, buffer)) {
+                        cementIGPCount += 1;
+                    }
+                });
+
+                // if ( cementIGPCount > 0) {
+                //     popupContent += `<p>Cement Plants: ${ cementIGPCount}</p>`;
+                // }
+            }
         }
+
 
         // 3. Aggregate africa cement data within the buffer
         let cementAfricaCount = 0;
@@ -1920,13 +2320,33 @@ map.on('click', (e) => {
                     }
                 });
 
-                if (cementAfricaCount > 0) {
-                    popupContent += `<p>Cement Points: ${cementAfricaCount}</p>`;
-                }
+                // if (cementAfricaCount > 0) {
+                //     popupContent += `<p>Cement Plants: ${cementAfricaCount}</p>`;
+                // }
             }
         }
 
-        // 4. Aggregate africa paper pulp data within the buffer
+        // 4. Aggregate IGP paper pulp data within the buffer
+        let paperPulpIGPCount = 0;
+        if (map.getLayer('paper_pulp_IGP')) {
+            const  paperPulpIGPVisibility = map.getLayoutProperty('paper_pulp_IGP', 'visibility');
+            if ( paperPulpIGPVisibility === 'visible') {
+                const  paperPulpIGPFeatures = map.queryRenderedFeatures({ layers: ['paper_pulp_IGP'] });
+
+                paperPulpIGPFeatures.forEach((feature) => {
+                    const  paperPulpIGPPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon( paperPulpIGPPoint, buffer)) {
+                        paperPulpIGPCount += 1;
+                    }
+                });
+
+                // if ( paperPulpIGPCount > 0) {
+                //     popupContent += `<p>Paper Pulp Plants: ${ paperPulpIGPCount}</p>`;
+                // }
+            }
+        }
+
+        // 5. Aggregate africa paper pulp data within the buffer
         let paperPulpAfricaCount = 0;
         if (map.getLayer('paper_pulp_africa')) {
             const  paperPulpAfricaVisibility = map.getLayoutProperty('paper_pulp_africa', 'visibility');
@@ -1946,7 +2366,27 @@ map.on('click', (e) => {
             }
         }
 
-        // 5. Aggregate africa steel plants data within the buffer
+        // 6. Aggregate africa steel plants data within the buffer
+        let steelIGPCount = 0;
+        if (map.getLayer('steel_IGP')) {
+            const  steelIGPVisibility = map.getLayoutProperty('steel_IGP', 'visibility');
+            if (steelIGPVisibility === 'visible') {
+                const  steelIGPFeatures = map.queryRenderedFeatures({ layers: ['steel_IGP'] });
+
+                steelIGPFeatures.forEach((feature) => {
+                    const  steelIGPPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon( steelIGPPoint, buffer)) {
+                        steelIGPCount += 1;
+                    }
+                });
+
+                // if ( steelIGPCount > 0) {
+                //     popupContent += `<p>Steel Plants: ${ steelIGPCount}</p>`;
+                // }
+            }
+        }
+
+        // 7. Aggregate africa steel plants data within the buffer
         let steelAfricaCount = 0;
         if (map.getLayer('steel_africa')) {
             const  steelAfricaVisibility = map.getLayoutProperty('steel_africa', 'visibility');
@@ -1960,13 +2400,13 @@ map.on('click', (e) => {
                     }
                 });
 
-                if ( steelAfricaCount > 0) {
-                    popupContent += `<p>Steel Plants: ${ steelAfricaCount}</p>`;
-                }
+                // if ( steelAfricaCount > 0) {
+                //     popupContent += `<p>Steel Plants: ${ steelAfricaCount}</p>`;
+                // }
             }
         }
 
-        // 6. Aggregate fossil fuel data within the buffer
+        // 8. Aggregate fossil fuel data within the buffer
         let fossilFuelCount = 0;
         if (map.getLayer('fossil')) {
             const fossilFuelVisibility = map.getLayoutProperty('fossil', 'visibility');
@@ -1980,13 +2420,13 @@ map.on('click', (e) => {
                     }
                 });
 
-                if (fossilFuelCount > 0) {
-                    popupContent += `<p>Fossil Fuel Points: ${fossilFuelCount}</p>`;
-                }
+                // if (fossilFuelCount > 0) {
+                //     popupContent += `<p>Fossil Fuel Points: ${fossilFuelCount}</p>`;
+                // }
             }
         }
 
-        // 4. Aggregate GPW data (population or area) within the buffer
+        // 9. Aggregate GPW data (population or area) within the buffer
         let totalPopulation = 0;
         let totalGPWPoints = 0;
         if (map.getLayer('gpw')) {
@@ -2002,17 +2442,85 @@ map.on('click', (e) => {
                     }
                 });
 
-                if (totalGPWPoints > 0) {
-                    popupContent += `<p>Total GPW Points: ${totalGPWPoints}</p>`;
-                }
+                // if (totalGPWPoints > 0) {
+                //     popupContent += `<p>Total GPW Points: ${totalGPWPoints}</p>`;
+                // }
             }
         }
 
-        // End the popup content and add canvas for the charts
-        popupContent += `
-            <canvas id="emissionsChart" width="250" height="250"></canvas>
-            </div>
-        `;
+        // 10. Aggregate africa steel plants data within the buffer
+        let oilGasIGPCount = 0;
+        if (map.getLayer('oil_gas_IGP')) {
+            const  oilGasIGPVisibility = map.getLayoutProperty('oil_gas_IGP', 'visibility');
+            if (oilGasIGPVisibility === 'visible') {
+                const  oilGasIGPFeatures = map.queryRenderedFeatures({ layers: ['oil_gas_IGP'] });
+
+                oilGasIGPFeatures.forEach((feature) => {
+                    const  oilGasIGPPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon( oilGasIGPPoint, buffer)) {
+                        oilGasIGPCount += 1;
+                    }
+                });
+
+                // if ( oilGasIGPCount > 0) {
+                //     popupContent += `<p>Oil Gas Refineries: ${ oilGasIGPCount}</p>`;
+                // }
+            }
+        }
+
+        // 11. Aggregate africa steel plants data within the buffer
+        let plasticWasteIGPCount = 0;
+        if (map.getLayer('plastic_waste_IGP')) {
+            const  plasticWasteIGPVisibility = map.getLayoutProperty('plastic_waste_IGP', 'visibility');
+            if (plasticWasteIGPVisibility === 'visible') {
+                const  plasticWasteIGPFeatures = map.queryRenderedFeatures({ layers: ['plastic_waste_IGP'] });
+
+                plasticWasteIGPFeatures.forEach((feature) => {
+                    const  plasticWasteIGPPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon( plasticWasteIGPPoint, buffer)) {
+                        plasticWasteIGPCount += 1;
+                    }
+                });
+
+                // if ( plasticWasteIGPCount > 0) {
+                //     popupContent += `<p>Plastic Waste Burning Sites: ${ plasticWasteIGPCount}</p>`;
+                // }
+            }
+        }
+
+        // 11. Aggregate africa steel plants data within the buffer
+        let solidWasteIGPCount = 0;
+        if (map.getLayer('solid_waste_IGP')) {
+            const  solidWasteIGPVisibility = map.getLayoutProperty('solid_waste_IGP', 'visibility');
+            if (solidWasteIGPVisibility === 'visible') {
+                const  solidWasteIGPFeatures = map.queryRenderedFeatures({ layers: ['solid_waste_IGP'] });
+
+                solidWasteIGPFeatures.forEach((feature) => {
+                    const  solidWasteIGPPoint = turf.point(feature.geometry.coordinates);
+                    if (turf.booleanPointInPolygon( solidWasteIGPPoint, buffer)) {
+                        solidWasteIGPCount += 1;
+                    }
+                });
+
+                // if ( solidWasteIGPCount > 0) {
+                //     popupContent += `<p>Solid Waste Burning Sites: ${ solidWasteIGPCount}</p>`;
+                // }
+            }
+        }
+
+            // End the popup content and add canvas for the charts
+                popupContent += `
+                <canvas id="emissionsChart" width="250" height="250"></canvas>
+                <canvas id="countsChart" width="250" height="250"></canvas>
+                </div>
+            `;
+        
+        
+        
+
+
+        
+       
 
         // Display the popup with the canvas for the charts
         new mapboxgl.Popup()
@@ -2020,95 +2528,142 @@ map.on('click', (e) => {
             .setHTML(popupContent)
             .addTo(map);
 
-        // Use Chart.js to create a pie chart after the popup is added to the DOM
-        setTimeout(() => {
-            // Emissions Chart
-            const emissionsCtx = document.getElementById('emissionsChart').getContext('2d');
-            new Chart(emissionsCtx, {
-                type: 'pie',
-                data: {
-                    labels: ['NO₂ (Coal)', 'SO₂ (Coal)', 'PM₁₀ (Coal)', 'PM₂.₅ (Coal)'],
-                    datasets: [{
-                        label: 'Emissions (tons/year)',
-                        data: [
-                            totalCoalEmissions.nox.toFixed(2),
-                            totalCoalEmissions.so2.toFixed(2),
-                            totalCoalEmissions.pm10.toFixed(2),
-                            totalCoalEmissions.pm25.toFixed(2)
-                        ],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)', // NO₂ color
-                            'rgba(54, 162, 235, 0.6)', // SO₂ color
-                            'rgba(255, 206, 86, 0.6)', // PM₁₀ color
-                            'rgba(75, 192, 192, 0.6)'  // PM₂.₅ color
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
+        // Use Chart.js to create charts after the popup is added to the DOM
+setTimeout(() => {
+    // Emissions Chart
+    const emissionsCtx = document.getElementById('emissionsChart').getContext('2d');
+    new Chart(emissionsCtx, {
+        type: 'pie',
+        data: {
+            labels: ['NO₂ (Coal)', 'SO₂ (Coal)', 'PM₁₀ (Coal)', 'PM₂.₅ (Coal)'],
+            datasets: [{
+                label: 'Emissions (tons/year)',
+                data: [
+                    totalCoalEmissions.nox.toFixed(2),
+                    totalCoalEmissions.so2.toFixed(2),
+                    totalCoalEmissions.pm10.toFixed(2),
+                    totalCoalEmissions.pm25.toFixed(2)
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)', // NO₂ color
+                    'rgba(54, 162, 235, 0.6)', // SO₂ color
+                    'rgba(255, 206, 86, 0.6)', // PM₁₀ color
+                    'rgba(75, 192, 192, 0.6)'  // PM₂.₅ color
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Emissions for Coal',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    padding: {
+                        top: 10,
+                        bottom: 20
                     }
-                }
-            });
-
-            // Counts Chart for brick kilns, coal plants, GPW points, fossil fuel points
-            const countsCtx = document.getElementById('countsChart').getContext('2d');
-            new Chart(countsCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Brick Kilns', 'Coal Plants', 'GPW Points', 'Fossil Fuel Points'],
-                    datasets: [{
-                        label: 'Counts',
-                        data: [totalBrickKilns, totalCoalPlants, totalGPWPoints, fossilFuelCount],
-                        backgroundColor: [
-                            'rgba(75, 192, 192, 0.6)',  // Brick Kilns
-                            'rgba(54, 162, 235, 0.6)',  // Coal Plants
-                            'rgba(153, 102, 255, 0.6)', // GPW Points
-                            'rgba(255, 159, 64, 0.6)'   // Fossil Fuel Points
-                        ],
-                        borderColor: [
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                legend: {
+                    position: 'right',
+                }
+            }
+        }
+    });
+
+  
+        // Map layer colors for different features
+        const layerColors = {
+            'Coal Plants': '#616161',
+            'GPW Points': 'black',
+            'Fossil Fuel Points': 'blue',
+            'Cement IGP': 'purple',
+            'Cement Africa': 'purple',  // Assuming same color as IGP for simplicity
+            'Paper Pulp IGP': 'rgb(112, 206, 202)',
+            'Paper Pulp Africa': 'rgb(112, 206, 202)',  // Assuming same color as IGP
+            'Steel IGP': 'rgb(24, 54, 84)',
+            'Steel Africa': 'rgb(24, 54, 84)',  // Assuming same color as IGP
+            'Oil Gas Refineries': 'brown',
+            'Plastic Waste': 'rgb(165, 146, 23)',
+            'Solid Waste': 'rgb(206, 131, 19)'
+        };
+    
+        // Prepare data for the Counts Chart by filtering non-zero counts
+        const countsData = [
+            { label: 'Coal Plants', value: totalCoalPlants },
+            { label: 'GPW Points', value: totalGPWPoints },
+            { label: 'Fossil Fuel Points', value: fossilFuelCount },
+            { label: 'Cement IGP', value: cementIGPCount },
+            { label: 'Cement Africa', value: cementAfricaCount },
+            { label: 'Paper Pulp IGP', value: paperPulpIGPCount },
+            { label: 'Paper Pulp Africa', value: paperPulpAfricaCount },
+            { label: 'Steel IGP', value: steelIGPCount },
+            { label: 'Steel Africa', value: steelAfricaCount },
+            { label: 'Oil Gas Refineries', value: oilGasIGPCount },
+            { label: 'Plastic Waste', value: plasticWasteIGPCount },
+            { label: 'Solid Waste', value: solidWasteIGPCount }
+        ].filter(entry => entry.value > 0);  // Filter out zero-count entries
+    
+        const countsLabels = countsData.map(entry => entry.label);
+        const countsValues = countsData.map(entry => entry.value);
+        const backgroundColors = countsLabels.map(label => layerColors[label]);
+        const borderColors = countsLabels.map(label => layerColors[label]);
+    
+        // Counts Chart
+        const countsCtx = document.getElementById('countsChart').getContext('2d');
+        new Chart(countsCtx, {
+            type: 'bar',
+            data: {
+                labels: countsLabels,
+                datasets: [{
+                    label: 'Counts',
+                    data: countsValues,
+                    backgroundColor: backgroundColors.map(color => color.replace('rgb', 'rgba').replace(')', ', 0.6)')),
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Counts for Selected Layers',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 20
                         }
                     },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
+                    legend: {
+                        position: 'none',
                     }
                 }
-            });
-        }, 100);  // Small timeout to ensure the charts are rendered after the popup
-
+            }
+        });
+    }, 100);  // Small timeout to ensure the charts are rendered after the popup
+    
     }
+    
 });
-
-
-
-
-
-
 
 
 // --------------------------------------------------------GEOCODER INITIALIZATION----------------------------------------------------
@@ -2137,10 +2692,36 @@ document.getElementById('toggleCoal').addEventListener('change', (e) => {
     
 });
 
-document.getElementById('toggleCoalAfrica').addEventListener('change', (e) => {
-    map.setLayoutProperty('coal_africa', 'visibility', e.target.checked ? 'visible' : 'none');
+
+document.getElementById('toggleCementIGP').addEventListener('change', (e) => {
+    map.setLayoutProperty('cement_IGP', 'visibility', e.target.checked ? 'visible' : 'none');
+    
 });
 
+document.getElementById('toggleOilGasIGP').addEventListener('change', (e) => {
+    map.setLayoutProperty('oil_gas_IGP', 'visibility', e.target.checked ? 'visible' : 'none');
+    
+});
+
+document.getElementById('togglePaperPulpIGP').addEventListener('change', (e) => {
+    map.setLayoutProperty('paper_pulp_IGP', 'visibility', e.target.checked ? 'visible' : 'none');
+    
+});
+
+document.getElementById('toggleSteelIGP').addEventListener('change', (e) => {
+    map.setLayoutProperty('steel_IGP', 'visibility', e.target.checked ? 'visible' : 'none');
+    
+});
+
+document.getElementById('togglePlasticWasteIGP').addEventListener('change', (e) => {
+    map.setLayoutProperty('plastic_waste_IGP', 'visibility', e.target.checked ? 'visible' : 'none');
+    
+});
+
+document.getElementById('toggleSolidWasteIGP').addEventListener('change', (e) => {
+    map.setLayoutProperty('solid_waste_IGP', 'visibility', e.target.checked ? 'visible' : 'none');
+    
+});
 
 
 document.getElementById('toggleGPW').addEventListener('change', (e) => {
@@ -2506,16 +3087,21 @@ frequencySelect.addEventListener('change', () => {
 
 // Hover information display with chart
 map.on('mousemove', (event) => {
-    if (map.getLayer('coal')) {
-        const states = map.queryRenderedFeatures(event.point, { layers: ['coal'] });
+    if (map.getLayer('coal') || map.getLayer('coal_africa')) {
+        // Query features from both layers at the event point
+        const states = map.queryRenderedFeatures(event.point, { layers: ['coal', 'coal_africa'] });
 
         if (states.length) {
             const properties = states[0].properties;
-            const pm10 = properties.p10_tn_;
-            const pm25 = properties.p25_tn_;
-            const so2 = properties.sx_tn_y;
-            const no2 = properties.nx_tn_y;
-            const plantName = properties.plnt_nm;
+
+            // Determine the layer and map property names correctly
+            const isAfrica = states[0].layer.id === 'coal_africa';
+
+            const pm10 = isAfrica ? properties.pm10 : properties.p10_tn_y;
+            const pm25 = isAfrica ? properties.pm25 : properties.p25_tn_y;
+            const so2 = isAfrica ? properties.sox : properties.so2_tn_y;
+            const no2 = isAfrica ? properties.nox : properties.nox_tn_y;
+            const plantName = properties.plant_name;
             const country = properties.country;
 
             document.getElementById('plantInfo').innerHTML = `<h3>${plantName}, ${country}</h3>`;
@@ -2534,8 +3120,9 @@ map.on('mousemove', (event) => {
             document.getElementById('hoverText').style.display = 'block';
         }
     }
-
 });
+
+
 
 // Initialize the charts with default values when the page loads
 document.addEventListener('DOMContentLoaded', () => {
@@ -2558,227 +3145,145 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // --------------------------------------------------------POLLUTANT FILETRS-------------------------------------------------------
+// -------------------------------------------------------- REGION-SPECIFIC DATA --------------------------------------------------------
+const igpCountries = ['India', 'Pakistan', 'Bangladesh'];
+const africaCountries = ['Nigeria', 'Uganda', 'Congo', 'Ghana'];
 
-function coalPollutantFilter(pollutant, country = '') {
+// Asset options per region (linked to actual layer IDs)
+const igpAssets = [
+    { id: 'coal', label: 'Coal IGP' },
+    { id: 'cement_igp', label: 'Cement' },
+    { id: 'oil_gas_IGP', label: 'Oil Gas Refineries' },
+    { id: 'paper_pulp_IGP', label: 'Paper Pulp' },
+    { id: 'steel_IGP', label: 'Steel' },
+    { id: 'plastic_waste_IGP', label: 'Plastic Waste' },
+    { id: 'solid_waste_IGP', label: 'Solid Waste' },
+    { id: 'fossil', label: 'Fossil Fuel' },
+    { id: 'gpw', label: 'GPW' }
+];
 
+const africaAssets = [
+    { id: 'coal_africa', label: 'Coal' },
+    { id: 'cement_africa', label: 'Cement' },
+    { id: 'paper_pulp_africa', label: 'Paper Pulp' },
+    { id: 'steel_africa', label: 'Steel Plants' },
+];
 
-    if (map.getLayer('coal')) {
-        map.removeLayer('coal');
-    }
+// -------------------------------------------------------- DYNAMICALLY UPDATE FILTERS --------------------------------------------------------
+function updateCountryFilter(region) {
+    const countryFilter = document.getElementById('countryFilter');
+    countryFilter.innerHTML = '<option value="">All</option>';  // Reset and add "All" option
 
-    const filter = ['all'];
-    if (country) {
-        filter.push(['==', 'country', country]);
-    }
+    const countries = region === 'Africa' ? africaCountries : igpCountries;
+    countries.forEach(country => {
+        countryFilter.innerHTML += `<option value="${country}">${country}</option>`;
+    });
+}
 
-    // Disable pollutant filter if coal layer is not visible
-    if (!document.getElementById('toggleCoal').checked) {
-        disablePollutantFilter();
-        return;
-    } else {
-        enablePollutantFilter();
-    }
+function updateAssetFilter(region) {
+    const assetFilter = document.getElementById('assetFilter');
+    assetFilter.innerHTML = '<option value="">All</option>';  // Reset and add "All" option
 
-    if (pollutant === '') {
-        document.getElementById('pollutant-legend').style.display = 'none';
-        map.addLayer({
-            'id': 'coal',
-            'type': 'circle',
-            'source': 'coal_IGP',
-            'filter': filter,
-            'paint': {
-                'circle-radius': 6,
-                'circle-stroke-width': 2,
-                'circle-color': '#616161', // Default gray color
-                'circle-stroke-color': 'white'
-            },
-            layout: {
-                visibility: 'visible'
-            }
-        });
-    } else {
-        let colorStops, radiusStops, legendTitle;
+    const assets = region === 'Africa' ? africaAssets : igpAssets;
+    assets.forEach(asset => {
+        assetFilter.innerHTML += `<option value="${asset.id}">${asset.label}</option>`;
+    });
+}
 
-        switch (pollutant) {
+// -------------------------------------------------------- CHECK REGION --------------------------------------------------------
+function checkRegionAndUpdateFilters() {
+    const currentCenter = map.getCenter();
+    const africaCenter = [20.0, 5.0];
+    const asiaCenter = [78.8181577, 28.7650135];
 
-            case 'p10_tn_':
-                legendTitle = 'PM₁₀ tonnes/yr';
-                colorStops = [
-                    [100, 'rgb(254,229,217)'],
-                    [500, 'rgb(252,187,161)'],
-                    [1500, 'rgb(252,146,114)'],
-                    [2500, 'rgb(251,106,74)'],
-                    [5000, 'rgb(222,45,38)'],
-                    [15000, 'rgb(165,15,21)']
-                ];
-                radiusStops = [
-                    [100, 5],
-                    [500, 7],
-                    [1500, 9],
-                    [2500, 11],
-                    [5000, 13],
-                    [15000, 15]
-                ];
-                break;
-            case 'p25_tn_':
-                legendTitle = 'PM₂.₅ tonnes/yr';
-                colorStops = [
-                    [50, 'rgb(254,229,217)'],
-                    [500, 'rgb(252,187,161)'],
-                    [1500, 'rgb(252,146,114)'],
-                    [2500, 'rgb(251,106,74)'],
-                    [3500, 'rgb(222,45,38)'],
-                    [6000, 'rgb(165,15,21)']
-                ];
-                radiusStops = [
-                    [50, 5],
-                    [500, 7],
-                    [1500, 9],
-                    [2500, 11],
-                    [3500, 13],
-                    [6000, 15]
-                ];
-                break;
-            case 'sx_tn_y':
-                legendTitle = 'SO₂ tonnes/yr';
-                colorStops = [
-                    [1800, 'rgb(254,229,217)'],
-                    [5000, 'rgb(252,187,161)'],
-                    [15000, 'rgb(252,146,114)'],
-                    [25000, 'rgb(251,106,74)'],
-                    [50000, 'rgb(222,45,38)'],
-                    [250000, 'rgb(165,15,21)']
-                ];
-                radiusStops = [
-                    [1800, 5],
-                    [5000, 7],
-                    [15000, 9],
-                    [25000, 11],
-                    [50000, 13],
-                    [250000, 15]
-                ];
-                break;
-            case 'nx_tn_y':
-                legendTitle = 'NO₂ tonnes/yr';
-                colorStops = [
-                    [1100, 'rgb(254,229,217)'],
-                    [5000, 'rgb(252,187,161)'],
-                    [15000, 'rgb(252,146,114)'],
-                    [25000, 'rgb(251,106,74)'],
-                    [50000, 'rgb(222,45,38)'],
-                    [150000, 'rgb(165,15,21)']
-                ];
-                radiusStops = [
-                    [1100, 5],
-                    [5000, 7],
-                    [15000, 9],
-                    [25000, 11],
-                    [50000, 13],
-                    [150000, 15]
-                ];
-                break;
-            default:
-                return;
+    // Check if the current map center is closer to Africa or Asia
+    const isAfrica = Math.abs(currentCenter.lng - africaCenter[0]) < 20;
+
+    updateCountryFilter(isAfrica ? 'Africa' : 'IGP');
+    updateAssetFilter(isAfrica ? 'Africa' : 'IGP');
+}
+
+// -------------------------------------------------------- HANDLE ASSET AND COUNTRY FILTERS --------------------------------------------------------
+
+function handleAssetFilterChange() {
+    const selectedAsset = document.getElementById('assetFilter').value;
+
+    // Hide all layers by default, then show the selected asset layer
+    const layerIds = [
+        'coal', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 
+        'cement_igp', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'plastic_waste_IGP', 'solid_waste_IGP',
+        'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 
+        'brick_kilns_UGA', 'brick_kilns_NGA'
+    ];
+
+    layerIds.forEach(layerId => {
+        const visibility = selectedAsset === layerId || selectedAsset === '' ? 'visible' : 'none';
+        map.setLayoutProperty(layerId, 'visibility', visibility);
+
+        // Sync the legend checkboxes
+        const checkbox = document.querySelector(`input[data-layer="${layerId}"]`);
+        if (checkbox) {
+            checkbox.checked = (visibility === 'visible');
         }
+    });
 
-        map.addLayer({
-            'id': 'coal',
-            'type': 'circle',
-            'source': 'coal_IGP',
-            'filter': filter,
-            'paint': {
-                'circle-color': [
-                    'interpolate',
-                    ['linear'],
-                    ['get', pollutant],
-                    ...colorStops.flat()
-                ],
-                'circle-radius': [
-                    'interpolate',
-                    ['linear'],
-                    ['get', pollutant],
-                    ...radiusStops.flat()
-                ]
-            },
-            layout: {
-                visibility: 'visible'
-            }
-        });
-        updatePollutantLegend(legendTitle, colorStops, radiusStops);
-    }
+    // Apply country and pollutant filters after asset visibility changes
+    handleCountryAndPollutantFilters();
 }
 
-// Disable the pollutant filter and show a message
-function disablePollutantFilter() {
-    const pollutantSelect = document.getElementById('polutantType');
-    pollutantSelect.disabled = true;
-    pollutantSelect.title = 'Enable the coal layer to view pollutants';  // Tooltip message
+function handleCountryFilterChange() {
+    const selectedCountry = document.getElementById('countryFilter').value;
+    const layerIds = getVisibleLayers();
+
+    // Apply country filter on all currently visible layers
+    layerIds.forEach(layerId => {
+        map.setFilter(layerId, [
+            'all',
+            ...(selectedCountry ? [['==', 'country', selectedCountry]] : [])  // Filter by country if selected
+        ]);
+    });
 }
 
-// Enable the pollutant filter when the coal layer is visible
-function enablePollutantFilter() {
-    const pollutantSelect = document.getElementById('polutantType');
-    pollutantSelect.disabled = false;
-    pollutantSelect.title = '';  // Remove the tooltip
-}
+// -------------------------------------------------------- HANDLE POLLUTANT AND COUNTRY FILTERS --------------------------------------------------------
 
-// Add event listener to handle coal layer visibility changes
-document.getElementById('toggleCoal').addEventListener('change', (e) => {
+function handleCountryAndPollutantFilters() {
     const selectedPollutant = document.getElementById('polutantType').value;
     const selectedCountry = document.getElementById('countryFilter').value;
-    coalPollutantFilter(selectedPollutant, selectedCountry);
-});
+    const layerIds = getVisibleLayers();
 
-// Example of initializing the pollutant filter state on page load
+    layerIds.forEach(layerId => {
+        map.setFilter(layerId, [
+            'all',
+            ...(selectedCountry ? [['==', 'country', selectedCountry]] : []),
+            ...(selectedPollutant ? [['>', selectedPollutant, 0]] : [])
+        ]);
+    });
+}
+
+// Get all visible layers
+function getVisibleLayers() {
+    const layerIds = [
+        'coal', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 
+        'cement_igp', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'plastic_waste_IGP', 'solid_waste_IGP',
+        'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 
+        'brick_kilns_UGA', 'brick_kilns_NGA'
+    ];
+
+    return layerIds.filter(layerId => map.getLayoutProperty(layerId, 'visibility') === 'visible');
+}
+
+// -------------------------------------------------------- INITIALIZE FILTERS ON PAGE LOAD --------------------------------------------------------
+
 document.addEventListener('DOMContentLoaded', () => {
-    if (!document.getElementById('toggleCoal').checked) {
-        disablePollutantFilter();
-    }
+    checkRegionAndUpdateFilters();  // Initialize filters based on current region
+
+    document.getElementById('assetFilter').addEventListener('change', handleAssetFilterChange);
+    document.getElementById('countryFilter').addEventListener('change', handleCountryFilterChange);
+    document.getElementById('polutantType').addEventListener('change', handleCountryAndPollutantFilters);
 });
 
-// Handle pollutant type and country filter changes
-document.getElementById('polutantType').addEventListener('change', () => {
-    const selectedPollutant = document.getElementById('polutantType').value;
-    const selectedCountry = document.getElementById('countryFilter').value;
-    coalPollutantFilter(selectedPollutant, selectedCountry);
-});
+// Update country and asset filters when the region changes (e.g., map moves)
+map.on('moveend', checkRegionAndUpdateFilters);
 
-document.getElementById('countryFilter').addEventListener('change', () => {
-    const selectedPollutant = document.getElementById('polutantType').value;
-    const selectedCountry = document.getElementById('countryFilter').value;
-    coalPollutantFilter(selectedPollutant, selectedCountry);
-});
-
-
-// ----------------------------------------------------------POLLUTANT LEGEND--------------------------------------------------------
-
-function updatePollutantLegend(legendTitle, colorStops, radiusStops) {
-    const legendContainer = document.querySelector('#pollutant-legend .graduated-circles');
-    const legendTitleElement = document.querySelector('#pollutant-legend .legend-title');
-
-    legendContainer.innerHTML = '';
-    legendTitleElement.textContent = `Coal: ${legendTitle}`;
-
-    for (let i = 0; i < colorStops.length; i++) {
-        const color = colorStops[i][1];
-        const radius = radiusStops[i][1];
-        const value = colorStops[i][0];
-
-        const legendItem = `
-    <div class="legend-item">
-        <span class="circle" style="width:${radius * 2}px; height:${radius * 2}px; background-color:${color};"></span>
-        <span class="circle-label">${value}</span>
-    </div>
-`;
-
-        legendContainer.innerHTML += legendItem;
-    }
-
-    document.getElementById('pollutant-legend').style.display = 'block';
-}
-
-document.querySelector('#pollutant-legend .closeButton').addEventListener('click', () => {
-    document.getElementById('pollutant-legend').style.display = 'none';
-});
 
 

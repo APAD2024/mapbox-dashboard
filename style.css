@@ -71,7 +71,7 @@ html {
 
 /* Right Section: Filters */
 .filter-section {
-    flex: 0 0 30%;
+    flex: 0 0 40%;
     /* 30% width */
     display: flex;
     align-items: center;
@@ -129,7 +129,7 @@ html {
 .geocoder-section {
     position: fixed;
     left: 500px;
-    flex: 0 0 40%;
+    flex: 0 0 30%;
     /* Middle section takes 40% of the top bar */
     display: flex;
     align-items: center;
@@ -537,9 +537,7 @@ html {
     top: 70px;
     left: 50px;
     background: linear-gradient(to bottom right, #f4f4f9, #e0e4e9);
-    /* Soft white background */
     color: #2e2e2e;
-    /* Green text */
     font-size: 14px;
     padding: 15px;
     border-radius: 8px;
@@ -547,17 +545,57 @@ html {
     z-index: 1;
     width: 200px;
     font-family: 'Open Sans', sans-serif;
-    display: none;
+    display: block;
+
+    /* Scroll settings */
+    max-height: 450px; /* Adjust the height as needed */
+    overflow-y: auto;
 }
 
 #legend h3 {
     font-size: 16px;
     font-weight: bold;
     margin-top: 10px;
-    color: #2a2a2b; /* Adjust as needed */
+    color: #2a2a2b;
     border-bottom: 1px solid #ddd;
     padding-bottom: 5px;
 }
+
+/* Optional scrollbar customization for WebKit browsers */
+#legend::-webkit-scrollbar {
+    width: 8px;
+}
+
+#legend::-webkit-scrollbar-thumb {
+    background: #b0b0b0;
+    border-radius: 10px;
+}
+
+#legend::-webkit-scrollbar-thumb:hover {
+    background: #808080;
+}
+
+
+.collapsible-header {
+    cursor: pointer;
+    padding: 5px 0;
+    color: #4b6151;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.collapsible-header:hover {
+    text-decoration: underline;
+}
+
+.collapsible-content {
+    display: none;
+    padding-left: 10px;
+    /* Adjust spacing if needed */
+    transition: max-height 0.3s ease-out;
+}
+
 
 
 
