@@ -3,7 +3,7 @@
 // -----------------------------------------------------------MAP INITIALIZATION-----------------------------------------------------------
 
 
-mapboxgl.accessToken = 'pk.eyJ1IjoibXVoYW1tYWQtYmlsYWw3NjMiLCJhIjoiY2w1NzA1NW90MDF4ZDNkbG9iYTUxeGdveiJ9.XSisxZKgp-ZzmgWWoy4WhA';
+mapboxgl.accessToken = 'pk.eyJ1IjoiYXBhZC13b3JsZCIsImEiOiJjbHoyc2d5b2EzNXk1MmtzaHFrdWprZ2swIn0.Z2onslEOxm7o0lbD-1WNtA';
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/light-v11', // style URL
@@ -35,6 +35,56 @@ const layerIds = [
 
 
 // -----------------------------------------------------------LAYERS LOADING-----------------------------------------------------------
+
+// Fetch pollution data from API and add to map
+async function fetchPollutionData() {
+    try {
+        const response = await fetch('https://api.apad.world/api/get_all_submissions', {
+            method: 'POST', // API expects a POST request
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({}) // Empty body if required
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        addPollutionMarkers(data); // Pass the fetched data to the function
+
+    } catch (error) {
+        console.error('Error fetching pollution data:', error);
+    }
+}
+
+// Function to add markers to the map
+function addPollutionMarkers(pollutionData) {
+    pollutionData.forEach(site => {
+        const { latitude, longitude, pollution_type, image_url, timestamp } = site;
+
+        // Create a popup with pollution details
+        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+            <div style="text-align: center;">
+                <h4>${pollution_type}</h4>
+                <p><strong>Reported on:</strong> ${new Date(timestamp).toLocaleString()}</p>
+                <img src="${image_url}" alt="${pollution_type}" width="150px" style="border-radius: 5px;"/>
+            </div>
+        `);
+
+        // Add marker to map
+        new mapboxgl.Marker({ color: 'red' }) // Red markers for pollution sites
+            .setLngLat([longitude, latitude])
+            .setPopup(popup) // Attach popup
+            .addTo(map);
+    });
+}
+
+// Call the function after the map loads
+map.on('load', fetchPollutionData);
+
 
 // Reusable function to add data layers with fetch and lazy loading
 function addDataLayers() {
