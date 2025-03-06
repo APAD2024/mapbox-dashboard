@@ -611,6 +611,25 @@ html {
     display: inline-block;
 }
 
+.hidden {
+    display: none;
+}
+
+.expand-toggle {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 3px;
+    background-color: #eee;
+    margin-left: 0px;
+}
+
+.expand-toggle:hover {
+    background-color: #ddd;
+}
+
+
 #legendButton {
     position: absolute;
     top: 70px;

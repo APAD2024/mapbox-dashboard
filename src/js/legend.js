@@ -71,7 +71,7 @@ export function initializeLegend(map) {
     }
 
     /**
-     * Expand/Collapse legend sections
+     * Expand/Collapse legend sections WITHOUT affecting visibility
      */
     document.querySelectorAll('.collapsible-header').forEach(header => {
         header.addEventListener('click', () => {
@@ -79,6 +79,53 @@ export function initializeLegend(map) {
             content.style.display = content.style.display === 'none' || content.style.display === '' ? 'block' : 'none';
         });
     });
+
+    /**
+     * Make parent toggles expand/collapse only
+     */
+    document.getElementById('toggleBrickKilns').addEventListener('click', function () {
+        const content = document.getElementById('brickKilnCountries');
+    
+        if (content.style.display === 'none' || content.classList.contains('hidden')) {
+            content.style.display = 'block';  // Show children
+            content.classList.remove('hidden');
+            this.innerHTML = '-';  // Change the button to collapse mode
+        } else {
+            content.style.display = 'none';  // Hide children
+            content.classList.add('hidden');
+            this.innerHTML = '+';  // Change the button to expand mode
+        }
+    });
+    
+    document.getElementById('toggleBrickKilnsGrid').addEventListener('click', function () {
+        const content = document.getElementById('BrickKilnsGrid');
+    
+        if (content.style.display === 'none' || content.classList.contains('hidden')) {
+            content.style.display = 'block';  // Show children
+            content.classList.remove('hidden');
+            this.innerHTML = '-';  // Change the button to collapse mode
+        } else {
+            content.style.display = 'none';  // Hide children
+            content.classList.add('hidden');
+            this.innerHTML = '+';  // Change the button to expand mode
+        }
+    });
+
+    document.getElementById('toggleBrickKilnsAFC').addEventListener('click', function () {
+        const content = document.getElementById('brickKilnAfcCountries');
+    
+        if (content.style.display === 'none' || content.classList.contains('hidden')) {
+            content.style.display = 'block';  // Show children
+            content.classList.remove('hidden');
+            this.innerHTML = '-';  // Change the button to collapse mode
+        } else {
+            content.style.display = 'none';  // Hide children
+            content.classList.add('hidden');
+            this.innerHTML = '+';  // Change the button to expand mode
+        }
+    });
+
+
 
     /**
      * Legend Visibility Toggle
@@ -101,5 +148,5 @@ export function initializeLegend(map) {
             toggleLayerVisibility(map, layerId, e.target.checked);
         });
     });
-    
 }
+

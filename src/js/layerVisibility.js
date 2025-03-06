@@ -127,67 +127,25 @@ export function initializeLayerVisibilityControls(map) {
     setupLayerToggle(map, 'togglePaperPulpAfrica', 'paper_pulp_africa');
     setupLayerToggle(map, 'toggleSteelAfrica', 'steel_africa');
 
-    // Parent Toggle: Brick Kilns
-    document.getElementById('toggleBrickKilns').addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        document.getElementById('brickKilnCountries').style.display = isChecked ? 'block' : 'none';
-        
-        document.getElementById('toggleBKPK').checked = isChecked;
-        document.getElementById('toggleBKIND').checked = isChecked;
-        document.getElementById('toggleBKBAN').checked = isChecked;
-        
-        toggleLayerVisibility(map, 'BK_PK', isChecked);
-        toggleLayerVisibility(map, 'BK_IND', isChecked);
-        toggleLayerVisibility(map, 'BK_BAN', isChecked);
+    /**
+     * **Fix Parent Toggles**
+     * - Parents should only expand/collapse child layers
+     * - They should NOT control visibility
+     */
 
-        if (isChecked) {
-            loadBrickKilnLayerPK(map);
-            loadBrickKilnLayerIND(map);
-            loadBrickKilnLayerBAN(map);
-        }
+    // Parent Toggle: Brick Kilns
+    document.getElementById('toggleBrickKilns').addEventListener('click', (e) => {
+        document.getElementById('brickKilnCountries').classList.toggle('hidden');
     });
 
     // Parent Toggle: Brick Kilns Grid
-    document.getElementById('toggleBrickKilnsGrid').addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        document.getElementById('BrickKilnsGrid').style.display = isChecked ? 'block' : 'none';
-
-        document.getElementById('toggleHexGridPAK').checked = isChecked;
-        document.getElementById('toggleHexGridIND').checked = isChecked;
-        document.getElementById('toggleHexGridBAN').checked = isChecked;
-
-        toggleLayerVisibility(map, 'brick_kilns_PK', isChecked);
-        toggleLayerVisibility(map, 'brick_kilns_IND', isChecked);
-        toggleLayerVisibility(map, 'brick_kilns_BAN', isChecked);
-
-        if (isChecked) {
-            loadBrickKilnLayerPKhex(map);
-            loadBrickKilnLayerINDhex(map);
-            loadBrickKilnLayerBANhex(map);
-        }
+    document.getElementById('toggleBrickKilnsGrid').addEventListener('click', (e) => {
+        document.getElementById('BrickKilnsGrid').classList.toggle('hidden');
     });
 
     // Parent Toggle: Africa Brick Kilns
-    document.getElementById('toggleBrickKilnsAFC').addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        document.getElementById('brickKilnAfcCountries').style.display = isChecked ? 'block' : 'none';
-
-        document.getElementById('toggleBKDRC').checked = isChecked;
-        document.getElementById('toggleBKGHA').checked = isChecked;
-        document.getElementById('toggleBKNGA').checked = isChecked;
-        document.getElementById('toggleBKUGA').checked = isChecked;
-
-        toggleLayerVisibility(map, 'brick_kilns_DRC', isChecked);
-        toggleLayerVisibility(map, 'brick_kilns_GHA', isChecked);
-        toggleLayerVisibility(map, 'brick_kilns_NGA', isChecked);
-        toggleLayerVisibility(map, 'brick_kilns_UGA', isChecked);
-
-        if (isChecked) {
-            loadBrickKilnLayerDRC(map);
-            loadBrickKilnLayerNGA(map);
-            loadBrickKilnLayerUGA(map);
-            loadBrickKilnLayerGHA(map);
-        }
+    document.getElementById('toggleBrickKilnsAFC').addEventListener('click', (e) => {
+        document.getElementById('brickKilnAfcCountries').classList.toggle('hidden');
     });
 
     // Toggle Legend Visibility
@@ -200,3 +158,4 @@ export function initializeLayerVisibilityControls(map) {
         document.getElementById('legend').style.display = 'none';
     });
 }
+
