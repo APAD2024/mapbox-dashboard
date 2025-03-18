@@ -1,4 +1,4 @@
-import { addDataLayers, fetchPollutionData } from './layers.js';
+import { addDataLayers } from './layers.js';
 import { initializeGeocoder } from './geocoder.js';
 import { initializeBasemapMenu } from './basemapMenu.js';
 import { initializeAreaChange } from './areaChange.js';
@@ -32,7 +32,6 @@ map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 // ---------------------------------------------------------------LAYER LOADING -------------------------------------------------------------
 // Ensure map is initialized
 map.on('load', () => {
-    fetchPollutionData(map);
     addDataLayers(map);
     initAggregateTool(map);
     initializeGeocoder(map);

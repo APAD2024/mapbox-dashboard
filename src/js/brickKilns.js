@@ -17,7 +17,7 @@ export function loadBrickKilnLayerPKhex(map) {
         showLoadingSpinner(); // Show the spinner while loading
 
         // Fetch the brick kilns GeoJSON data and create a hexagonal grid
-        fetch('https://gist.githubusercontent.com/Mseher/8c7ad3243267ef258e730ac7671dda65/raw/dbe8b202e4ab35bfc7b26513727e61962e519153/Brick_Kilns_IGP_PK_emission_estimates.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_PAK_coal.geojson')
             .then(response => response.json())
             .then(data => {
                 // Get the bounding box of the points
@@ -119,7 +119,7 @@ export function loadBrickKilnLayerINDhex(map) {
     if (!map.getSource('brick_kilns_IND_hex')) {
         showLoadingSpinner();
 
-        fetch('https://gist.githubusercontent.com/Mseher/5ff795ba99dade57695c8ddad13f6f67/raw/f89f59a115bae6f8272c14ab9f4cad3b632c8b88/Brick_kilns_IND-Main.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_IND_coal.geojson')
             .then(response => response.json())
             .then(data => {
                 const bbox = turf.bbox(data);
@@ -214,7 +214,7 @@ export function loadBrickKilnLayerBANhex(map) {
     if (!map.getSource('brick_kilns_BAN_hex')) {
         showLoadingSpinner();
 
-        fetch('https://gist.github.com/Mseher/7fe4a53954a25eb5bda06b74589c34da/raw/4d226ba3b9e56a1a68880fcc8499f37e1897ad60/Brick_Kilns_IGP_BAN_emission_estimates.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson')
             .then(response => response.json())
             .then(data => {
                 const bbox = turf.bbox(data);
@@ -322,7 +322,7 @@ function reportPoint(brickid, lng, lat) {
 export function loadBrickKilnLayerPK(map) {
     if (!map.getSource('bk_pk')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/8c7ad3243267ef258e730ac7671dda65/raw/dbe8b202e4ab35bfc7b26513727e61962e519153/Brick_Kilns_IGP_PK_emission_estimates.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_PAK_coal.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('bk_pk', {
@@ -361,11 +361,11 @@ export function loadBrickKilnLayerPK(map) {
                                 <div class="popup-table">
                                     <h3>${properties.id}</h3>
                                     <table>
-                                    <tr><th>Pollutant</th><td> kg/season</td></tr>
-                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10s(kg)']}</td></tr>
-                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm2.5s(kg)']}</td></tr>
-                                    <tr><th>NO<sub>2</sub></th><td>${properties['noxs(kg)']}</td></tr>
-                                    <tr><th>SO<sub>2</sub></th><td>${properties['soxs(kg)']}</td></tr>
+                                    <tr><th>Pollutant</th><td> tons/season</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10']}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm25']}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties['nox']}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties['so2']}</td></tr>
                                 </table>
                                     <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
@@ -399,7 +399,7 @@ export function loadBrickKilnLayerPK(map) {
 export function loadBrickKilnLayerIND(map) {
     if (!map.getSource('bk_ind')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/08d0be14f7691615d8cdc3cf954ee5e1/raw/465bee679ed85ffa2fd67c51482d0f3c8c616439/India_Brick_kiln.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_IND_coal.geojson ')
             .then(response => response.json())
             .then(data => {
                 map.addSource('bk_ind', {
@@ -440,11 +440,11 @@ export function loadBrickKilnLayerIND(map) {
                                     <div class="popup-table">
                                     <h3>${properties.id}</h3>
                                     <table>
-                                    <tr><th>Pollutant</th><td> kg/season</td></tr>
-                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10s_kg_']}</td></tr>
-                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm2_5s_kg_']}</td></tr>
-                                    <tr><th>NO<sub>2</sub></th><td>${properties['noxs_kg_']}</td></tr>
-                                    <tr><th>SO<sub>2</sub></th><td>${properties['soxs_kg_']}</td></tr>
+                                    <tr><th>Pollutant</th><td> tons/season</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10']}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm25']}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties['nox']}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties['so2']}</td></tr>
                                 </table>
                                     <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
@@ -475,7 +475,7 @@ export function loadBrickKilnLayerIND(map) {
 export function loadBrickKilnLayerBAN(map) {
     if (!map.getSource('bk_ban')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/7fe4a53954a25eb5bda06b74589c34da/raw/4d226ba3b9e56a1a68880fcc8499f37e1897ad60/Brick_Kilns_IGP_BAN_emission_estimates.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson ')
             .then(response => response.json())
             .then(data => {
                 map.addSource('bk_ban', {
@@ -516,11 +516,11 @@ export function loadBrickKilnLayerBAN(map) {
                                     <div class="popup-table">
                                     <h3>${properties.id}</h3>
                                     <table>
-                                    <tr><th>Pollutant</th><td> kg/season</td></tr>
-                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10s(kg)']}</td></tr>
-                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm2.5s(kg)']}</td></tr>
-                                    <tr><th>NO<sub>2</sub></th><td>${properties['noxs(kg)']}</td></tr>
-                                    <tr><th>SO<sub>2</sub></th><td>${properties['soxs(kg)']}</td></tr>
+                                    <tr><th>Pollutant</th><td> tons/season</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10']}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm25']}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties['nox']}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties['so2']}</td></tr>
                                 </table>
                                     <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point

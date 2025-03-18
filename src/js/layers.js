@@ -5,58 +5,58 @@ import { isAggregateToolEnabled } from './aggregateTool.js';
 
 
 export const layerIds = [
-    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'plastic_waste_IGP', 'solid_waste_IGP',
+    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
     'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA'
 ];
-let populationLayer, fossilFuelLayer, coalLayer, gpwLayer, pollutantLayer, boundaryLayer;
+let boundaryLayer, populationLayer, gpwLayer;
 // -------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
 
 
 // -----------------------------------------------------------LAYERS LOADING-----------------------------------------------------------
 
 // Function to fetch pollution data
-export async function fetchPollutionData(map) {
-    try {
-        const response = await fetch('https://api.apad.world/api/get_all_submissions', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({})
-        });
+// export async function fetchPollutionData(map) {
+//     try {
+//         const response = await fetch('https://api.apad.world/api/get_all_submissions', {
+//             method: 'POST',
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({})
+//         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
 
-        const data = await response.json();
-        addPollutionMarkers(map, data);
+//         const data = await response.json();
+//         addPollutionMarkers(map, data);
 
-    } catch (error) {
-        console.error('Error fetching pollution data:', error);
-    }
-}
+//     } catch (error) {
+//         console.error('Error fetching pollution data:', error);
+//     }
+// }
 
 // Function to add pollution markers
-export function addPollutionMarkers(map, pollutionData) {
-    pollutionData.forEach(site => {
-        const { latitude, longitude, pollution_type, image_url, timestamp } = site;
+// export function addPollutionMarkers(map, pollutionData) {
+//     pollutionData.forEach(site => {
+//         const { latitude, longitude, pollution_type, image_url, timestamp } = site;
 
-        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-            <div style="text-align: center;">
-                <h4>${pollution_type}</h4>
-                <p><strong>Reported on:</strong> ${new Date(timestamp).toLocaleString()}</p>
-                <img src="${image_url}" alt="${pollution_type}" width="150px" style="border-radius: 5px;"/>
-            </div>
-        `);
+//         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+//             <div style="text-align: center;">
+//                 <h4>${pollution_type}</h4>
+//                 <p><strong>Reported on:</strong> ${new Date(timestamp).toLocaleString()}</p>
+//                 <img src="${image_url}" alt="${pollution_type}" width="150px" style="border-radius: 5px;"/>
+//             </div>
+//         `);
 
-        new mapboxgl.Marker({ color: 'red' })
-            .setLngLat([longitude, latitude])
-            .setPopup(popup)
-            .addTo(map);
-    });
-}
+//         new mapboxgl.Marker({ color: 'red' })
+//             .setLngLat([longitude, latitude])
+//             .setPopup(popup)
+//             .addTo(map);
+//     });
+// }
 
 
 
@@ -73,7 +73,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data
                 });
-                boundaryLayer = map.addLayer({
+                map.addLayer({
                     'id': 'indian',
                     'type': 'line',
                     'source': 'indian_plain',
@@ -100,7 +100,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data
                 });
-                boundaryLayer = map.addLayer({
+                map.addLayer({
                     'id': 'COD_Adm',
                     'type': 'line',
                     'source': 'COD_Adm_boundary',
@@ -127,7 +127,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data
                 });
-                boundaryLayer = map.addLayer({
+                map.addLayer({
                     'id': 'GHA_Adm',
                     'type': 'line',
                     'source': 'GHA_Adm_boundary',
@@ -181,7 +181,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data
                 });
-                boundaryLayer = map.addLayer({
+                map.addLayer({
                     'id': 'UGA_Adm',
                     'type': 'line',
                     'source': 'UGA_Adm_boundary',
@@ -204,7 +204,7 @@ export function addDataLayers(map) {
             'type': 'raster',
             'url': 'mapbox://muhammad-bilal763.bra3hxpk'
         });
-        populationLayer = map.addLayer({
+        map.addLayer({
             'id': 'population',
             'source': 'population',
             'type': 'raster',
@@ -224,7 +224,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data
                 });
-                fossilFuelLayer = map.addLayer({
+                map.addLayer({
                     'id': 'fossil',
                     'type': 'circle',
                     'source': 'fossil_fuel',
@@ -263,14 +263,14 @@ export function addDataLayers(map) {
     // Lazy load Coal IGP layer
     if (!map.getSource('coal_IGP')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/f1608007d5c4d041a8d67496e30b7458/raw/7340a32fa2fea659dfffb8c14c680c85ff690111/IGP_Coal_Plants.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Coal+Plants/coal_plants_main.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('coal_IGP', {
                     type: 'geojson',
                     data: data,
                 });
-                coalLayer = map.addLayer({
+                map.addLayer({
                     'id': 'coal',
                     'type': 'circle',
                     'source': 'coal_IGP',
@@ -292,13 +292,13 @@ export function addDataLayers(map) {
                             const properties = e.features[0].properties;
                             const popupContent = `
                             <div class="popup-table">
-                                <h3>${properties.plant_name}, ${properties.country}</h3>
+                                <h3>${properties.name}, ${properties.country}</h3>
                                 <table>
                                     <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
-                                    <tr><th>PM<sub>10</sub></th><td>${properties.p10_tn_y}</td></tr>
-                                    <tr><th>PM<sub>2.5</sub></th><td>${properties.p25_tn_y}</td></tr>
-                                    <tr><th>NO<sub>2</sub></th><td>${properties.nox_tn_y}</td></tr>
-                                    <tr><th>SO<sub>2</sub></th><td>${properties.so2_tn_y}</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties.pm10}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties.pm25}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties.nox}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties.so2}</td></tr>
                                 </table>
                             </div>
                             `;
@@ -318,7 +318,7 @@ export function addDataLayers(map) {
             });
     }
 
-    
+
 
     // Lazy load GPW layer
     if (!map.getSource('GPW')) {
@@ -330,7 +330,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data
                 });
-                gpwLayer = map.addLayer({
+                map.addLayer({
                     'id': 'gpw',
                     'type': 'circle',
                     'source': 'GPW',
@@ -370,14 +370,14 @@ export function addDataLayers(map) {
     // Lazy load Cement IGP layer
     if (!map.getSource('cementIGP')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/084621ff3c494a2f5a72c3985821432d/raw/2aef1eb06e4cc801aa1cd5547a463683a57eef80/cement_igp.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Cement+Plants/cement_plants_main.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('cementIGP', {
                     type: 'geojson',
                     data: data
                 });
-                gpwLayer = map.addLayer({
+                map.addLayer({
                     'id': 'cement_IGP',
                     'type': 'circle',
                     'source': 'cementIGP',
@@ -388,7 +388,7 @@ export function addDataLayers(map) {
                         'circle-stroke-color': 'white'
                     },
                     layout: {
-                        visibility: 'none'
+                        visibility: 'visible'
                     }
                 });
 
@@ -403,11 +403,10 @@ export function addDataLayers(map) {
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
                                      <div class="popup-table">
-                                    <h3>${properties.plant_name}, ${properties.country}</h3>
+                                    <h3>${properties.name}, ${properties.country}</h3>
                                         <table>
                                             <tr><th>State</th><td>${properties.state}</td></tr>
                                             <tr><th>Region</th><td>${properties.region}</td></tr>
-                                            <tr><th>Sub Region</th><td>${properties.sub_region}</td></tr>
                                             <tr><th>Status</th><td>${properties.status}</td></tr>
                                         </table>
                                     </div>
@@ -428,14 +427,14 @@ export function addDataLayers(map) {
     // Lazy load Oil Gas Refining layer
     if (!map.getSource('oilgasIGP')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/27d0c9675491802841d2c65edca2c0f8/raw/30663fcd041e76d6c19b2105f0431d5c7f5b11b2/oil_gas_igp.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/oil_gas_refining_main.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('oilgasIGP', {
                     type: 'geojson',
                     data: data
                 });
-                gpwLayer = map.addLayer({
+                map.addLayer({
                     'id': 'oil_gas_IGP',
                     'type': 'circle',
                     'source': 'oilgasIGP',
@@ -461,11 +460,11 @@ export function addDataLayers(map) {
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
                                      <div class="popup-table">
-                                    <h3>${properties.source_nam}</h3>
+                                    <h3>${properties.name}</h3>
                                         <table>
-                                            <tr><th>Gas</th><td>${properties.gas}</td></tr>
-                                            <tr><th>Capacity</th><td>${properties.capacity_f}</td></tr>
-                                            <tr><th>Country</th><td>${properties.iso3_count}</td></tr>
+                                            <tr><th>Gas</th><td>${properties.type}</td></tr>
+                                            <tr><th>Capacity</th><td>${properties.capacity}</td></tr>
+                                            <tr><th>Status</th><td>${properties.status}</td></tr>
                                         </table>
                                     </div>
                                     `)
@@ -485,14 +484,14 @@ export function addDataLayers(map) {
     // Lazy load Paper Pulp IGP layer
     if (!map.getSource('paperPulpIGP')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/8c774bef4ca09be557ca1b53710a8b35/raw/687f999eafa84ec12e5fb160d027d2887808fc40/paper_pulp_igp.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Pulp+and+Paper+Plants/paper_pulp_main.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('paperPulpIGP', {
                     type: 'geojson',
                     data: data
                 });
-                gpwLayer = map.addLayer({
+                map.addLayer({
                     'id': 'paper_pulp_IGP',
                     'type': 'circle',
                     'source': 'paperPulpIGP',
@@ -518,11 +517,11 @@ export function addDataLayers(map) {
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
                                      <div class="popup-table">
-                                    <h3>${properties.plant_name}, ${properties.city}</h3>
+                                    <h3>${properties.name}, ${properties.region}</h3>
                                         <table>
-                                            <tr><th>Plant Type</th><td>${properties.plant_type}</td></tr>
+                                            <tr><th>Plant Type</th><td>${properties.type}</td></tr>
                                             <tr><th>Status</th><td>${properties.status}</td></tr>
-                                            <tr><th>Capacity</th><td>${properties.capacity_p}</td></tr>
+                                            <tr><th>Capacity</th><td>${properties.capacity}</td></tr>
                                         </table>
                                     </div>
                                     `)
@@ -541,14 +540,14 @@ export function addDataLayers(map) {
     // Lazy load Steel IGP layer
     if (!map.getSource('steelIGP')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/7134493862bf31e262412731b2253a65/raw/fceb6e9877e4bfe203bb2a21660a3ae36ba5adc6/steel_IGP.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Steel+Plants/steel_plants_main.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('steelIGP', {
                     type: 'geojson',
                     data: data
                 });
-                gpwLayer = map.addLayer({
+                map.addLayer({
                     'id': 'steel_IGP',
                     'type': 'circle',
                     'source': 'steelIGP',
@@ -574,11 +573,11 @@ export function addDataLayers(map) {
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
                                      <div class="popup-table">
-                                    <h3>${properties.city}, ${properties.country}</h3>
+                                    <h3>${properties.name}, ${properties.region}</h3>
                                         <table>
-                                            <tr><th>Plant Type</th><td>${properties.plant_type}</td></tr>
+                                            <tr><th>Plant Type</th><td>${properties.type}</td></tr>
                                             <tr><th>Status</th><td>${properties.status}</td></tr>
-                                            <tr><th>Capacity</th><td>${properties.capacity_p}</td></tr>
+                                            <tr><th>Capacity</th><td>${properties.capacity}</td></tr>
                                         </table>
                                     </div>
                                     `)
@@ -594,72 +593,19 @@ export function addDataLayers(map) {
             });
     }
 
+
+
     // Lazy load  Plastic Waste IGP layer
-    if (!map.getSource('plasticWasteIGP')) {
+    if (!map.getSource('solidWasteIGP')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/e00828d1f608b0eccd3c595acb0b5063/raw/1445bbfc749a509325784efc1f5a3299c2f7a528/plastic_waste_IGP.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('plasticWasteIGP', {
-                    type: 'geojson',
-                    data: data
-                });
-                gpwLayer = map.addLayer({
-                    'id': 'plastic_waste_IGP',
-                    'type': 'circle',
-                    'source': 'plasticWasteIGP',
-                    'paint': {
-                        'circle-radius': 5,
-                        'circle-stroke-width': 2,
-                        'circle-color': 'rgb(165, 146, 23)',  // Add # for hex color
-                        'circle-stroke-color': 'white'
-                    },
-                    layout: {
-                        visibility: 'visible'
-                    }
-                });
-
-
-
-                if (!isAggregateToolEnabled()) {
-                    // Popup for the coal layer
-                    map.on('click', 'plastic_waste_IGP', (e) => {
-                        if (!isAggregateToolEnabled()) {
-                            const properties = e.features[0].properties;
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(`
-                                     <div class="popup-table">
-                                    <h3>${properties.name}</h3>
-                                        <table>
-                                            <tr><th>Area</th><td>${properties.area}</td></tr>
-                                            <tr><th>Country</th><td>${properties.country}</td></tr>
-                                        </table>
-                                    </div>
-                                    `)
-                                .addTo(map);
-                        }
-                    });
-                }
-                hideLoadingSpinner(); // Hide the spinner after loading
-            })
-            .catch(error => {
-                console.error('Error loading Plastic Waste IGP data:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    }
-    
-     // Lazy load  Plastic Waste IGP layer
-     if (!map.getSource('solidWasteIGP')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/cd7115dc6a27c5771fcbf22480eb781c/raw/cbd1ba2cf0952b3d911daf888dd87fe80b301c7a/solid_waste_disposal_IGP.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Plastic+and+Landfill+Sites/waste_main.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('solidWasteIGP', {
                     type: 'geojson',
                     data: data
                 });
-                gpwLayer = map.addLayer({
+                map.addLayer({
                     'id': 'solid_waste_IGP',
                     'type': 'circle',
                     'source': 'solidWasteIGP',
@@ -685,10 +631,11 @@ export function addDataLayers(map) {
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
                                      <div class="popup-table">
-                                    <h3>${properties.asset_type}</h3>
+                                    <h3>${properties.name}</h3>
                                         <table>
                                             <tr><th>Status</th><td>${properties.status}</td></tr>
                                             <tr><th>Country</th><td>${properties.country}</td></tr>
+                                            <tr><th>Type</th><td>${properties.type}</td></tr>
                                         </table>
                                     </div>
                                     `)
@@ -714,7 +661,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data
                 });
-                pollutantLayer = map.addLayer({
+                map.addLayer({
                     'id': 'pollutant',
                     'type': 'heatmap',
                     'source': 'pollutant_decay',
@@ -774,7 +721,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data,
                 });
-                coalLayer = map.addLayer({
+                map.addLayer({
                     'id': 'coal_africa',
                     'type': 'circle',
                     'source': 'coal_Afc',
@@ -832,7 +779,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data,
                 });
-                coalLayer = map.addLayer({
+                map.addLayer({
                     'id': 'cement_africa',
                     'type': 'circle',
                     'source': 'cement_Afc',
@@ -853,7 +800,7 @@ export function addDataLayers(map) {
                         if (!isAggregateToolEnabled()) {
                             const properties = e.features[0]?.properties || {}; // Ensure properties exist
                             console.log(properties); // Debugging: Log properties to verify
-                        
+
                             const popupContent = `
                             <div class="popup-table">
                                 <h3>${properties.city || 'Unknown City'}, ${properties.state || 'Unknown State'}, ${properties.country || 'Unknown Country'}</h3>
@@ -867,15 +814,15 @@ export function addDataLayers(map) {
                                 </table>
                             </div>
                             `;
-                        
+
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(popupContent)
                                 .addTo(map);
                         }
-                       
+
                     });
-                    
+
                 }
 
                 hideLoadingSpinner(); // Hide the spinner after loading
@@ -896,7 +843,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data,
                 });
-                coalLayer = map.addLayer({
+                map.addLayer({
                     'id': 'paper_pulp_africa',
                     'type': 'circle',
                     'source': 'paper_Pulp_Afc',
@@ -916,7 +863,7 @@ export function addDataLayers(map) {
                     map.on('click', 'paper_pulp_africa', (e) => {
                         if (!isAggregateToolEnabled()) {
                             const properties = e.features[0]?.properties || {}; // Ensure properties exist
-                       
+
                             const popupContent = `
                             <div class="popup-table">
                                 <h3>${properties.plant_name}</h3>
@@ -930,15 +877,15 @@ export function addDataLayers(map) {
                                 </table>
                             </div>
                             `;
-                        
+
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(popupContent)
                                 .addTo(map);
                         }
-                       
+
                     });
-                    
+
                 }
 
                 hideLoadingSpinner(); // Hide the spinner after loading
@@ -959,7 +906,7 @@ export function addDataLayers(map) {
                     type: 'geojson',
                     data: data,
                 });
-                coalLayer = map.addLayer({
+                map.addLayer({
                     'id': 'steel_africa',
                     'type': 'circle',
                     'source': 'steel_Afc',
@@ -979,7 +926,7 @@ export function addDataLayers(map) {
                     map.on('click', 'steel_africa', (e) => {
                         if (!isAggregateToolEnabled()) {
                             const properties = e.features[0]?.properties || {}; // Ensure properties exist
-                          
+
                             const popupContent = `
                             <div class="popup-table">
                                 <h3>${properties.state}, ${properties.city}</h3>
@@ -992,15 +939,15 @@ export function addDataLayers(map) {
                                 </table>
                             </div>
                             `;
-                        
+
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(popupContent)
                                 .addTo(map);
                         }
-                       
+
                     });
-                    
+
                 }
 
                 hideLoadingSpinner(); // Hide the spinner after loading
