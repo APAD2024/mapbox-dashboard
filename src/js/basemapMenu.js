@@ -5,7 +5,7 @@ import {
     loadBrickKilnLayerDRC, loadBrickKilnLayerNGA, loadBrickKilnLayerUGA, loadBrickKilnLayerGHA,
     loadBrickKilnLayerPKhex, loadBrickKilnLayerINDhex, loadBrickKilnLayerBANhex
 } from './brickKilns.js';
-import { addDataLayers } from './layers.js';
+import { layerIds, addDataLayers } from './layers.js';
 import { initializeHeatmapControls } from './heatmapControls.js';
 
 const GOOGLE_AIR_QUALITY_URL = "https://airquality.googleapis.com/v1/mapTypes/US_AQI/heatmapTiles/{z}/{x}/{y}?key=AIzaSyAKE1BVSz3DXjo6bGgr7evdYXGcm-fePRY";
@@ -62,7 +62,12 @@ export function initializeBasemapMenu(map) {
                     
                     setTimeout(() => {
                         if (map.getLayer('google-air-quality')) {
-                            map.moveLayer('google-air-quality', 'indian'); // 🔥 Move below boundaries
+                            layerIds.forEach(layerId => {
+                                if (document.getElementById(`toggle${layerId}`)?.checked) {
+                                    map.moveLayer('google-air-quality', layerId);
+                                }
+                                
+                            });
                         }
                     }, 1000);
 
