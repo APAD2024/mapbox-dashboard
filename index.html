@@ -99,6 +99,20 @@
     </div>
 
 
+    <!-- Heatmap Control Box -->
+<div id="heatmapBox" style="display: none; position: absolute; bottom: 100px; right: 20px; z-index: 100; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+    <label for="heatmapToggle">
+        <strong>Heatmap</strong>
+        <input type="checkbox" id="heatmapToggle" checked />
+    </label>
+    <div style="margin-top: 5px; display: flex; align-items: center;">
+        <span style="font-size: 12px;">Poor</span>
+        <div style="flex-grow: 1; height: 10px; background: linear-gradient(to right, red, yellow, green); margin: 0 10px;"></div>
+        <span style="font-size: 12px;">Excellent</span>
+    </div>
+</div>
+
+
     <!-------------------------------------------------------- Continent Switch Button ------------------------------------------------------------->
     <div id="areaChange" title="Move to Africa">
         <i class="fas fa-globe-africa"></i>
@@ -426,6 +440,7 @@
     <script type="module" src="src/js/main.js"></script>
 <script type="module" src="src/js/layers.js"></script>
 <script type="module" src="src/js/geocoder.js"></script>
+<script type="module" src="src/js/heatmapControls.js"></script>
 
 </body>
 

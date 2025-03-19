@@ -24,7 +24,7 @@ export function loadBrickKilnLayerPKhex(map) {
                 const bbox = turf.bbox(data);
 
                 // Generate the hexagonal grid
-                const hexGrid = turf.hexGrid(bbox, 10, { units: 'kilometers' }); // 10 km hexagon size
+                const hexGrid = turf.hexGrid(bbox, 20, { units: 'kilometers' }); // 10 km hexagon size
 
                 // Count points within each hexagon
                 hexGrid.features.forEach(hex => {
@@ -77,7 +77,7 @@ export function loadBrickKilnLayerPKhex(map) {
                             // Prepare the popup content displaying only the density/count
                             const popupContent = `
                     <div class="popup-table">
-                        <h3>Brick Kiln Density / 10 km</h3>
+                        <h3>Brick Kiln Density / 20 km</h3>
                         <table>
                             <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
                         </table>
@@ -124,7 +124,7 @@ export function loadBrickKilnLayerINDhex(map) {
             .then(data => {
                 const bbox = turf.bbox(data);
 
-                const hexGrid = turf.hexGrid(bbox, 10, { units: 'kilometers' });
+                const hexGrid = turf.hexGrid(bbox, 20, { units: 'kilometers' });
 
                 hexGrid.features.forEach(hex => {
                     const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
@@ -175,7 +175,7 @@ export function loadBrickKilnLayerINDhex(map) {
                             const properties = e.features[0].properties;
                             const popupContent = `
                             <div class="popup-table">
-                                <h3>Brick Kiln Density / 10 km</h3>
+                                <h3>Brick Kiln Density / 20 km</h3>
                                 <table>
                                     <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
                                 </table>
@@ -219,7 +219,7 @@ export function loadBrickKilnLayerBANhex(map) {
             .then(data => {
                 const bbox = turf.bbox(data);
 
-                const hexGrid = turf.hexGrid(bbox, 10, { units: 'kilometers' });
+                const hexGrid = turf.hexGrid(bbox, 20, { units: 'kilometers' });
 
                 hexGrid.features.forEach(hex => {
                     const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
@@ -269,7 +269,7 @@ export function loadBrickKilnLayerBANhex(map) {
                             const properties = e.features[0].properties;
                             const popupContent = `
                         <div class="popup-table">
-                            <h3>Brick Kiln Density / 10 km</h3>
+                            <h3>Brick Kiln Density / 20 km</h3>
                             <table>
                                 <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
                             </table>

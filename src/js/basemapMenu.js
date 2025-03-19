@@ -6,11 +6,19 @@ import {
     loadBrickKilnLayerPKhex, loadBrickKilnLayerINDhex, loadBrickKilnLayerBANhex
 } from './brickKilns.js';
 import { addDataLayers } from './layers.js';
+import { initializeHeatmapControls } from './heatmapControls.js';
+
 const GOOGLE_AIR_QUALITY_URL = "https://airquality.googleapis.com/v1/mapTypes/US_AQI/heatmapTiles/{z}/{x}/{y}?key=AIzaSyAKE1BVSz3DXjo6bGgr7evdYXGcm-fePRY";
 
 export function initializeBasemapMenu(map) {
     const menuButton = document.getElementById('menuButton');
     const menu = document.getElementById('menu');
+    const heatmapBox = document.getElementById('heatmapBox'); // Reference to heatmap UI
+
+    
+    // ✅ Initialize heatmap controls
+    initializeHeatmapControls(map);
+
 
     // ✅ Toggle menu visibility
     menuButton.onclick = () => {
@@ -35,6 +43,10 @@ export function initializeBasemapMenu(map) {
                         tileSize: 256
                     });
 
+                    // ✅ Show heatmap UI
+                    heatmapBox.style.display = "block";
+
+
                     map.addLayer({
                         id: 'google-air-quality',
                         type: 'raster',
@@ -44,7 +56,8 @@ export function initializeBasemapMenu(map) {
                         }
                     });
 
-                    // ✅ Hide spinner once the air quality layer is added
+                    
+
                     map.once('idle', () => {
                         hideLoadingSpinner();
                     });
@@ -52,12 +65,17 @@ export function initializeBasemapMenu(map) {
                 } else {
                     // ✅ Toggle layer visibility if already added
                     const visibility = map.getLayoutProperty('google-air-quality', 'visibility');
-                    map.setLayoutProperty('google-air-quality', 'visibility', visibility === 'visible' ? 'none' : 'visible');
+                    const newVisibility = visibility === 'visible' ? 'none' : 'visible';
+                    map.setLayoutProperty('google-air-quality', 'visibility', newVisibility);
 
-                    // ✅ Hide spinner immediately since layer exists
+                  
                     hideLoadingSpinner();
                 }
             } else {
+
+                // ✅ Hide heatmap UI
+                heatmapBox.style.display = "none";
+                
                 // ✅ Switch to another Mapbox basemap
                 const style = `mapbox://styles/mapbox/${selectedBasemap}`;
                 map.setStyle(style);
@@ -67,8 +85,10 @@ export function initializeBasemapMenu(map) {
 
                     map.once('idle', () => {
                         restoreLayerVisibility(map);
-                        hideLoadingSpinner(); // ✅ Ensure spinner stops after basemap loads
+                        hideLoadingSpinner();
                     });
+
+                    
 
                     // ✅ Re-add Brick Kiln layers only if their respective checkboxes are checked
                     if (document.getElementById('toggleBKPK').checked) loadBrickKilnLayerPK(map);
@@ -79,7 +99,6 @@ export function initializeBasemapMenu(map) {
                     if (document.getElementById('toggleBKUGA').checked) loadBrickKilnLayerUGA(map);
                     if (document.getElementById('toggleBKGHA').checked) loadBrickKilnLayerGHA(map);
 
-                    // ✅ Load hexagonal Brick Kiln layers based on their toggle state
                     if (document.getElementById('toggleHexGridPAK').checked) loadBrickKilnLayerPKhex(map);
                     if (document.getElementById('toggleHexGridIND').checked) loadBrickKilnLayerINDhex(map);
                     if (document.getElementById('toggleHexGridBAN').checked) loadBrickKilnLayerBANhex(map);
