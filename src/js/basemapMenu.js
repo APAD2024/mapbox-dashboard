@@ -53,10 +53,19 @@ export function initializeBasemapMenu(map) {
                         source: 'google-air-quality',
                         layout: {
                             visibility: 'visible'
+                        },
+                        paint: {
+                            'raster-opacity': 0.7 // 🔥 Adjust transparency (0.0 = fully transparent, 1.0 = fully opaque)
                         }
                     });
-
                     
+                    
+                    setTimeout(() => {
+                        if (map.getLayer('google-air-quality')) {
+                            map.moveLayer('google-air-quality', 'indian'); // 🔥 Move below boundaries
+                        }
+                    }, 1000);
+
 
                     map.once('idle', () => {
                         hideLoadingSpinner();
@@ -75,7 +84,7 @@ export function initializeBasemapMenu(map) {
 
                 // ✅ Hide heatmap UI
                 heatmapBox.style.display = "none";
-                
+
                 // ✅ Switch to another Mapbox basemap
                 const style = `mapbox://styles/mapbox/${selectedBasemap}`;
                 map.setStyle(style);

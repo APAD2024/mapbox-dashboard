@@ -475,7 +475,7 @@ export function loadBrickKilnLayerIND(map) {
 export function loadBrickKilnLayerBAN(map) {
     if (!map.getSource('bk_ban')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson ')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson')
             .then(response => response.json())
             .then(data => {
                 map.addSource('bk_ban', {
