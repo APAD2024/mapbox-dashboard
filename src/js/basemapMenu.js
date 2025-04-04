@@ -1,21 +1,24 @@
 import { saveLayerVisibility, restoreLayerVisibility, logLayerVisibility } from './layerVisibility.js';
 import { showLoadingSpinner, hideLoadingSpinner } from './utils.js';
-import { 
-    loadBrickKilnLayerPK, loadBrickKilnLayerIND, loadBrickKilnLayerBAN, 
+import {
+    loadBrickKilnLayerPK, loadBrickKilnLayerIND, loadBrickKilnLayerBAN,
     loadBrickKilnLayerDRC, loadBrickKilnLayerNGA, loadBrickKilnLayerUGA, loadBrickKilnLayerGHA,
     loadBrickKilnLayerPKhex, loadBrickKilnLayerINDhex, loadBrickKilnLayerBANhex
 } from './brickKilns.js';
 import { layerIds, addDataLayers } from './layers.js';
 import { initializeHeatmapControls } from './heatmapControls.js';
+import { GOOGLE_AIR_QUALITY_URL } from './config.js';
 
-const GOOGLE_AIR_QUALITY_URL = "https://airquality.googleapis.com/v1/mapTypes/US_AQI/heatmapTiles/{z}/{x}/{y}?key=AIzaSyAKE1BVSz3DXjo6bGgr7evdYXGcm-fePRY";
 
 export function initializeBasemapMenu(map) {
     const menuButton = document.getElementById('menuButton');
     const menu = document.getElementById('menu');
     const heatmapBox = document.getElementById('heatmapBox'); // Reference to heatmap UI
 
-    
+    document.querySelector('#menu .closeButton').addEventListener('click', () => {
+        document.getElementById('menu').style.display = 'none';
+    });
+
     // ✅ Initialize heatmap controls
     initializeHeatmapControls(map);
 
@@ -58,15 +61,15 @@ export function initializeBasemapMenu(map) {
                             'raster-opacity': 0.7 // 🔥 Adjust transparency (0.0 = fully transparent, 1.0 = fully opaque)
                         }
                     });
-                    
-                    
+
+
                     setTimeout(() => {
                         if (map.getLayer('google-air-quality')) {
                             layerIds.forEach(layerId => {
                                 if (document.getElementById(`toggle${layerId}`)?.checked) {
                                     map.moveLayer('google-air-quality', layerId);
                                 }
-                                
+
                             });
                         }
                     }, 1000);
@@ -82,7 +85,7 @@ export function initializeBasemapMenu(map) {
                     const newVisibility = visibility === 'visible' ? 'none' : 'visible';
                     map.setLayoutProperty('google-air-quality', 'visibility', newVisibility);
 
-                  
+
                     hideLoadingSpinner();
                 }
             } else {
@@ -102,7 +105,7 @@ export function initializeBasemapMenu(map) {
                         hideLoadingSpinner();
                     });
 
-                    
+
 
                     // ✅ Re-add Brick Kiln layers only if their respective checkboxes are checked
                     if (document.getElementById('toggleBKPK').checked) loadBrickKilnLayerPK(map);
@@ -120,6 +123,28 @@ export function initializeBasemapMenu(map) {
                     logLayerVisibility(map);
                 });
             }
+
+            // 🔁 Watch the heatmap toggle checkbox to revert to light basemap when turned off
+            const heatmapToggle = document.getElementById('heatmapToggle');
+            if (heatmapToggle) {
+                heatmapToggle.addEventListener('change', function () {
+                    if (!this.checked) {
+                        // Set radio input back to light-v11
+                        const lightRadio = document.getElementById('light-v11');
+                        if (lightRadio) lightRadio.checked = true;
+
+                        // Hide the heatmap box
+                        heatmapBox.style.display = "none";
+
+                        // Remove heatmap layer if visible
+                        if (map.getLayer('google-air-quality')) {
+                            map.setLayoutProperty('google-air-quality', 'visibility', 'none');
+                        }
+
+                    }
+                });
+            }
+
 
             menu.style.display = 'none'; // Hide menu after selection
         });

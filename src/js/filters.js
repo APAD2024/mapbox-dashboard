@@ -1,4 +1,8 @@
-// Pollutant Filters Module
+import {
+    loadBrickKilnLayerPK, loadBrickKilnLayerIND, loadBrickKilnLayerBAN,
+    loadBrickKilnLayerPKhex, loadBrickKilnLayerINDhex, loadBrickKilnLayerBANhex,
+    loadBrickKilnLayerDRC, loadBrickKilnLayerNGA, loadBrickKilnLayerUGA, loadBrickKilnLayerGHA
+} from './brickKilns.js';
 
 // Region-specific data
 const igpCountries = ['India', 'Pakistan', 'Bangladesh'];
@@ -7,13 +11,14 @@ const africaCountries = ['Nigeria', 'Uganda', 'Congo', 'Ghana'];
 // Asset options per region (linked to actual layer IDs)
 const igpAssets = [
     { id: 'coal', label: 'Coal IGP' },
-    { id: 'cement_igp', label: 'Cement' },
+    { id: 'cement_IGP', label: 'Cement' },
     { id: 'oil_gas_IGP', label: 'Oil Gas Refineries' },
     { id: 'paper_pulp_IGP', label: 'Paper Pulp' },
     { id: 'steel_IGP', label: 'Steel' },
     { id: 'solid_waste_IGP', label: 'Solid Waste' },
     { id: 'fossil', label: 'Fossil Fuel' },
-    { id: 'gpw', label: 'GPW' }
+    { id: 'gpw', label: 'GPW' },
+    { id: 'brick_kiln', label: 'Brick Kiln' }
 ];
 
 const africaAssets = [
@@ -21,15 +26,20 @@ const africaAssets = [
     { id: 'cement_africa', label: 'Cement' },
     { id: 'paper_pulp_africa', label: 'Paper Pulp' },
     { id: 'steel_africa', label: 'Steel Plants' },
+    { id: 'brick_kiln', label: 'Brick Kiln' }
 ];
 
 // Layer IDs used in filters
 const layerIds = [
-    'coal', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 
-    'cement_igp', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
-    'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 
+    'coal', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN',
+    'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
+    'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA',
     'brick_kilns_UGA', 'brick_kilns_NGA'
 ];
+
+const brickKilnIGP = ['BK_PK', 'BK_IND', 'BK_BAN'];
+const brickKilnAfc = ['brick_kilns_DRC', 'brick_kilns_GHA',
+    'brick_kilns_UGA', 'brick_kilns_NGA']
 
 // Function to update country filter dropdown
 export function updateCountryFilter(region) {
@@ -69,21 +79,44 @@ export function checkRegionAndUpdateFilters(map) {
 // Function to handle asset filter changes
 export function handleAssetFilterChange(map) {
     const selectedAsset = document.getElementById('assetFilter').value;
+    const isBrickKiln = selectedAsset === 'brick_kiln';
 
-    // Hide all layers by default, then show the selected asset layer
     layerIds.forEach(layerId => {
-        const visibility = selectedAsset === layerId || selectedAsset === '' ? 'visible' : 'none';
+        let visibility = 'none';
+
+        if (selectedAsset === '' || selectedAsset === layerId) {
+            visibility = 'visible';
+        }
+
+        if (isBrickKiln && (brickKilnIGP.includes(layerId) || brickKilnAfc.includes(layerId))) {
+            visibility = 'visible';
+
+            // 🔄 Dynamically load the Brick Kiln layer if not already present
+            if (!map.getLayer(layerId)) {
+                if (layerId === 'BK_PK') loadBrickKilnLayerPK(map);
+                if (layerId === 'BK_IND') loadBrickKilnLayerIND(map);
+                if (layerId === 'BK_BAN') loadBrickKilnLayerBAN(map);
+
+                if (layerId === 'brick_kilns_DRC') loadBrickKilnLayerDRC(map);
+                if (layerId === 'brick_kilns_NGA') loadBrickKilnLayerNGA(map);
+                if (layerId === 'brick_kilns_UGA') loadBrickKilnLayerUGA(map);
+                if (layerId === 'brick_kilns_GHA') loadBrickKilnLayerGHA(map);
+            }
+        }
+
+        // ✅ Set visibility if layer already exists
         if (map.getLayer(layerId)) {
             map.setLayoutProperty(layerId, 'visibility', visibility);
         }
 
-        // Sync legend checkboxes
+        // ✅ Sync legend checkbox if exists
         const checkbox = document.querySelector(`input[data-layer="${layerId}"]`);
         if (checkbox) {
             checkbox.checked = (visibility === 'visible');
         }
     });
 
+    // ✅ Reapply country and pollutant filters
     handleCountryAndPollutantFilters(map);
 }
 

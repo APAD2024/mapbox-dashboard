@@ -2,6 +2,11 @@ export function initializeHeatmapControls(map) {
     const heatmapBox = document.getElementById('heatmapBox');
     const heatmapToggle = document.getElementById('heatmapToggle');
 
+
+    document.querySelector('#heatmapBox .closeButton').addEventListener('click', () => {
+        document.getElementById('heatmapBox').style.display = 'none';
+    });
+    
     if (!heatmapBox || !heatmapToggle) {
         console.error("🚨 Heatmap UI elements not found!");
         return;

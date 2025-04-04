@@ -24,7 +24,7 @@ export function loadBrickKilnLayerPKhex(map) {
                 const bbox = turf.bbox(data);
 
                 // Generate the hexagonal grid
-                const hexGrid = turf.hexGrid(bbox, 20, { units: 'kilometers' }); // 10 km hexagon size
+                const hexGrid = turf.hexGrid(bbox, 15, { units: 'kilometers' }); // 10 km hexagon size
 
                 // Count points within each hexagon
                 hexGrid.features.forEach(hex => {
@@ -52,13 +52,22 @@ export function loadBrickKilnLayerPKhex(map) {
                             'interpolate',
                             ['linear'],
                             ['get', 'pointCount'],
-                            0, 'rgba(255,255,255,0)',
-                            1, '#ffeda0',
-                            10, '#feb24c',
-                            50, '#f03b20'
-                        ],
-                        'fill-opacity': 0.7
-                    }
+                            0, 'rgba(255,255,178,0)',
+                            10, 'rgba(255,255,178,0.3)',
+                            20, 'rgb(254,229,132)',
+                            30, 'rgb(254,204,92)',
+                            50, 'rgb(253,174,64)',
+                            100, 'rgb(253,141,60)',
+                            150, 'rgb(252,78,42)',
+                            200, 'rgb(240,59,32)',
+                            250, 'rgb(220,30,30)',
+                            300, 'rgb(189,0,38)',
+                            350, 'rgb(140,0,30)',
+                            400, 'rgb(100,0,20)'
+                            ],
+                        'fill-opacity': 0.7,
+
+                    },
                 });
 
                 // Wait for the map to become idle, meaning all sources and tiles have been loaded
@@ -77,7 +86,7 @@ export function loadBrickKilnLayerPKhex(map) {
                             // Prepare the popup content displaying only the density/count
                             const popupContent = `
                     <div class="popup-table">
-                        <h3>Brick Kiln Density / 20 km</h3>
+                        <h3>Brick Kiln Density / 15km</h3>
                         <table>
                             <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
                         </table>
@@ -124,7 +133,7 @@ export function loadBrickKilnLayerINDhex(map) {
             .then(data => {
                 const bbox = turf.bbox(data);
 
-                const hexGrid = turf.hexGrid(bbox, 20, { units: 'kilometers' });
+                const hexGrid = turf.hexGrid(bbox, 15, { units: 'kilometers' });
 
                 hexGrid.features.forEach(hex => {
                     const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
@@ -149,12 +158,21 @@ export function loadBrickKilnLayerINDhex(map) {
                             'interpolate',
                             ['linear'],
                             ['get', 'pointCount'],
-                            0, 'rgba(255,255,255,0)',
-                            1, '#ffeda0',
-                            10, '#feb24c',
-                            50, '#f03b20'
-                        ],
-                        'fill-opacity': 0.7
+                            0, 'rgba(255,255,178,0)',
+                            10, 'rgba(255,255,178,0.3)',
+                            20, 'rgb(254,229,132)',
+                            30, 'rgb(254,204,92)',
+                            50, 'rgb(253,174,64)',
+                            100, 'rgb(253,141,60)',
+                            150, 'rgb(252,78,42)',
+                            200, 'rgb(240,59,32)',
+                            250, 'rgb(220,30,30)',
+                            300, 'rgb(189,0,38)',
+                            350, 'rgb(140,0,30)',
+                            400, 'rgb(100,0,20)'
+                            ],
+                        'fill-opacity': 0.7,
+
                     },
                     layout: {
                         visibility: 'visible'
@@ -168,14 +186,14 @@ export function loadBrickKilnLayerINDhex(map) {
                     }
                 });
 
-                if (aggregateToolEnabled == false) {
+                if (!isAggregateToolEnabled()) {
                     // Add popup click event
                     map.on('click', 'brick_kilns_IND', (e) => {
                         if (!isAggregateToolEnabled()) {
                             const properties = e.features[0].properties;
                             const popupContent = `
                             <div class="popup-table">
-                                <h3>Brick Kiln Density / 20 km</h3>
+                                <h3>Brick Kiln Density / 15km</h3>
                                 <table>
                                     <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
                                 </table>
@@ -219,7 +237,7 @@ export function loadBrickKilnLayerBANhex(map) {
             .then(data => {
                 const bbox = turf.bbox(data);
 
-                const hexGrid = turf.hexGrid(bbox, 20, { units: 'kilometers' });
+                const hexGrid = turf.hexGrid(bbox, 15, { units: 'kilometers' });
 
                 hexGrid.features.forEach(hex => {
                     const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
@@ -244,12 +262,21 @@ export function loadBrickKilnLayerBANhex(map) {
                             'interpolate',
                             ['linear'],
                             ['get', 'pointCount'],
-                            0, 'rgba(255,255,255,0)',
-                            1, '#ffeda0',
-                            10, '#feb24c',
-                            50, '#f03b20'
-                        ],
-                        'fill-opacity': 0.7
+                            0, 'rgba(255,255,178,0)',
+                            10, 'rgba(255,255,178,0.3)',
+                            20, 'rgb(254,229,132)',
+                            30, 'rgb(254,204,92)',
+                            50, 'rgb(253,174,64)',
+                            100, 'rgb(253,141,60)',
+                            150, 'rgb(252,78,42)',
+                            200, 'rgb(240,59,32)',
+                            250, 'rgb(220,30,30)',
+                            300, 'rgb(189,0,38)',
+                            350, 'rgb(140,0,30)',
+                            400, 'rgb(100,0,20)'
+                            ],
+                        'fill-opacity': 0.9,
+
                     },
                     layout: {
                         visibility: 'visible'
@@ -269,7 +296,7 @@ export function loadBrickKilnLayerBANhex(map) {
                             const properties = e.features[0].properties;
                             const popupContent = `
                         <div class="popup-table">
-                            <h3>Brick Kiln Density / 20 km</h3>
+                            <h3>Brick Kiln Density / 15km</h3>
                             <table>
                                 <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
                             </table>

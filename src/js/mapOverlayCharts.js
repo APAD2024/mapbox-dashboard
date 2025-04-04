@@ -122,11 +122,11 @@ export function initializeOverlayCharts(map) {
                 const properties = states[0].properties;
                 const isAfrica = states[0].layer.id === 'coal_africa';
 
-                const pm10 = isAfrica ? properties.pm10 : properties.p10_tn_y;
-                const pm25 = isAfrica ? properties.pm25 : properties.p25_tn_y;
-                const so2 = isAfrica ? properties.sox : properties.so2_tn_y;
-                const no2 = isAfrica ? properties.nox : properties.nox_tn_y;
-                const plantName = properties.plant_name;
+                const pm10 =  properties.pm10;
+                const pm25 =  properties.pm25;
+                const so2 =  properties.so2;
+                const no2 =  properties.nox;
+                const plantName = properties.name;
                 const country = properties.country;
 
                 document.getElementById('plantInfo').innerHTML = `<h3>${plantName}, ${country}</h3>`;

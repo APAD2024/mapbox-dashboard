@@ -402,12 +402,14 @@ export function addDataLayers(map) {
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
-                                     <div class="popup-table">
-                                    <h3>${properties.name}, ${properties.country}</h3>
+                                    <div class="popup-table">
+                                        <h3>${properties.name}, ${properties.country}</h3>
                                         <table>
-                                            <tr><th>State</th><td>${properties.state}</td></tr>
-                                            <tr><th>Region</th><td>${properties.region}</td></tr>
-                                            <tr><th>Status</th><td>${properties.status}</td></tr>
+                                            <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
+                                            <tr><th>PM<sub>10</sub></th><td>${properties.pm10}</td></tr>
+                                            <tr><th>PM<sub>2.5</sub></th><td>${properties.pm25}</td></tr>
+                                            <tr><th>NO<sub>2</sub></th><td>${properties.nox}</td></tr>
+                                            <tr><th>SO<sub>2</sub></th><td>${properties.so2}</td></tr>
                                         </table>
                                     </div>
                                     `)
@@ -459,12 +461,14 @@ export function addDataLayers(map) {
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
-                                     <div class="popup-table">
-                                    <h3>${properties.name}</h3>
+                                    <div class="popup-table">
+                                        <h3>${properties.name}, ${properties.country}</h3>
                                         <table>
-                                            <tr><th>Gas</th><td>${properties.type}</td></tr>
-                                            <tr><th>Capacity</th><td>${properties.capacity}</td></tr>
-                                            <tr><th>Status</th><td>${properties.status}</td></tr>
+                                            <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
+                                            <tr><th>PM<sub>10</sub></th><td>${properties.pm10}</td></tr>
+                                            <tr><th>PM<sub>2.5</sub></th><td>${properties.pm25}</td></tr>
+                                            <tr><th>NO<sub>2</sub></th><td>${properties.nox}</td></tr>
+                                            <tr><th>SO<sub>2</sub></th><td>${properties.so2}</td></tr>
                                         </table>
                                     </div>
                                     `)
@@ -516,12 +520,14 @@ export function addDataLayers(map) {
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
-                                     <div class="popup-table">
-                                    <h3>${properties.name}, ${properties.region}</h3>
+                                    <div class="popup-table">
+                                        <h3>${properties.name}, ${properties.country}</h3>
                                         <table>
-                                            <tr><th>Plant Type</th><td>${properties.type}</td></tr>
-                                            <tr><th>Status</th><td>${properties.status}</td></tr>
-                                            <tr><th>Capacity</th><td>${properties.capacity}</td></tr>
+                                            <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
+                                            <tr><th>PM<sub>10</sub></th><td>${properties.pm10}</td></tr>
+                                            <tr><th>PM<sub>2.5</sub></th><td>${properties.pm25}</td></tr>
+                                            <tr><th>NO<sub>2</sub></th><td>${properties.nox}</td></tr>
+                                            <tr><th>SO<sub>2</sub></th><td>${properties.so2}</td></tr>
                                         </table>
                                     </div>
                                     `)
@@ -572,14 +578,16 @@ export function addDataLayers(map) {
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
-                                     <div class="popup-table">
-                                    <h3>${properties.name}, ${properties.region}</h3>
-                                        <table>
-                                            <tr><th>Plant Type</th><td>${properties.type}</td></tr>
-                                            <tr><th>Status</th><td>${properties.status}</td></tr>
-                                            <tr><th>Capacity</th><td>${properties.capacity}</td></tr>
-                                        </table>
-                                    </div>
+                                    <div class="popup-table">
+                                <h3>${properties.name}, ${properties.country}</h3>
+                                <table>
+                                    <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties.pm10}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties.pm25}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties.nox}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties.so2}</td></tr>
+                                </table>
+                            </div>
                                     `)
                                 .addTo(map);
                         }
@@ -630,14 +638,16 @@ export function addDataLayers(map) {
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(`
-                                     <div class="popup-table">
-                                    <h3>${properties.name}</h3>
-                                        <table>
-                                            <tr><th>Status</th><td>${properties.status}</td></tr>
-                                            <tr><th>Country</th><td>${properties.country}</td></tr>
-                                            <tr><th>Type</th><td>${properties.type}</td></tr>
-                                        </table>
-                                    </div>
+                                    <div class="popup-table">
+                                <h3>${properties.name}, ${properties.country}</h3>
+                                <table>
+                                    <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
+                                    <tr><th>PM<sub>10</sub></th><td>${properties.pm10}</td></tr>
+                                    <tr><th>PM<sub>2.5</sub></th><td>${properties.pm25}</td></tr>
+                                    <tr><th>NO<sub>2</sub></th><td>${properties.nox}</td></tr>
+                                    <tr><th>SO<sub>2</sub></th><td>${properties.so2}</td></tr>
+                                </table>
+                            </div>
                                     `)
                                 .addTo(map);
                         }

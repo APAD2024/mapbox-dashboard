@@ -1,8 +1,13 @@
-import { 
-    loadBrickKilnLayerPK, loadBrickKilnLayerIND, loadBrickKilnLayerBAN, 
+import {
+    loadBrickKilnLayerPK, loadBrickKilnLayerIND, loadBrickKilnLayerBAN,
     loadBrickKilnLayerPKhex, loadBrickKilnLayerINDhex, loadBrickKilnLayerBANhex,
-    loadBrickKilnLayerDRC, loadBrickKilnLayerNGA, loadBrickKilnLayerUGA, loadBrickKilnLayerGHA 
+    loadBrickKilnLayerDRC, loadBrickKilnLayerNGA, loadBrickKilnLayerUGA, loadBrickKilnLayerGHA
 } from './brickKilns.js';
+
+import {
+    loadADM3BrickKilnsPakistan,
+    loadADM3BrickKilnsIndia
+} from './brickKilnadm3.js';
 
 // Store visibility states
 // Store visibility states
@@ -15,7 +20,7 @@ const defaultLayerIds = [
     'oil_gas_igp', 'paper_pulp_igp', 'steel_igp',
     'solid_waste_igp', 'coal_africa', 'cement_africa', 'paper_pulp_africa',
     'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA',
-    'brick_kilns_NGA'
+    'brick_kilns_NGA', 'adm3_PAK', 'adm3_IND', 'adm3_BAN'
 ];
 
 // Function to save layer visibility
@@ -66,6 +71,9 @@ export function toggleLayerVisibility(map, layerId, isChecked) {
     if (map.getLayer(layerId)) {
         map.setLayoutProperty(layerId, 'visibility', isChecked ? 'visible' : 'none');
     }
+    if (map.getLayer(`${layerId}-outline`)) {
+        map.setLayoutProperty(`${layerId}-outline`, 'visibility', visible ? 'visible' : 'none');
+    }
 }
 
 /**
@@ -114,6 +122,12 @@ export function initializeLayerVisibilityControls(map) {
     setupBrickKilnToggle(map, 'toggleHexGridIND', 'brick_kilns_IND', loadBrickKilnLayerINDhex);
     setupBrickKilnToggle(map, 'toggleHexGridBAN', 'brick_kilns_BAN', loadBrickKilnLayerBANhex);
 
+    // ADM-3 Brick Kilns
+    setupBrickKilnToggle(map, 'toggleadm3_PAK', 'adm3_PAK', loadADM3BrickKilnsPakistan);
+    setupBrickKilnToggle(map, 'toggleadm3_IND', 'adm3_IND', loadADM3BrickKilnsIndia);
+    // Optional future setup: setupBrickKilnToggle(map, 'toggleadm3_BAN', 'adm3_BAN', loadADM3BrickKilnsBangladesh);
+
+
     // Africa Brick Kiln Layers
     setupBrickKilnToggle(map, 'toggleBKDRC', 'brick_kilns_DRC', loadBrickKilnLayerDRC);
     setupBrickKilnToggle(map, 'toggleBKGHA', 'brick_kilns_GHA', loadBrickKilnLayerGHA);
@@ -140,6 +154,10 @@ export function initializeLayerVisibilityControls(map) {
     // Parent Toggle: Brick Kilns Grid
     document.getElementById('toggleBrickKilnsGrid').addEventListener('click', (e) => {
         document.getElementById('BrickKilnsGrid').classList.toggle('hidden');
+    });
+
+    document.getElementById('toggleBrickKilnsAdm3').addEventListener('click', () => {
+        document.getElementById('brickKilnAdm3').classList.toggle('hidden');
     });
 
     // Parent Toggle: Africa Brick Kilns

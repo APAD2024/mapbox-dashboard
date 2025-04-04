@@ -13,6 +13,9 @@ import { initializeOverlayCharts } from './mapOverlayCharts.js';
 import { initializeFilters } from './filters.js';
 
 
+import { initializeADM3FilterPanel } from './adm3Filters.js';
+
+
 // -----------------------------------------------------------MAP INITIALIZATION-----------------------------------------------------------
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYXBhZC13b3JsZCIsImEiOiJjbHoyc2d5b2EzNXk1MmtzaHFrdWprZ2swIn0.Z2onslEOxm7o0lbD-1WNtA';
@@ -61,6 +64,9 @@ map.on('load', () => {
 });
 
 
+map.on('load', () => {
+    initializeADM3FilterPanel(map);
+});
 
 
 
@@ -82,3 +88,4 @@ map.on('load', () => {
 map.on('load', () => {
     initializeFilters(map);
 });
+
