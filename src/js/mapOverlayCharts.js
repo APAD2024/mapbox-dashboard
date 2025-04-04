@@ -72,7 +72,7 @@ export function initializeOverlayCharts(map) {
     };
 
 
-    
+
 
 
     // Convert yearly/day frequency
@@ -142,43 +142,47 @@ export function initializeOverlayCharts(map) {
 
     map.on('mousemove', (event) => {
         let found = false;
-    
+
         for (const layerId of pollutantLayers) {
             if (!map.getLayer(layerId)) continue;
-    
+
             const features = map.queryRenderedFeatures(event.point, { layers: [layerId] });
             if (!features.length) continue;
-    
+
             const props = features[0].properties || {};
             const hasPollution = ['pm10', 'pm25', 'so2', 'nox'].some(key => key in props);
-            if (!hasPollution) continue;
-    
-            lastPm10 = Number(props.pm10) || 0 || null;
-            lastPm25 = Number(props.pm25) || 0 || null;
-            lastSo2 = Number(props.so2) || 0 || null;
-            lastNo2 = Number(props.nox) || 0 || null;
-    
+  
+
+            const parseOrZero = (val) => isNaN(Number(val)) ? 0 : Number(val);
+
+            lastPm10 = parseOrZero(props.pm10);
+            lastPm25 = parseOrZero(props.pm25);
+            lastSo2  = parseOrZero(props.so2);
+            lastNo2  = parseOrZero(props.nox);
+
+
+
             const name = props.name || props.NAME_3 || 'Unnamed';
             const country = props.country || props.COUNTRY || '';
-    
+
             plantInfo.innerHTML = `<h3>${name}, ${country}</h3>`;
             updatePollutantCharts(lastPm10, lastPm25, lastSo2, lastNo2);
             hoverText.style.display = 'none';
-    
+
             // ✅ Set source title dynamically here
             const layerTitle = layerNames[layerId] || 'Unknown Source';
             const sourceTitle = document.getElementById('pollutantSourceTitle');
             if (sourceTitle) sourceTitle.innerText = `Pollutants from ${layerTitle}`;
-    
+
             found = true;
             break;
         }
-    
+
         if (!found) {
             hoverText.style.display = 'block';
         }
     });
-    
+
 
 
 

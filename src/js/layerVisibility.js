@@ -68,13 +68,18 @@ export function logLayerVisibility(map, layers = defaultLayerIds) {
  * Function to toggle layer visibility dynamically
  */
 export function toggleLayerVisibility(map, layerId, isChecked) {
+    const visibility = isChecked ? 'visible' : 'none';
+
     if (map.getLayer(layerId)) {
-        map.setLayoutProperty(layerId, 'visibility', isChecked ? 'visible' : 'none');
+        map.setLayoutProperty(layerId, 'visibility', visibility);
     }
-    if (map.getLayer(`${layerId}-outline`)) {
-        map.setLayoutProperty(`${layerId}-outline`, 'visibility', visible ? 'visible' : 'none');
+
+    const outlineId = `${layerId}-outline`;
+    if (map.getLayer(outlineId)) {
+        map.setLayoutProperty(outlineId, 'visibility', visibility);
     }
 }
+
 
 /**
  * Function to handle checkbox changes for standard layers
