@@ -809,13 +809,11 @@ export function addDataLayers(map) {
                     map.on('click', 'cement_africa', (e) => {
                         if (!isAggregateToolEnabled()) {
                             const properties = e.features[0]?.properties || {}; // Ensure properties exist
-                            console.log(properties); // Debugging: Log properties to verify
 
                             const popupContent = `
                             <div class="popup-table">
                                 <h3>${properties.city || 'Unknown City'}, ${properties.state || 'Unknown State'}, ${properties.country || 'Unknown Country'}</h3>
                                 <table>
-                                    <td>Cement Plants</td>
                                     <tr><th>Sub Region</th><td>${properties.sub_region || 'N/A'}</td></tr>
                                     <tr><th>Plant Type</th><td>${properties.plant_type || 'N/A'}</td></tr>
                                     <tr><th>Status</th><td>${properties.status || 'N/A'}</td></tr>
@@ -878,7 +876,6 @@ export function addDataLayers(map) {
                             <div class="popup-table">
                                 <h3>${properties.plant_name}</h3>
                                 <table>
-                                    <td>Paper Pulp Plants</td>
                                     <tr><th>Country</th><td>${properties.country}</td></tr>
                                     <tr><th>City</th><td>${properties.city}</td></tr>
                                     <tr><th>Sub Region</th><td>${properties.sub_region}</td></tr>
@@ -941,7 +938,6 @@ export function addDataLayers(map) {
                             <div class="popup-table">
                                 <h3>${properties.state}, ${properties.city}</h3>
                                 <table>
-                                <td>Steel Plants</td>
                                     <tr><th>Country</th><td>${properties.country}</td></tr>
                                     <tr><th>Sub Region</th><td>${properties.sub_region}</td></tr>
                                     <tr><th>Plant Type</th><td>${properties.plant_type}</td></tr>

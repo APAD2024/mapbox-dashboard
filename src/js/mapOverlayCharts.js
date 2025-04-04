@@ -6,7 +6,7 @@ let lastNo2 = 0;
 
 // Layers to monitor
 const pollutantLayers = [
-    'coal', 'fossil', 'gpw', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
+    'coal', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
     'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA'
 ];
 
@@ -153,10 +153,10 @@ export function initializeOverlayCharts(map) {
             const hasPollution = ['pm10', 'pm25', 'so2', 'nox'].some(key => key in props);
             if (!hasPollution) continue;
     
-            lastPm10 = Number(props.pm10) || 0;
-            lastPm25 = Number(props.pm25) || 0;
-            lastSo2 = Number(props.so2) || 0;
-            lastNo2 = Number(props.nox) || 0;
+            lastPm10 = Number(props.pm10) || 0 || null;
+            lastPm25 = Number(props.pm25) || 0 || null;
+            lastSo2 = Number(props.so2) || 0 || null;
+            lastNo2 = Number(props.nox) || 0 || null;
     
             const name = props.name || props.NAME_3 || 'Unnamed';
             const country = props.country || props.COUNTRY || '';
