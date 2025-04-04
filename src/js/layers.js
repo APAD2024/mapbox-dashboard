@@ -15,48 +15,48 @@ let boundaryLayer, populationLayer, gpwLayer;
 // -----------------------------------------------------------LAYERS LOADING-----------------------------------------------------------
 
 // Function to fetch pollution data
-// export async function fetchPollutionData(map) {
-//     try {
-//         const response = await fetch('https://api.apad.world/api/get_all_submissions', {
-//             method: 'POST',
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({})
-//         });
+export async function fetchPollutionData(map) {
+    try {
+        const response = await fetch('https://api.apad.world/api/get_all_submissions', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        });
 
-//         if (!response.ok) {
-//             throw new Error(`HTTP error! Status: ${response.status}`);
-//         }
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
-//         const data = await response.json();
-//         addPollutionMarkers(map, data);
+        const data = await response.json();
+        addPollutionMarkers(map, data);
 
-//     } catch (error) {
-//         console.error('Error fetching pollution data:', error);
-//     }
-// }
+    } catch (error) {
+        console.error('Error fetching pollution data:', error);
+    }
+}
 
 // Function to add pollution markers
-// export function addPollutionMarkers(map, pollutionData) {
-//     pollutionData.forEach(site => {
-//         const { latitude, longitude, pollution_type, image_url, timestamp } = site;
+export function addPollutionMarkers(map, pollutionData) {
+    pollutionData.forEach(site => {
+        const { latitude, longitude, pollution_type, image_url, timestamp } = site;
 
-//         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-//             <div style="text-align: center;">
-//                 <h4>${pollution_type}</h4>
-//                 <p><strong>Reported on:</strong> ${new Date(timestamp).toLocaleString()}</p>
-//                 <img src="${image_url}" alt="${pollution_type}" width="150px" style="border-radius: 5px;"/>
-//             </div>
-//         `);
+        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+            <div style="text-align: center;">
+                <h4>${pollution_type}</h4>
+                <p><strong>Reported on:</strong> ${new Date(timestamp).toLocaleString()}</p>
+                <img src="${image_url}" alt="${pollution_type}" width="150px" style="border-radius: 5px;"/>
+            </div>
+        `);
 
-//         new mapboxgl.Marker({ color: 'red' })
-//             .setLngLat([longitude, latitude])
-//             .setPopup(popup)
-//             .addTo(map);
-//     });
-// }
+        new mapboxgl.Marker({ color: 'red' })
+            .setLngLat([longitude, latitude])
+            .setPopup(popup)
+            .addTo(map);
+    });
+}
 
 
 

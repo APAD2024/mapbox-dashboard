@@ -446,90 +446,68 @@ html {
 
 .map-overlay {
     position: absolute;
-    height: auto;
     bottom: 40px;
     left: 10px;
     background: #ffffff;
-    margin-right: 20px;
     font-family: 'Arial', sans-serif;
     overflow: hidden;
-    border-radius: 10px;
-    /* Rounded corners */
-    padding: 15px;
-    /* Padding inside the box */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Subtle shadow for depth */
-    max-width: 300px;
-    /* Control the maximum width */
+    border-radius: 8px;
+    padding: 10px 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    max-width: 220px;
     width: 100%;
-    /* Full width to make it responsive */
     border: 1px solid rgba(0, 0, 0, 0.1);
-    /* Light border */
     transition: bottom 0.3s ease, right 0.3s ease;
-    /* Smooth transition for bottom and right */
 }
 
-#pollutantChart{
+/* Hide chart initially */
+#pollutantChart {
     display: none;
 }
 
 /* Title styling */
 .map-overlay h2 {
-    font-size: 14px;
-    /* Slightly larger for the title */
+    font-size: 13px;
     font-weight: bold;
-    /* Bold for emphasis */
     color: #333;
-    /* Darker text color for better readability */
-    margin-bottom: 10px;
-    border-bottom: 2px solid #f1f1f1;
-    /* Subtle border below the heading */
-    padding-bottom: 5px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
 }
 
 .map-overlay h3 {
-    font-size: 15px;
-    /* Slightly larger for the title */
+    font-size: 13px;
     font-weight: bold;
-    /* Bold for emphasis */
     color: #4b6151;
-    /* Darker text color for better readability */
 }
 
 /* Text styling */
 .map-overlay p {
-    font-size: 12px;
-    /* Smaller font for the description */
+    font-size: 11px;
     color: #666;
-    /* Softer color for the text */
     margin: 0;
 }
 
 .map-overlay p:hover {
     color: #000;
-    /* Darker color on hover for interaction */
     text-decoration: underline;
-    /* Underline on hover for emphasis */
 }
 
+/* Buttons */
 .collapse-btn, .expand-btn {
     background-color: #4b6151;
     color: white;
     border: none;
     cursor: pointer;
-    padding: 2px 8px;
-    border-radius: 5px;
-    font-size: 12px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 11px;
     float: right;
 }
 
 .collapse-btn:hover, .expand-btn:hover {
     background-color: #3a4e42;
 }
-
-
-
-
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
     .map-overlay {
