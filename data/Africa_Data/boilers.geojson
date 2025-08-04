@@ -1,0 +1,817 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.818535,
+          27.047266
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Manoj Khadya Udhyog",
+        "Address of the Industry": "Bindabasini Rural Municipality, Parsa"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.870421,
+          27.013437
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Kohinoor Textile Ind. Pvt. Ltd.",
+        "Address of the Industry": "Chhata Pipra, Bara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.317832,
+          27.676231
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Nepal Dairy Pvt. Ltd.",
+        "Address of the Industry": "Dhapakhel, Hattiban, Lalitpur, Nepal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.324829,
+          27.661551
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Shree Nawaprabhat Dairy Pvt ltd",
+        "Address of the Industry": "Patan industrial area,lalitpur mp-15,lalitpur ,bagmati province"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.274291,
+          26.486374
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Sungreen Plywood Industries pvt. ltd.",
+        "Address of the Industry": "Dharan-8"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.290287,
+          26.790963
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Surya Kattha Udhyog Pvt. Ltd.",
+        "Address of the Industry": "Dharan 8"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.679435,
+          28.132722
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Dolphin Group",
+        "Address of the Industry": "lakhnawar-7 kohalpur"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.320702,
+          26.469094
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Green Tyres Ltd.",
+        "Address of the Industry": "Kathari, Morang"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.270365,
+          26.425166
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Tricot Industries Pvt Ltd",
+        "Address of the Industry": "Rani, Biratnagar, Nepal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.972717,
+          27.149858
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Ganapati Vanaspati Ltd",
+        "Address of the Industry": "Pipra, Simara, Bara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.31719877958999,
+          27.01895465307681
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Jun Chiyabari Tea Garden Pvt. Ltd.",
+        "Address of the Industry": "Dhankuta-1, Hile"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.343192,
+          27.707393
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Dwarika's Kathmandu Village Hotel Pvt. Ltd",
+        "Address of the Industry": "Battisputali , Kathmandu, Nepal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.338085,
+          27.749903
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Deurali Janta Pharmaceuticals Pvt. Ltd",
+        "Address of the Industry": "Dhapasi, Kathmandu, Nepal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.274126,
+          26.610095
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Pragati Textile Industries Pvt. Ltd",
+        "Address of the Industry": "Itahari-13, Khanar, Sunsari, Nepal."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.953001,
+          27.123425
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Nepal Pharmaceuticals Laboratory Pvt. Ltd.",
+        "Address of the Industry": "Jeetpur"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.312107,
+          27.670421
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Aadhunik Dairy Products Pvt. Ltd.",
+        "Address of the Industry": "Balaju, Kathmandu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.301675,
+          27.618752
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Green Nepal Agro Pvt. Ltd.",
+        "Address of the Industry": "Bungmati, Lalitpur -22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.944954,
+          27.107537
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "National Healthcare Pvt. Ltd.",
+        "Address of the Industry": "Chhatapipra, Bara, Nepal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.049718,
+          26.68396
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Ritika Dairy Udhyog Pvt. Ltd.",
+        "Address of the Industry": "Mechinagar-12, Jhapa"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.745576,
+          26.611286
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Hygen Packs (Nepal) Pvt Ltd",
+        "Address of the Industry": "Samaygadh, Kamal Rural Municipality - 2, Jhapa"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.423987,
+          27.675323
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Bhaktapur Dairy Pvt. Ltd",
+        "Address of the Industry": "Bhaktapur Industrial Area"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.423231,
+          27.675074
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Bhaktapur Ceramics",
+        "Address of the Industry": "Bhaktapur"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.426021,
+          27.673853
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Kriti Textiles",
+        "Address of the Industry": "Bhaktapur"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.426812,
+          27.673776
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Shivam Dairy Pvt. Ltd.",
+        "Address of the Industry": "Bhaktapur"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.324862,
+          27.662188
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Aakash food",
+        "Address of the Industry": "Patan"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.326599,
+          27.66338
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Shree Textiles",
+        "Address of the Industry": "Patan"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.327062,
+          27.664009
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Samyukta Dairy and Foods Pvt. Ltd",
+        "Address of the Industry": "Patan"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.426782,
+          27.67444
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "JAYSANJIVANI DAIRY UDHYOG",
+        "Address of the Industry": "Bhaktapur Industrial Estate"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.327522,
+          27.664686
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Agro Thai Foods",
+        "Address of the Industry": "Patan"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.327051,
+          27.665818
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Rajdhani Dairy Pvt. Ltd.",
+        "Address of the Industry": "Patan"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.9051,
+          27.0746
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Husk Power Nepal Pvt. Ltd.",
+        "Address of the Industry": "Birgunj-21, Parsa"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.300741,
+          27.731863
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "G.pac lubricants pvt ltd",
+        "Address of the Industry": "Balaju industrial area kathmandu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.008893,
+          28.204489
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Fishtail Dairy Pvt Ltd",
+        "Address of the Industry": "Pokhara Industrial Area, Kundhar, Pokhara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.10843689422093,
+          26.63756540846262
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Jaya Maa Kamakhya Industries Pvt. Ltd.",
+        "Address of the Industry": "Mechinagar-15, Jhapa"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.302429,
+          27.729168
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Bottlers Nepal Ltd.",
+        "Address of the Industry": "Balaju Industrial District, Balaju, Kathmandu, Nepal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.115691,
+          26.658102
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Nepal Multipurpose co operative Society Limited (NMC Dairy Udyog )",
+        "Address of the Industry": "Mechinagar ,8 Itabhatta , Jhapa ,Koshi province"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.027214,
+          27.399512
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "DDC Hetauda Milk Supply Scheme",
+        "Address of the Industry": "Hetauda Industrial State, Hetauda-8, Makwanpur"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.04684,
+          28.156913
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Karmacharya Bakes and Foods",
+        "Address of the Industry": "Pokhara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.322872,
+          26.465394
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Shiv Bhagawati Khadya Udhyog",
+        "Address of the Industry": "kathari 7"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.273129,
+          26.703561
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Kamadhenu Dairy",
+        "Address of the Industry": "Tarara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.2658971484542,
+          26.666321698097
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Rijal Tashi Ind.Pvt.Ltd",
+        "Address of the Industry": "Itahari 5 sunsari nepal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.276692,
+          26.584085
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Asian Biscuits And Confectionery Pvt. Ltd.",
+        "Address of the Industry": "Duhabi, Sunsari, Nepal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.462936,
+          27.686219
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Arrow Pharmaceuticals Ltd.",
+        "Address of the Industry": "Changunarayan -8, sudal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.265104,
+          26.569859
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Premier Steel Pvt. Ltd.",
+        "Address of the Industry": "Duhabi, Sunsari"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.28081,
+          26.80646
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Surya Metal Industries Pvt. Ltd.",
+        "Address of the Industry": "Dharan-8, Sunsari, Koshi"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.086,
+          26.654
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Siddhartha Ply Industries Pvt. Ltd.",
+        "Address of the Industry": "Dulabari Road, Mechhinagar"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.280466,
+          26.805962
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "BM Metal Industries Pvt. Ltd.",
+        "Address of the Industry": "Dharan Industrial District, Sunsari"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.514736,
+          27.641413
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Shubharambha Dariy and Agrovet Research Pvt. Ltd.",
+        "Address of the Industry": "Banepa 08 kavrepalanchok"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.621469,
+          27.877658
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Yak Brewing Company Pvt. Ltd.",
+        "Address of the Industry": "Ichchhakamana-4, Kurintar Nepal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.740962,
+          26.581189
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "MILAN DAIRY & FOODS INDUSTRY PVT LTD",
+        "Address of the Industry": "GAGENDRA NARAYAN SINGH INDUSTRIAL ESTATE , BASBITTI , SAPTARI."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.393624,
+          27.705192
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Tulasa Dairy Pvt. Ltd.",
+        "Address of the Industry": "Kageshwori, Manohara-7 Kathmandu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.585773,
+          28.279633
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Baglung Dugdh Utpadak Sahakari Sanstha Sang",
+        "Address of the Industry": "Baglung Municipality-2, Baglung"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.033236,
+          27.429071
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Siddhartha Pellet Feed Pvt. Ltd",
+        "Address of the Industry": "Hetauda Industrial Area ,Hetauda"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.171425,
+          26.685086
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Koshi Feeds Pvt. Ltd.",
+        "Address of the Industry": "Ramdhuni-5 Jhumka Sunsari"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.902458,
+          27.471369
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Om Agro Pvt.Ltd",
+        "Address of the Industry": "Newarpani Hetauda"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.6386,
+          28.5779
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Surkhet Dairy Udhyog Pvt. Ltd.",
+        "Address of the Industry": "Birendranagar-12, Airport Road"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.276327,
+          26.595358
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Pashupati Khadya Tel Udyog Pvt. Ltd.",
+        "Address of the Industry": "Duhabi-8, Sonapur, Sunsari"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.42886,
+          27.67446
+        ]
+      },
+      "properties": {
+        "Name of Enterprise": "Shiva Baba Textile Pvt. Ltd.",
+        "Address of the Industry": "Byasi, Bhaktapur"
+      }
+    }
+  ]
+}
