@@ -968,7 +968,7 @@ export function addDataLayers(map) {
 if (!map.getSource('boilers_layer')) {
     showLoadingSpinner(); // Show loading spinner while fetching data
 
-    fetch('/mapbox-dashboard/data/Africa_Data/boilers.geojson')
+    fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/boilers/boilers.geojson')
         .then(response => response.json())
         .then(data => {
             map.addSource('boilers_layer', {
