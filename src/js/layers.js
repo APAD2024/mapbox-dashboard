@@ -1,6 +1,6 @@
 
-import { showLoadingSpinner, hideLoadingSpinner } from './utils.js';
 import { isAggregateToolEnabled } from './aggregateTool.js';
+import { hideLoadingSpinner, showLoadingSpinner } from './utils.js';
 
 
 
@@ -963,4 +963,66 @@ export function addDataLayers(map) {
                 hideLoadingSpinner(); // Hide the spinner even if there is an error
             });
     }
+
+ // Lazy load Boilers layer
+if (!map.getSource('boilers_layer')) {
+    showLoadingSpinner(); // Show loading spinner while fetching data
+
+    fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/boilers/boilers.geojson')
+        .then(response => response.json())
+        .then(data => {
+            map.addSource('boilers_layer', {
+                type: 'geojson',
+                data: data
+            });
+
+            map.addLayer({
+                id: 'boilers',
+                type: 'circle',
+                source: 'boilers_layer',
+                paint: {
+                    'circle-radius': 6,
+                    'circle-color': '#FF5722', 
+                    'circle-stroke-color': 'white',
+                    'circle-stroke-width': 0.6
+                },
+                layout: {
+                    visibility: 'visible'
+                }
+            });
+
+            // Enable popup on click
+            if (!isAggregateToolEnabled()) {
+                map.on('click', 'boilers', (e) => {
+                    if (!isAggregateToolEnabled()) {
+                        const props = e.features[0].properties;
+
+                        // Concatenate Address of Industry and Industry with comma, ignoring empty values
+                        const addressIndustry = [props["Name of Enterprise"],props["Address of the Industry"]]
+                            .filter(Boolean)
+                            .join(', ');
+
+                        const popupContent = `
+                            <div class="popup-table">
+                                <h3>${addressIndustry || ''}</h3>
+                            </div>
+                        `;
+
+                        new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(popupContent)
+                            .addTo(map);
+                    }
+                });
+            }
+
+            hideLoadingSpinner(); // Hide spinner after successful load
+        })
+        .catch(error => {
+            console.error('Error loading Industries GeoJSON:', error);
+            hideLoadingSpinner(); // Hide spinner even if load fails
+        });
+}
+
+
 }
