@@ -18,7 +18,8 @@ const igpAssets = [
     { id: 'solid_waste_IGP', label: 'Solid Waste' },
     { id: 'fossil', label: 'Fossil Fuel' },
     { id: 'gpw', label: 'GPW' },
-    { id: 'brick_kiln', label: 'Brick Kiln' }
+    { id: 'brick_kiln', label: 'Brick Kiln' },
+    {id:'boilers',label:'Boilers'}
 ];
 
 const africaAssets = [
@@ -34,7 +35,7 @@ const layerIds = [
     'coal', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN',
     'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
     'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA',
-    'brick_kilns_UGA', 'brick_kilns_NGA'
+    'brick_kilns_UGA', 'brick_kilns_NGA','boilers'
 ];
 
 const brickKilnIGP = ['BK_PK', 'BK_IND', 'BK_BAN'];
