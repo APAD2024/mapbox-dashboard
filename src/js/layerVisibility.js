@@ -20,7 +20,7 @@ const defaultLayerIds = [
     'oil_gas_igp', 'paper_pulp_igp', 'steel_igp',
     'solid_waste_igp', 'coal_africa', 'cement_africa', 'paper_pulp_africa',
     'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA',
-    'brick_kilns_NGA', 'adm3_PAK', 'adm3_IND', 'adm3_BAN','boilers'
+    'brick_kilns_NGA', 'adm3_PAK', 'adm3_IND', 'adm3_BAN','boilers','pollution_reports'
 ];
 
 // Function to save layer visibility
@@ -119,6 +119,8 @@ export function initializeLayerVisibilityControls(map) {
     setupLayerToggle(map, 'togglepop', 'population');
     setupLayerToggle(map, 'toggledecay', 'pollutant');
     setupLayerToggle(map, 'toggleBoilers', 'boilers');
+    setupLayerToggle(map,'toggleReportedPollution','pollution_reports');
+
 
 
     // Brick Kiln Layers

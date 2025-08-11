@@ -6,7 +6,7 @@ import { hideLoadingSpinner, showLoadingSpinner } from './utils.js';
 
 export const layerIds = [
     'indian', 'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
-    'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA'
+    'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA','boilers','pollution_reports'
 ];
 let boundaryLayer, populationLayer, gpwLayer;
 // -------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
@@ -14,48 +14,102 @@ let boundaryLayer, populationLayer, gpwLayer;
 
 // -----------------------------------------------------------LAYERS LOADING-----------------------------------------------------------
 
-// Function to fetch pollution data
-export async function fetchPollutionData(map) {
+
+
+// Fetch API data and convert to GeoJSON
+
+function convertPollutionDataToGeoJSON(data) {
+    return {
+        type: "FeatureCollection",
+        features: data
+            .map(item => ({
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [item.longitude, item.latitude]
+                },
+                properties: {
+                    id: item.id,
+                    pollution_type: item.pollution_type,
+                    image_url: item.image_url,
+                    timestamp: item.timestamp,
+                    is_verified: item.is_verified
+                }
+            }))
+    };
+}
+
+async function fetchAndAddPollutionLayer(map) {
     try {
-        const response = await fetch('https://api.apad.world/api/get_all_submissions', {
+        const response = await fetch('https://api.apad.world/api/get_all_submissions?is_verified=true', {
             method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify({})
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
-        addPollutionMarkers(map, data);
+        const geojson = convertPollutionDataToGeoJSON(data);
 
-    } catch (error) {
-        console.error('Error fetching pollution data:', error);
+        // Load and add the red marker image before adding the layer
+        if (!map.hasImage('custom-marker')) {
+            await new Promise((resolve, reject) => {
+                map.loadImage('https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png', (error, image) => {
+                    if (error) reject(error);
+                    else {
+                        map.addImage('custom-marker', image);
+                        resolve();
+                    }
+                });
+            });
+        }
+
+        if (map.getSource('pollution_reports')) {
+            map.getSource('pollution_reports').setData(geojson);
+        } else {
+            map.addSource('pollution_reports', {
+                type: 'geojson',
+                data: geojson
+            });
+
+            map.addLayer({
+                id: 'pollution_reports',
+                type: 'symbol',
+                source: 'pollution_reports',
+                layout: {
+                    'icon-image': 'custom-marker',  // Use the loaded red marker image here
+                    'icon-size': 1,
+                    'icon-anchor': 'bottom',
+                    'visibility': 'visible'
+                }
+            });
+
+            map.on('click', 'pollution_reports', (e) => {
+                const props = e.features[0].properties;
+                new mapboxgl.Popup()
+                    .setLngLat(e.lngLat)
+                    .setHTML(`
+                        <div style="text-align: center;">
+                            <h4>${props.pollution_type}</h4>
+                            <p><strong>Reported on:</strong> ${new Date(props.timestamp).toLocaleString()}</p>
+                            <img src="${props.image_url}" alt="${props.pollution_type}" width="150px" style="border-radius: 5px;"/>
+                        </div>
+                    `)
+                    .addTo(map);
+            });
+
+            map.on('mouseenter', 'pollution_reports', () => {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+
+            map.on('mouseleave', 'pollution_reports', () => {
+                map.getCanvas().style.cursor = '';
+            });
+        }
+    } catch (err) {
+        console.error('Error fetching or adding pollution data:', err);
     }
-}
-
-// Function to add pollution markers
-export function addPollutionMarkers(map, pollutionData) {
-    pollutionData.forEach(site => {
-        const { latitude, longitude, pollution_type, image_url, timestamp } = site;
-
-        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-            <div style="text-align: center;">
-                <h4>${pollution_type}</h4>
-                <p><strong>Reported on:</strong> ${new Date(timestamp).toLocaleString()}</p>
-                <img src="${image_url}" alt="${pollution_type}" width="150px" style="border-radius: 5px;"/>
-            </div>
-        `);
-
-        new mapboxgl.Marker({ color: 'red' })
-            .setLngLat([longitude, latitude])
-            .setPopup(popup)
-            .addTo(map);
-    });
 }
 
 
@@ -89,7 +143,9 @@ export function addDataLayers(map) {
                 hideLoadingSpinner(); // Hide the spinner even if there is an error
             });
     }
-
+    
+    fetchAndAddPollutionLayer(map); 
+    
     // Congo Adm Boundary
     if (!map.getSource('COD_Adm_boundary')) {
         showLoadingSpinner(); // Show the spinner while loading
@@ -1023,6 +1079,56 @@ if (!map.getSource('boilers_layer')) {
             hideLoadingSpinner(); // Hide spinner even if load fails
         });
 }
+
+//pollution layer
+// if (!map.getSource('pollution_reports')) {
+//     fetchPollutionGeoJSON()
+//         .then(geojson => {
+//             // No need to load a custom image here
+
+//             // Add the GeoJSON source
+//             map.addSource('pollution_reports', { type: 'geojson', data: geojson });
+
+//             // Add symbol layer with built-in icon
+//             map.addLayer({
+//                 id: 'pollution_reports_layer',
+//                 type: 'symbol',
+//                 source: 'pollution_reports',
+//                 layout: {
+//                     'icon-image': 'marker-15',   // built-in marker icon
+//                     'icon-size': 1,
+//                     'icon-anchor': 'bottom',
+//                     'visibility': 'visible'
+//                 }
+//             });
+
+//             // Popup on click
+//             map.on('click', 'pollution_reports_layer', e => {
+//                 const props = e.features[0].properties;
+//                 new mapboxgl.Popup()
+//                     .setLngLat(e.lngLat)
+//                     .setHTML(`
+//                         <div style="text-align: center;">
+//                             <h4>${props.pollution_type}</h4>
+//                             <p><strong>Reported on:</strong> ${new Date(props.timestamp).toLocaleString()}</p>
+//                             <img src="${props.image_url}" alt="${props.pollution_type}" width="150px" style="border-radius: 5px;"/>
+//                         </div>
+//                     `)
+//                     .addTo(map);
+//             });
+
+//             // Cursor pointer on hover
+//             map.on('mouseenter', 'pollution_reports_layer', () => {
+//                 map.getCanvas().style.cursor = 'pointer';
+//             });
+//             map.on('mouseleave', 'pollution_reports_layer', () => {
+//                 map.getCanvas().style.cursor = '';
+//             });
+//         })
+//         .catch(err => console.error('Error loading pollution markers:', err));
+// }
+
+
 
 
 }
