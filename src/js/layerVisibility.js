@@ -1,12 +1,19 @@
 import {
-    loadBrickKilnLayerPK, loadBrickKilnLayerIND, loadBrickKilnLayerBAN,
-    loadBrickKilnLayerPKhex, loadBrickKilnLayerINDhex, loadBrickKilnLayerBANhex,
-    loadBrickKilnLayerDRC, loadBrickKilnLayerNGA, loadBrickKilnLayerUGA, loadBrickKilnLayerGHA
+    loadBrickKilnLayerBAN,
+    loadBrickKilnLayerBANhex,
+    loadBrickKilnLayerDRC,
+    loadBrickKilnLayerGHA,
+    loadBrickKilnLayerIND,
+    loadBrickKilnLayerINDhex,
+    loadBrickKilnLayerNGA,
+    loadBrickKilnLayerPK,
+    loadBrickKilnLayerPKhex,
+    loadBrickKilnLayerUGA
 } from './brickKilns.js';
 
 import {
-    loadADM3BrickKilnsPakistan,
-    loadADM3BrickKilnsIndia
+    loadADM3BrickKilnsIndia,
+    loadADM3BrickKilnsPakistan
 } from './brickKilnadm3.js';
 
 // Store visibility states
@@ -20,7 +27,7 @@ const defaultLayerIds = [
     'oil_gas_igp', 'paper_pulp_igp', 'steel_igp',
     'solid_waste_igp', 'coal_africa', 'cement_africa', 'paper_pulp_africa',
     'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA',
-    'brick_kilns_NGA', 'adm3_PAK', 'adm3_IND', 'adm3_BAN','boilers','pollution_reports'
+    'brick_kilns_NGA', 'adm3_PAK', 'adm3_IND', 'adm3_BAN','boilers','pollution_reports','openaq_latest'
 ];
 
 // Function to save layer visibility
@@ -120,6 +127,7 @@ export function initializeLayerVisibilityControls(map) {
     setupLayerToggle(map, 'toggledecay', 'pollutant');
     setupLayerToggle(map, 'toggleBoilers', 'boilers');
     setupLayerToggle(map,'toggleReportedPollution','pollution_reports');
+    setupLayerToggle(map,'toggleOpenAQData','openaq_latest')
 
 
 
