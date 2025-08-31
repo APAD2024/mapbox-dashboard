@@ -24,7 +24,8 @@ const igpAssets = [
     { id: 'gpw', label: 'GPW' },
     { id: 'brick_kiln', label: 'Brick Kiln' },
     {id:'boilers',label:'Boilers'},
-    {id:'pollution_reports',label:'Reported Pollution'}
+    {id:'pollution_reports',label:'Reported Pollution'},
+    {id:'openaq_latest',label:'Pollutants'}
 ];
 
 const africaAssets = [
@@ -40,7 +41,7 @@ const layerIds = [
     'coal', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN',
     'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
     'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA',
-    'brick_kilns_UGA', 'brick_kilns_NGA','boilers','pollution_reports'
+    'brick_kilns_UGA', 'brick_kilns_NGA','boilers','pollution_reports','openaq_latest'
 ];
 
 const brickKilnIGP = ['BK_PK', 'BK_IND', 'BK_BAN'];

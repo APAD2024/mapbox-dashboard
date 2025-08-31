@@ -55,10 +55,10 @@
           <label for="polutantType" class="filter-label">Pollutant Type</label>
           <select id="polutantType" class="filter-select">
             <option value="">All</option>
-            <option value="p25_tn_y">PM₂.₅</option>
-            <option value="p10_tn_y">PM₁₀</option>
-            <option value="so2_tn_y">SO₂</option>
-            <option value="nox_tn_y">NO₂</option>
+            <option value="pm10">PM₂.₅</option>
+            <option value="pm25">PM₁₀</option>
+            <option value="so2">SO₂</option>
+            <option value="nox">NO₂</option>
           </select>
         </div>
 
@@ -389,7 +389,18 @@
           <div class="legend-key" style="background-color: #ff5722"></div>
           <span>Boilers</span>
         </div>
-
+         <!-- OpenAQ Pollutants -->
+        <div class="legend-section" id="legend-openaq_latest
+     " draggable="true">
+          <input
+            id="toggleOpenAQData"
+            type="checkbox"
+            data-layer="openaq_latest"
+            checked
+          />
+          <div class="legend-key" style="background-color: rgba(73, 84, 24, 1)"></div>
+          <span>Pollutants</span>
+        </div>
         <!-- Pollution Reports -->
         <div class="legend-section" id="legend-pollution" draggable="true">
           <input
@@ -407,7 +418,6 @@
           </div>
           <span>Reported Pollution</span>
         </div>
-
         <!-- Brick Kiln Density IGP -->
         <div class="legend-section" id="legend-brickKilnGrid" draggable="true">
           <span id="toggleBrickKilnsGrid" class="expand-toggle">+</span>
