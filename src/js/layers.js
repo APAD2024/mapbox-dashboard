@@ -220,65 +220,62 @@ async function fetchOpenAQLatestAsGeoJSON() {
 
 // Reusable function to add data layers with fetch and lazy loading
 export function addDataLayers(map) {
-  // Indian plain layer
-  if (!map.getSource("indian_plain")) {
-    showLoadingSpinner(); // Show the spinner while loading
-    fetch(
-      "https://gist.githubusercontent.com/Mseher/d2fe2c380fc19ab797d17c0116b11876/raw/3c37088e53623fcc8c9479159ad0fe8c6b89ed3f/IGP_boundary.geojson"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        map.addSource("indian_plain", {
-          type: "geojson",
-          data: data,
-        });
-        map.addLayer({
-          id: "indian",
-          type: "line",
-          source: "indian_plain",
-          paint: {
-            "line-color": "black",
-            "line-width": 1,
-          },
-        });
-        hideLoadingSpinner(); // Hide the spinner after loading
-      })
-      .catch((error) => {
-        console.error("Error loading Indian plain data:", error);
-        hideLoadingSpinner(); // Hide the spinner even if there is an error
-      });
-  }
 
-  fetchAndAddPollutionLayer(map);
-
-  // Congo Adm Boundary
-  if (!map.getSource("COD_Adm_boundary")) {
-    showLoadingSpinner(); // Show the spinner while loading
-    fetch(
-      "https://gist.githubusercontent.com/Mseher/731408a10cc9e5ed36c5fb5a1982dc1c/raw/7779b1c68faa84685e3a3eef631afa675d78f209/COD_adm_0.geojson"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        map.addSource("COD_Adm_boundary", {
-          type: "geojson",
-          data: data,
-        });
-        map.addLayer({
-          id: "COD_Adm",
-          type: "line",
-          source: "COD_Adm_boundary",
-          paint: {
-            "line-color": "black",
-            "line-width": 1,
-          },
-        });
-        hideLoadingSpinner(); // Hide the spinner after loading
-      })
-      .catch((error) => {
-        console.error("Error loading Congo Adm Boundary:", error);
-        hideLoadingSpinner(); // Hide the spinner even if there is an error
-      });
-  }
+    // Indian plain layer
+    if (!map.getSource('indian_plain')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/khizerzakir/a57134b1784de99b512cdcade67936c2/raw/d457183d9aa4f2e128440ebfd69da3143f933ae2/IGP_boundary.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('indian_plain', {
+                    type: 'geojson',
+                    data: data
+                });
+                map.addLayer({
+                    'id': 'indian',
+                    'type': 'line',
+                    'source': 'indian_plain',
+                    'paint': {
+                        'line-color': 'black',
+                        'line-width': 1
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Indian plain data:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+    
+    fetchAndAddPollutionLayer(map); 
+    
+    // Congo Adm Boundary
+    if (!map.getSource('COD_Adm_boundary')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/731408a10cc9e5ed36c5fb5a1982dc1c/raw/7779b1c68faa84685e3a3eef631afa675d78f209/COD_adm_0.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('COD_Adm_boundary', {
+                    type: 'geojson',
+                    data: data
+                });
+                map.addLayer({
+                    'id': 'COD_Adm',
+                    'type': 'line',
+                    'source': 'COD_Adm_boundary',
+                    'paint': {
+                        'line-color': 'black',
+                        'line-width': 1
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Congo Adm Boundary:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
 
   // Ghana Adm Boundary
   if (!map.getSource("GHA_Adm_boundary")) {
@@ -338,34 +335,59 @@ export function addDataLayers(map) {
       });
   }
 
-  // Uganda Adm Boundary
-  if (!map.getSource("UGA_Adm_boundary")) {
-    showLoadingSpinner(); // Show the spinner while loading
-    fetch(
-      "https://gist.githubusercontent.com/Mseher/542c13b528a18c3d13d43eb390efe47f/raw/7f60e28ef3b7e9df2a1f3a4f745856debff9832e/UGA_adm_0.geojson"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        map.addSource("UGA_Adm_boundary", {
-          type: "geojson",
-          data: data,
-        });
-        map.addLayer({
-          id: "UGA_Adm",
-          type: "line",
-          source: "UGA_Adm_boundary",
-          paint: {
-            "line-color": "black",
-            "line-width": 1,
-          },
-        });
-        hideLoadingSpinner(); // Hide the spinner after loading
-      })
-      .catch((error) => {
-        console.error("Error loading Uganda Adm Boundary:", error);
-        hideLoadingSpinner(); // Hide the spinner even if there is an error
-      });
-  }
+    // Uganda Adm Boundary
+    if (!map.getSource('UGA_Adm_boundary')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/Mseher/542c13b528a18c3d13d43eb390efe47f/raw/7f60e28ef3b7e9df2a1f3a4f745856debff9832e/UGA_adm_0.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('UGA_Adm_boundary', {
+                    type: 'geojson',
+                    data: data
+                });
+                map.addLayer({
+                    'id': 'UGA_Adm',
+                    'type': 'line',
+                    'source': 'UGA_Adm_boundary',
+                    'paint': {
+                        'line-color': 'black',
+                        'line-width': 1
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading Uganda Adm Boundary:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
+
+    // Kenya Adm Boundary
+    if (!map.getSource('KEN_Adm_boundary')) {
+        showLoadingSpinner(); // Show the spinner while loading
+        fetch('https://gist.githubusercontent.com/khizerzakir/e7a28f5a6a27a58e68d22699981489d3/raw/60aaa8a8710c395e030ddeeecfcf6c818e9136af/Ken_adm_0.geojson')
+            .then(response => response.json())
+            .then(data => {
+                map.addSource('KEN_Adm_boundary', {
+                    type: 'geojson',
+                    data: data
+                });
+                map.addLayer({
+                    'id': 'KEN_Adm',
+                    'type': 'line',
+                    'source': 'KEN_Adm_boundary',
+                    'paint': {
+                        'line-color': 'black',
+                        'line-width': 1
+                    }
+                });
+                hideLoadingSpinner(); // Hide the spinner after loading
+            })
+            .catch(error => {
+                console.error('Error loading KENYA Adm Boundary:', error);
+                hideLoadingSpinner(); // Hide the spinner even if there is an error
+            });
+    }
 
   // Population raster layer
   if (!map.getSource("population")) {
