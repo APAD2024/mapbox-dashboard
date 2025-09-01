@@ -1281,7 +1281,7 @@ export function addDataLayers(map) {
             "circle-stroke-color": "#fff",
           },
           layout: {
-            visibility: "visible",
+            visibility: "none",
           },
         });
 
