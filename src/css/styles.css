@@ -311,6 +311,28 @@ html {
     transition: font-size 0.3s ease;
 }
 
+#toggleOpenAQData {
+    position: absolute;
+    top: 270px; /* Move below calculator */
+    right: 10px;
+    background: white;
+    padding: 9px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    z-index: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#toggleOpenAQData .fa-smog {
+    font-size: 18px;
+    color: #4b6151;
+    transition: color 0.3s ease;
+}
+
 /* Tooltip Styling */
 #tooltip {
     position: fixed;
@@ -340,7 +362,7 @@ html {
 /* Aggregate Tool Button Styling */
 #aggregateTool {
     position: absolute;
-    top: 270px;
+    top: 330px;
     right: 10px;
     background: white;
     padding: 9px;
