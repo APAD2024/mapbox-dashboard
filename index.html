@@ -203,6 +203,24 @@
       </select>
     </div>
 
+    <!------------- OpenAQ Pollutants Icon & Legend Container (same size as areaChange) --------------->
+
+    <div
+      id="toggleOpenAQData"
+      class="icon-control"
+      data-layer="openaq_latest"
+      title="OpenAQ pollutant data"
+    >
+      <i class="fas fa-smog"></i>
+    </div>
+
+    <input
+      type="checkbox"
+      id="toggleOpenAQDataCheckbox"
+      data-layer="openaq_latest"
+      style="display: none"
+    />
+
     <!----------------------------------------------------------------- Map ----------------------------------------------------------------------->
 
     <div id="map"></div>
@@ -388,18 +406,6 @@
           />
           <div class="legend-key" style="background-color: #ff5722"></div>
           <span>Boilers</span>
-        </div>
-         <!-- OpenAQ Pollutants -->
-        <div class="legend-section" id="legend-openaq_latest
-     " draggable="true">
-          <input
-            id="toggleOpenAQData"
-            type="checkbox"
-            data-layer="openaq_latest"
-            checked
-          />
-          <div class="legend-key" style="background-color: rgba(73, 84, 24, 1)"></div>
-          <span>Pollutants</span>
         </div>
         <!-- Pollution Reports -->
         <div class="legend-section" id="legend-pollution" draggable="true">
@@ -686,5 +692,15 @@
     <script type="module" src="src/js/layers.js"></script>
     <script type="module" src="src/js/geocoder.js"></script>
     <script type="module" src="src/js/heatmapControls.js"></script>
+
+    <script>
+      document
+        .getElementById("toggleOpenAQData")
+        .addEventListener("click", () => {
+          const checkbox = document.getElementById("toggleOpenAQDataCheckbox");
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event("change"));
+        });
+    </script>
   </body>
 </html>

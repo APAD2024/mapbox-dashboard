@@ -127,7 +127,8 @@ export function initializeLayerVisibilityControls(map) {
     setupLayerToggle(map, 'toggledecay', 'pollutant');
     setupLayerToggle(map, 'toggleBoilers', 'boilers');
     setupLayerToggle(map,'toggleReportedPollution','pollution_reports');
-    setupLayerToggle(map,'toggleOpenAQData','openaq_latest')
+    setupLayerToggle(map,'toggleOpenAQDataCheckbox','openaq_latest');
+
 
 
 
