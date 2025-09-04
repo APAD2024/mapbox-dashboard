@@ -14,7 +14,7 @@ export const layerIds = [
   "brick_kilns_IND",
   "brick_kilns_BAN",
   "cement_IGP",
-  "oil_gas_IGP",
+  "furnace_oil_IGP",
   "paper_pulp_IGP",
   "steel_IGP",
   "solid_waste_IGP",
