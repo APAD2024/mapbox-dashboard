@@ -512,17 +512,17 @@ export function addDataLayers(map) {
     // Lazy load Oil Gas Refining layer
     if (!map.getSource('oilgasIGP')) {
         showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/oil_gas_refining_main.geojson')
+        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_main.geojson')
             .then(response => response.json())
             .then(data => {
-                map.addSource('oilgasIGP', {
+                map.addSource('furnaceoil', {
                     type: 'geojson',
                     data: data
                 });
                 map.addLayer({
-                    'id': 'oil_gas_IGP',
+                    'id': 'furnace_oil_IGP',
                     'type': 'circle',
-                    'source': 'oilgasIGP',
+                    'source': 'furnaceoil',
                     'paint': {
                         'circle-radius': 5,
                         'circle-stroke-width': 2,
