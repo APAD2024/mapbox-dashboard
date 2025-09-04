@@ -24,7 +24,7 @@ let layerVisibility = {};
 const defaultLayerIds = [
     'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN',
     'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_igp',
-    'oil_gas_igp', 'paper_pulp_igp', 'steel_igp',
+    'furnace_oil_igp', 'paper_pulp_igp', 'steel_igp',
     'solid_waste_igp', 'coal_africa', 'cement_africa', 'paper_pulp_africa',
     'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA',
     'brick_kilns_NGA', 'adm3_PAK', 'adm3_IND', 'adm3_BAN','boilers','pollution_reports','openaq_latest'
@@ -118,7 +118,7 @@ export function initializeLayerVisibilityControls(map) {
     setupLayerToggle(map, 'toggleFossil', 'fossil');
     setupLayerToggle(map, 'toggleCoal', 'coal');
     setupLayerToggle(map, 'toggleCementIGP', 'cement_IGP');
-    setupLayerToggle(map, 'toggleOilGasIGP', 'oil_gas_IGP');
+    setupLayerToggle(map, 'toggleFurnaceOilIGP', 'furnace_oil_IGP');
     setupLayerToggle(map, 'togglePaperPulpIGP', 'paper_pulp_IGP');
     setupLayerToggle(map, 'toggleSteelIGP', 'steel_IGP');
     setupLayerToggle(map, 'toggleSolidWasteIGP', 'solid_waste_IGP');
