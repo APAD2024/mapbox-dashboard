@@ -329,21 +329,21 @@ function handleAggregation(map, lngLat) {
       }
 
       // 10. Aggregate africa steel plants data within the buffer
-      let oilGasIGPCount = 0;
-      if (map.getLayer('oil_gas_IGP')) {
-          const  oilGasIGPVisibility = map.getLayoutProperty('oil_gas_IGP', 'visibility');
-          if (oilGasIGPVisibility === 'visible') {
-              const  oilGasIGPFeatures = map.queryRenderedFeatures({ layers: ['oil_gas_IGP'] });
+      let furnaceoilIGPCount = 0;
+      if (map.getLayer('Furnace_oil_IGP')) {
+          const  furnaceoilIGPVisibility = map.getLayoutProperty('Furnace_oil_IGP', 'visibility');
+          if (furnaceoilIGPVisibility === 'visible') {
+              const  furnaceoilIGPFeatures = map.queryRenderedFeatures({ layers: ['Furnace_oil_IGP'] });
 
-              oilGasIGPFeatures.forEach((feature) => {
-                  const  oilGasIGPPoint = turf.point(feature.geometry.coordinates);
-                  if (turf.booleanPointInPolygon( oilGasIGPPoint, buffer)) {
-                      oilGasIGPCount += 1;
+              furnaceoilIGPFeatures.forEach((feature) => {
+                  const  furnaceoilIGPPoint = turf.point(feature.geometry.coordinates);
+                  if (turf.booleanPointInPolygon( furnaceoilIGPPoint, buffer)) {
+                      furnaceoilIGPCount += 1;
                   }
               });
 
-              // if ( oilGasIGPCount > 0) {
-              //     popupContent += `<p>Oil Gas Refineries: ${ oilGasIGPCount}</p>`;
+              // if ( furnaceoilIGPCount > 0) {
+              //     popupContent += `<p>Furnace Oil: ${ furnaceoilIGPCount}</p>`;
               // }
           }
       }
@@ -404,7 +404,7 @@ function handleAggregation(map, lngLat) {
 
     // Generate charts after popup renders
     setTimeout(() => generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, totalGPWPoints, fossilFuelCount,
-        cementIGPCount,cementAfricaCount,paperPulpIGPCount,paperPulpAfricaCount, steelIGPCount, steelAfricaCount,oilGasIGPCount,
+        cementIGPCount,cementAfricaCount,paperPulpIGPCount,paperPulpAfricaCount, steelIGPCount, steelAfricaCount,furnaceoilIGPCount,
         plasticWasteIGPCount, solidWasteIGPCount
     ), 100);
 }
@@ -461,7 +461,7 @@ function generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, to
         'Paper Pulp Africa': 'rgb(112, 206, 202)',  // Assuming same color as IGP
         'Steel IGP': 'rgb(24, 54, 84)',
         'Steel Africa': 'rgb(24, 54, 84)',  // Assuming same color as IGP
-        'Oil Gas Refineries': 'brown',
+        'Furnace Oil': 'brown',
         'Plastic Waste': 'rgb(165, 146, 23)',
         'Solid Waste': 'rgb(206, 131, 19)'
     };
@@ -477,7 +477,7 @@ function generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, to
         { label: 'Paper Pulp Africa', value: paperPulpAfricaCount },
         { label: 'Steel IGP', value: steelIGPCount },
         { label: 'Steel Africa', value: steelAfricaCount },
-        { label: 'Oil Gas Refineries', value: oilGasIGPCount },
+        { label: 'Frunace Oil', value: furnaceoilIGPCount },
         { label: 'Plastic Waste', value: plasticWasteIGPCount },
         { label: 'Solid Waste', value: solidWasteIGPCount }
     ].filter(entry => entry.value > 0);  // Filter out zero-count entries
