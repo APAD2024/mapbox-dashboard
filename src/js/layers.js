@@ -5,7 +5,7 @@ import { hideLoadingSpinner, showLoadingSpinner } from './utils.js';
 
 
 export const layerIds = [
-    'indian', 'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
+    'indian', 'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_IGP', 'furnace_oil_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
     'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA','boilers','pollution_reports'
 ];
 let boundaryLayer, populationLayer, gpwLayer;
@@ -510,7 +510,7 @@ export function addDataLayers(map) {
 
 
     // Lazy load Oil Gas Refining layer
-    if (!map.getSource('oilgasIGP')) {
+    if (!map.getSource('furnaceoilIGP')) {
         showLoadingSpinner(); // Show the spinner while loading
         fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_main.geojson')
             .then(response => response.json())
@@ -538,7 +538,7 @@ export function addDataLayers(map) {
 
                 if (!isAggregateToolEnabled()) {
                     // Popup for the coal layer
-                    map.on('click', 'oil_gas_IGP', (e) => {
+                    map.on('click', 'furnace_oil_IGP', (e) => {
                         if (!isAggregateToolEnabled()) {
                             const properties = e.features[0].properties;
                             new mapboxgl.Popup()
@@ -562,7 +562,7 @@ export function addDataLayers(map) {
                 hideLoadingSpinner(); // Hide the spinner after loading
             })
             .catch(error => {
-                console.error('Error loading Oil and Gas Refining IGP data:', error);
+                console.error('Error loading Furnace Oil IGP data:', error);
                 hideLoadingSpinner(); // Hide the spinner even if there is an error
             });
     }
