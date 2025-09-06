@@ -14,7 +14,7 @@ export const layerIds = [
   "brick_kilns_IND",
   "brick_kilns_BAN",
   "cement_IGP",
-  "oil_gas_IGP",
+  "furnace_oil_IGP",
   "paper_pulp_IGP",
   "steel_IGP",
   "solid_waste_IGP",
@@ -627,22 +627,22 @@ export function addDataLayers(map) {
       });
   }
 
-  // Lazy load Oil Gas Refining layer
-  if (!map.getSource("oilgasIGP")) {
+  // Lazy load Furnace Oil layer
+  if (!map.getSource("furnaceoilIGP")) {
     showLoadingSpinner(); // Show the spinner while loading
     fetch(
-      "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/oil_gas_refining_main.geojson"
+      "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_main.geojson"
     )
       .then((response) => response.json())
       .then((data) => {
-        map.addSource("oilgasIGP", {
+        map.addSource("furnaceoilIGP", {
           type: "geojson",
           data: data,
         });
         map.addLayer({
-          id: "oil_gas_IGP",
+          id: "furnace_oil_IGP",
           type: "circle",
-          source: "oilgasIGP",
+          source: "furnaceoilIGP",
           paint: {
             "circle-radius": 5,
             "circle-stroke-width": 2,
@@ -656,7 +656,7 @@ export function addDataLayers(map) {
 
         if (!isAggregateToolEnabled()) {
           // Popup for the coal layer
-          map.on("click", "oil_gas_IGP", (e) => {
+          map.on("click", "furnace_oil_IGP", (e) => {
             if (!isAggregateToolEnabled()) {
               const properties = e.features[0].properties;
               new mapboxgl.Popup()
@@ -682,7 +682,7 @@ export function addDataLayers(map) {
         hideLoadingSpinner(); // Hide the spinner after loading
       })
       .catch((error) => {
-        console.error("Error loading Oil and Gas Refining IGP data:", error);
+        console.error("Error loading Furnace Oil IGP data:", error);
         hideLoadingSpinner(); // Hide the spinner even if there is an error
       });
   }
