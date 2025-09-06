@@ -6,7 +6,7 @@ let lastNo2 = 0;
 
 // Layers to monitor
 const pollutantLayers = [
-    'coal', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'cement_IGP', 'furnace_oil_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
+    'coal', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'cement_IGP', 'furnace_oil_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
     'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA'
 ];
 
@@ -51,7 +51,6 @@ export function initializeOverlayCharts(map) {
 
     const layerNames = {
         coal: 'Coal Plant',
-        fossil: 'Fossil Fuel Facility',
         gpw: 'Population Source',
         brick_kilns_PK: 'Brick Kilns (Pakistan)',
         brick_kilns_IND: 'Brick Kilns (India)',

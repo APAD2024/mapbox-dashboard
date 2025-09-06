@@ -22,7 +22,7 @@ let layerVisibility = {};
 
 // Default list of layers (modify as needed)
 const defaultLayerIds = [
-    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN',
+    'coal', 'population', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN',
     'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_igp',
     'furnace_oil_igp', 'paper_pulp_igp', 'steel_igp',
     'solid_waste_igp', 'coal_africa', 'cement_africa', 'paper_pulp_africa',
@@ -115,7 +115,7 @@ export function setupBrickKilnToggle(map, checkboxId, layerId, loadFunction) {
  */
 export function initializeLayerVisibilityControls(map) {
     // Standard Industry Layer Toggles
-    setupLayerToggle(map, 'toggleFossil', 'fossil');
+    // setupLayerToggle(map, 'toggleFossil', 'fossil');
     setupLayerToggle(map, 'toggleCoal', 'coal');
     setupLayerToggle(map, 'toggleCementIGP', 'cement_IGP');
     setupLayerToggle(map, 'toggleFurnaceOilIGP', 'furnace_oil_IGP');

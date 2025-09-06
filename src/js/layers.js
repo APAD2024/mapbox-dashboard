@@ -5,7 +5,6 @@ export const layerIds = [
   "indian",
   "coal",
   "population",
-  "fossil",
   "gpw",
   "BK_PK",
   "BK_IND",
@@ -405,58 +404,58 @@ export function addDataLayers(map) {
     });
   }
 
-  // Lazy load Fossil fuel layer
-  if (!map.getSource("fossil_fuel")) {
-    showLoadingSpinner(); // Show the spinner while loading
-    fetch(
-      "https://gist.githubusercontent.com/bilalpervaiz/597c50eff1747c1a3c8c948bef6ccc19/raw/6984d3a37d75dc8ca7489ee031377b2d57da67d2/fossil_fuel.geojson"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        map.addSource("fossil_fuel", {
-          type: "geojson",
-          data: data,
-        });
-        map.addLayer({
-          id: "fossil",
-          type: "circle",
-          source: "fossil_fuel",
-          paint: {
-            "circle-radius": 5,
-            "circle-stroke-width": 2,
-            "circle-color": "blue",
-            "circle-stroke-color": "white",
-          },
-          layout: {
-            visibility: "visible",
-          },
-        });
+  // // Lazy load Fossil fuel layer
+  // if (!map.getSource("fossil_fuel")) {
+  //   showLoadingSpinner(); // Show the spinner while loading
+  //   fetch(
+  //     "https://gist.githubusercontent.com/bilalpervaiz/597c50eff1747c1a3c8c948bef6ccc19/raw/6984d3a37d75dc8ca7489ee031377b2d57da67d2/fossil_fuel.geojson"
+  //   )
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       map.addSource("fossil_fuel", {
+  //         type: "geojson",
+  //         data: data,
+  //       });
+  //       map.addLayer({
+  //         id: "fossil",
+  //         type: "circle",
+  //         source: "fossil_fuel",
+  //         paint: {
+  //           "circle-radius": 5,
+  //           "circle-stroke-width": 2,
+  //           "circle-color": "blue",
+  //           "circle-stroke-color": "white",
+  //         },
+  //         layout: {
+  //           visibility: "visible",
+  //         },
+  //       });
 
-        if (!isAggregateToolEnabled()) {
-          // Popup for fossil fuel layer
-          map.on("click", "fossil", (e) => {
-            if (!isAggregateToolEnabled()) {
-              const properties = e.features[0].properties;
-              const cleanedOriginalI = properties.original_i.replace(
-                /{|}/g,
-                ""
-              );
-              new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(
-                  `<div class="popup-table"><h3>${cleanedOriginalI}</h3></div>`
-                )
-                .addTo(map);
-            }
-          });
-        }
-        hideLoadingSpinner(); // Hide the spinner after loading
-      })
-      .catch((error) => {
-        console.error("Error loading Fossil Fuel data:", error);
-        hideLoadingSpinner(); // Hide the spinner even if there is an error
-      });
-  }
+  //       if (!isAggregateToolEnabled()) {
+  //         // Popup for fossil fuel layer
+  //         map.on("click", "fossil", (e) => {
+  //           if (!isAggregateToolEnabled()) {
+  //             const properties = e.features[0].properties;
+  //             const cleanedOriginalI = properties.original_i.replace(
+  //               /{|}/g,
+  //               ""
+  //             );
+  //             new mapboxgl.Popup()
+  //               .setLngLat(e.lngLat)
+  //               .setHTML(
+  //                 `<div class="popup-table"><h3>${cleanedOriginalI}</h3></div>`
+  //               )
+  //               .addTo(map);
+  //           }
+  //         });
+  //       }
+  //       hideLoadingSpinner(); // Hide the spinner after loading
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error loading Fossil Fuel data:", error);
+  //       hideLoadingSpinner(); // Hide the spinner even if there is an error
+  //     });
+  // }
 
   // Lazy load Coal IGP layer
   if (!map.getSource("coal_IGP")) {
@@ -667,10 +666,10 @@ export function addDataLayers(map) {
                                         <h3>${properties.name}, ${properties.country}</h3>
                                         <table>
                                             <tr><th>Pollutant</th><td> tonnes/Yr</td></tr>
-                                            <tr><th>PM<sub>10</sub></th><td>${properties.pm10}</td></tr>
-                                            <tr><th>PM<sub>2.5</sub></th><td>${properties.pm25}</td></tr>
-                                            <tr><th>NO<sub>2</sub></th><td>${properties.nox}</td></tr>
-                                            <tr><th>SO<sub>2</sub></th><td>${properties.so2}</td></tr>
+                                            <tr><th>PM<sub>10</sub></th><td>${properties["pm10(t_yr)"]}</td></tr>
+                                            <tr><th>PM<sub>2.5</sub></th><td>${properties["pm25(t_yr)"]}</td></tr>
+                                            <tr><th>NO<sub>x</sub></th><td>${properties["nox(t_yr)"]}</td></tr>
+                                            <tr><th>SO<sub>2</sub></th><td>${properties["so2(t_yr)"]}</td></tr>
                                         </table>
                                     </div>
                                     `
