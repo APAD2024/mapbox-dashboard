@@ -403,14 +403,14 @@ function handleAggregation(map, lngLat) {
         .addTo(map);
 
     // Generate charts after popup renders
-    setTimeout(() => generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, totalGPWPoints, fossilFuelCount,
+    setTimeout(() => generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, totalGPWPoints,
         cementIGPCount,cementAfricaCount,paperPulpIGPCount,paperPulpAfricaCount, steelIGPCount, steelAfricaCount,furnaceoilIGPCount,
         plasticWasteIGPCount, solidWasteIGPCount
     ), 100);
 }
 
 // Function to generate charts
-function generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, totalGPWPoints, fossilFuelCount, cementIGPCount,cementAfricaCount,paperPulpIGPCount,paperPulpAfricaCount, steelIGPCount, steelAfricaCount,oilGasIGPCount,plasticWasteIGPCount, solidWasteIGPCount) {
+function generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, totalGPWPoints, cementIGPCount,cementAfricaCount,paperPulpIGPCount,paperPulpAfricaCount, steelIGPCount, steelAfricaCount,oilGasIGPCount,plasticWasteIGPCount, solidWasteIGPCount) {
     const emissionsCtx = document.getElementById('emissionsChart').getContext('2d');
     new Chart(emissionsCtx, {
         type: 'pie',
@@ -454,7 +454,7 @@ function generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, to
      const layerColors = {
         'Coal Plants': '#616161',
         'GPW Points': 'black',
-        'Fossil Fuel Points': 'blue',
+        // 'Fossil Fuel Points': 'blue',
         'Cement IGP': 'purple',
         'Cement Africa': 'purple',  // Assuming same color as IGP for simplicity
         'Paper Pulp IGP': 'rgb(112, 206, 202)',
@@ -470,7 +470,7 @@ function generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, to
     const countsData = [
         { label: 'Coal Plants', value: totalCoalPlants },
         { label: 'GPW Points', value: totalGPWPoints },
-        { label: 'Fossil Fuel Points', value: fossilFuelCount },
+        // { label: 'Fossil Fuel Points', value: fossilFuelCount },
         { label: 'Cement IGP', value: cementIGPCount },
         { label: 'Cement Africa', value: cementAfricaCount },
         { label: 'Paper Pulp IGP', value: paperPulpIGPCount },
