@@ -1,4 +1,4 @@
-import { closePopups  } from './utils.js';
+import { closePopups } from './utils.js';
 // -----------------------------------------------------------AGGREGATE TOOL-----------------------------------------------------------
 
 // Aggregate Tool State
@@ -131,10 +131,10 @@ function handleAggregation(map, lngLat) {
               coalLayerFeatures.forEach((feature) => {
                   const coalPoint = turf.point(feature.geometry.coordinates);
                   if (turf.booleanPointInPolygon(coalPoint, buffer)) {
-                      totalCoalEmissions.nox += feature.properties.nox_tn_y || 0;
-                      totalCoalEmissions.so2 += feature.properties.so2_tn_y || 0;
-                      totalCoalEmissions.pm10 += feature.properties.p10_tn_y || 0;
-                      totalCoalEmissions.pm25 += feature.properties.p25_tn_y || 0;
+                       totalCoalEmissions.nox += feature.properties.nox || 0;
+                      totalCoalEmissions.so2 += feature.properties.sox || 0;
+                      totalCoalEmissions.pm10 += feature.properties.pm10 || 0;
+                      totalCoalEmissions.pm25 += feature.properties.pm25 || 0;
                       totalCoalPlants++; // Count coal plants within the buffer
                   }
               });
@@ -331,7 +331,7 @@ function handleAggregation(map, lngLat) {
       // 10. Aggregate africa steel plants data within the buffer
       let furnaceoilIGPCount = 0;
       if (map.getLayer('furnace_oil_IGP')) {
-          const  oilGasIGPVisibility = map.getLayoutProperty('furnace_oil_IGP', 'visibility');
+          const  furnaceoilIGPVisibility = map.getLayoutProperty('furnace_oil_IGP', 'visibility');
           if (furnaceoilIGPVisibility === 'visible') {
               const  furnaceoilIGPFeatures = map.queryRenderedFeatures({ layers: ['furnace_oil_IGP'] });
 
@@ -388,6 +388,25 @@ function handleAggregation(map, lngLat) {
           }
       }
 
+      let boilersCount = 0;
+      if (map.getLayer('boilers')) {
+          const boilersVisibility = map.getLayoutProperty('boilers', 'visibility');
+          if (boilersVisibility === 'visible') {
+              const boilersFeatures = map.queryRenderedFeatures({ layers: ['boilers'] });
+
+              boilersFeatures.forEach((feature) => {
+                  const boilersPoint = turf.point(feature.geometry.coordinates);
+                  if (turf.booleanPointInPolygon(boilersPoint, buffer)) {
+                      boilersCount += 1;
+                  }
+              });
+
+              // if (cementAfricaCount > 0) {
+              //     popupContent += `<p>Cement Plants: ${cementAfricaCount}</p>`;
+              // }
+          }
+      }
+
           // End the popup content and add canvas for the charts
               popupContent += `
               <canvas id="emissionsChart" width="250" height="250"></canvas>
@@ -405,12 +424,12 @@ function handleAggregation(map, lngLat) {
     // Generate charts after popup renders
     setTimeout(() => generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, totalGPWPoints,
         cementIGPCount,cementAfricaCount,paperPulpIGPCount,paperPulpAfricaCount, steelIGPCount, steelAfricaCount,furnaceoilIGPCount,
-        plasticWasteIGPCount, solidWasteIGPCount
+        plasticWasteIGPCount, solidWasteIGPCount,boilersCount
     ), 100);
 }
 
 // Function to generate charts
-function generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, totalGPWPoints, cementIGPCount,cementAfricaCount,paperPulpIGPCount,paperPulpAfricaCount, steelIGPCount, steelAfricaCount,oilGasIGPCount,plasticWasteIGPCount, solidWasteIGPCount) {
+function generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, totalGPWPoints, cementIGPCount,cementAfricaCount,paperPulpIGPCount,paperPulpAfricaCount, steelIGPCount, steelAfricaCount,furnaceoilIGPCount,plasticWasteIGPCount, solidWasteIGPCount,boilersCount) {
     const emissionsCtx = document.getElementById('emissionsChart').getContext('2d');
     new Chart(emissionsCtx, {
         type: 'pie',
@@ -463,7 +482,8 @@ function generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, to
         'Steel Africa': 'rgb(24, 54, 84)',  // Assuming same color as IGP
         'Furnace Oil': 'brown',
         'Plastic Waste': 'rgb(165, 146, 23)',
-        'Solid Waste': 'rgb(206, 131, 19)'
+        'Solid Waste': 'rgb(206, 131, 19)',
+        'Boilers':'#FF5722'
     };
 
     // Prepare data for the Counts Chart by filtering non-zero counts
@@ -479,7 +499,8 @@ function generateCharts(totalCoalEmissions, totalCoalPlants, totalBrickKilns, to
         { label: 'Steel Africa', value: steelAfricaCount },
         { label: 'Furnace Oil', value: furnaceoilIGPCount },
         { label: 'Plastic Waste', value: plasticWasteIGPCount },
-        { label: 'Solid Waste', value: solidWasteIGPCount }
+        { label: 'Solid Waste', value: solidWasteIGPCount },
+        {label:'Boilers',value:boilersCount}
     ].filter(entry => entry.value > 0);  // Filter out zero-count entries
     
     const countsLabels = countsData.map(entry => entry.label);
