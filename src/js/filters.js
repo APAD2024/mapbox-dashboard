@@ -20,7 +20,7 @@ const igpAssets = [
     { id: 'paper_pulp_IGP', label: 'Paper Pulp' },
     { id: 'steel_IGP', label: 'Steel' },
     { id: 'solid_waste_IGP', label: 'Solid Waste' },
-    { id: 'fossil', label: 'Fossil Fuel' },
+    // { id: 'fossil', label: 'Fossil Fuel' },
     { id: 'gpw', label: 'GPW' },
     { id: 'brick_kiln', label: 'Brick Kiln' },
     {id:'boilers',label:'Boilers'},
@@ -38,7 +38,7 @@ const africaAssets = [
 
 // Layer IDs used in filters
 const layerIds = [
-    'coal', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN',
+    'coal', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN',
     'cement_IGP', 'furnace_oil_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
     'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA',
     'brick_kilns_UGA', 'brick_kilns_NGA','boilers','pollution_reports','openaq_latest'
