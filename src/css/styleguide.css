@@ -1,0 +1,76 @@
+:root {
+  /* Color styles */
+
+--dark-green: hsla(182, 47.7%, 12.7%, 1);
+--light-green: hsla(167, 13.2%, 79.2%, 1);
+--gray:  hsla(0, 0%, 75.3%, 1);
+--dark-gray: hsla(0, 0%, 44.3%, 1);
+
+--dark-yellow: hsla(53, 91.4%, 50%, 1);
+--yellow:  hsla(53, 91.5%, 77.1%, 1);
+
+--dark-orange: hsla(26, 91%, 50%, 1);
+--orange: hsla(26, 91%, 65%, 1);
+
+--dark-red:  hsla(356, 100%, 30%, 1);
+--red: hsla(356, 100%, 60%, 1);
+--pink: hsla(356, 100%, 80%, 1);
+
+--vivid-green: hsla(115, 50%, 50%, 1);
+--vivid-light-green:  hsla(115, 50%, 75%, 1);
+
+--blue: hsla(205, 50%, 50%, 1);
+--light-blue:  hsla(205, 50%, 70%, 1);
+
+/* Text-size styles */
+/* base size: body01--bold (16px) */
+--body03: 0.62rem;
+--body02: 0.81rem;
+--body01: 1rem;
+--heading06: 1.25rem;
+--heading05: 1.56rem;
+--heading04: 1.94rem;
+--heading02: 3.06rem;
+--heading01: 3.81rem;
+--heading03: 2.44rem;
+
+/* Bold Weight */
+    --heading-bold-weight: 600; /* or 800 if extra bold */
+
+/* Effect styles */
+--shadow:  4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+body {
+  font-size: var(--body01);
+  font-family: sans-serif;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* Paragraphs or smaller text */
+p {
+  font-size: var(--heading06);
+}
+
+
+/* Headings */
+h1 {
+  font-size: var(--heading01);
+}
+
+h2 {
+  font-size: var(--heading02);
+}
+
+h3 {
+  font-size: var(--heading03);
+}
+
+h4 {
+  font-size: var(--heading04);
+}
+
+h5 {
+  font-size: var(--heading05);
+}

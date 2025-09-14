@@ -16,7 +16,10 @@ import {
     loadADM3BrickKilnsPakistan
 } from './brickKilnadm3.js';
 
-// Store visibility states
+import { loadGroupLayers, fetchAndAddPollutionLayer, loadSymbolLayer, loadOpenAQLayer } from './layers.js';
+
+const layerPromise = fetchAndAddPollutionLayer(map);
+setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
 // Store visibility states
 let layerVisibility = {};
 
@@ -71,125 +74,312 @@ export function logLayerVisibility(map, layers = defaultLayerIds) {
 }
 
 
-/**
- * Function to toggle layer visibility dynamically
- */
-export function toggleLayerVisibility(map, layerId, isChecked) {
+// Function to toggle one or multiple layers
+export function toggleLayerVisibility(map, layerIds, isChecked) {
     const visibility = isChecked ? 'visible' : 'none';
 
-    if (map.getLayer(layerId)) {
-        map.setLayoutProperty(layerId, 'visibility', visibility);
-    }
+    // Make sure layerIds is always an array
+    const layers = Array.isArray(layerIds) ? layerIds : [layerIds];
 
-    const outlineId = `${layerId}-outline`;
-    if (map.getLayer(outlineId)) {
-        map.setLayoutProperty(outlineId, 'visibility', visibility);
-    }
-}
+    layers.forEach(layerId => {
+        if (map.getLayer(layerId)) {
+            map.setLayoutProperty(layerId, 'visibility', visibility);
+        }
 
-
-/**
- * Function to handle checkbox changes for standard layers
- */
-export function setupLayerToggle(map, checkboxId, layerId) {
-    document.getElementById(checkboxId).addEventListener('change', (e) => {
-        toggleLayerVisibility(map, layerId, e.target.checked);
-    });
-}
-
-/**
- * Function to handle loading brick kiln layers dynamically when toggled
- */
-export function setupBrickKilnToggle(map, checkboxId, layerId, loadFunction) {
-    document.getElementById(checkboxId).addEventListener('change', (e) => {
-        if (e.target.checked) {
-            loadFunction(map);
-        } else {
-            toggleLayerVisibility(map, layerId, false);
+        const outlineId = `${layerId}-outline`;
+        if (map.getLayer(outlineId)) {
+            map.setLayoutProperty(outlineId, 'visibility', visibility);
         }
     });
 }
 
 /**
- * Initialize all legend layer toggles
+ * Sets up a toggle for a group of layers
+ * @param {Object} map - The Mapbox or Leaflet map instance
+ * @param {string} checkboxId - The ID of the checkbox element
+ * @param {Array} layers - Array of objects: { id: string, load: function(map) }
  */
-export function initializeLayerVisibilityControls(map) {
-    // Standard Industry Layer Toggles
-    setupLayerToggle(map, 'toggleFossil', 'fossil');
-    setupLayerToggle(map, 'toggleCoal', 'coal');
-    setupLayerToggle(map, 'toggleCementIGP', 'cement_IGP');
-    setupLayerToggle(map, 'toggleOilGasIGP', 'oil_gas_IGP');
-    setupLayerToggle(map, 'togglePaperPulpIGP', 'paper_pulp_IGP');
-    setupLayerToggle(map, 'toggleSteelIGP', 'steel_IGP');
-    setupLayerToggle(map, 'toggleSolidWasteIGP', 'solid_waste_IGP');
-    setupLayerToggle(map, 'toggleGPW', 'gpw');
-    setupLayerToggle(map, 'togglepop', 'population');
-    setupLayerToggle(map, 'toggledecay', 'pollutant');
-    setupLayerToggle(map, 'toggleBoilers', 'boilers');
-    setupLayerToggle(map,'toggleReportedPollution','pollution_reports');
-    setupLayerToggle(map,'toggleOpenAQData','openaq_latest')
 
+const brickKilnLayers = [
+    { id: 'BK_PK', load: loadBrickKilnLayerPK },
+    { id: 'BK_IND', load: loadBrickKilnLayerIND },
+    { id: 'BK_BAN', load: loadBrickKilnLayerBAN },
+    { id: 'brick_kilns_DRC', load: loadBrickKilnLayerDRC },
+    { id: 'brick_kilns_GHA', load: loadBrickKilnLayerGHA },
+    { id: 'brick_kilns_UGA', load: loadBrickKilnLayerUGA },
+    { id: 'brick_kilns_NGA', load: loadBrickKilnLayerNGA }
+];
 
+// const brickKilnGridLayers = [
+//     { id: 'BK_PK_hex', load: loadBrickKilnLayerBANhex },
+//     { id: 'BK_IND_hex', load: loadBrickKilnLayerINDhex },
+//     { id: 'BK_BAN_hex', load: loadBrickKilnLayerPKhex }
+// ];
 
-    // Brick Kiln Layers
-    setupBrickKilnToggle(map, 'toggleBKPK', 'BK_PK', loadBrickKilnLayerPK);
-    setupBrickKilnToggle(map, 'toggleBKIND', 'BK_IND', loadBrickKilnLayerIND);
-    setupBrickKilnToggle(map, 'toggleBKBAN', 'BK_BAN', loadBrickKilnLayerBAN);
-    setupBrickKilnToggle(map, 'toggleHexGridPAK', 'brick_kilns_PK', loadBrickKilnLayerPKhex);
-    setupBrickKilnToggle(map, 'toggleHexGridIND', 'brick_kilns_IND', loadBrickKilnLayerINDhex);
-    setupBrickKilnToggle(map, 'toggleHexGridBAN', 'brick_kilns_BAN', loadBrickKilnLayerBANhex);
+// Function to handle checkbox changes for standard layers
+export function setupLayerToggle(map, checkboxId, layerPromise, layerId) {
+  const checkbox = document.getElementById(checkboxId);
+  if (!checkbox) return;
 
-    // ADM-3 Brick Kilns
-    setupBrickKilnToggle(map, 'toggleadm3_PAK', 'adm3_PAK', loadADM3BrickKilnsPakistan);
-    setupBrickKilnToggle(map, 'toggleadm3_IND', 'adm3_IND', loadADM3BrickKilnsIndia);
-    // Optional future setup: setupBrickKilnToggle(map, 'toggleadm3_BAN', 'adm3_BAN', loadADM3BrickKilnsBangladesh);
+  // When checkbox changes, toggle layer visibility
+  checkbox.addEventListener("change", (e) => {
+    toggleLayerVisibility(map, layerId, e.target.checked);
+  });
 
+  // When the layer is added, set initial visibility based on checkbox
+  layerPromise.then(() => {
+    toggleLayerVisibility(map, layerId, checkbox.checked);
+  });
+}
 
-    // Africa Brick Kiln Layers
-    setupBrickKilnToggle(map, 'toggleBKDRC', 'brick_kilns_DRC', loadBrickKilnLayerDRC);
-    setupBrickKilnToggle(map, 'toggleBKGHA', 'brick_kilns_GHA', loadBrickKilnLayerGHA);
-    setupBrickKilnToggle(map, 'toggleBKUGA', 'brick_kilns_UGA', loadBrickKilnLayerUGA);
-    setupBrickKilnToggle(map, 'toggleBKNGA', 'brick_kilns_NGA', loadBrickKilnLayerNGA);
+// Function to handle checkbox for a group of layers
+export function setupGroupLayerToggle(map, checkboxId, layers) {
+    const loadedLayers = {};
 
-    // Africa Region Industry Layers
-    setupLayerToggle(map, 'toggleCoalAfrica', 'coal_africa');
-    setupLayerToggle(map, 'toggleCementAfrica', 'cement_africa');
-    setupLayerToggle(map, 'togglePaperPulpAfrica', 'paper_pulp_africa');
-    setupLayerToggle(map, 'toggleSteelAfrica', 'steel_africa');
+    const checkbox = document.getElementById(checkboxId);
+    if (!checkbox) return;
 
-    /**
-     * **Fix Parent Toggles**
-     * - Parents should only expand/collapse child layers
-     * - They should NOT control visibility
-     */
+    const loadAndToggle = (layer, show) => {
+        if (!loadedLayers[layer.id]) {
+            loadedLayers[layer.id] = layer.load(map,).then(() => {
+                toggleLayerVisibility(map, layer.id, show);
+            });
+        } else {
+            toggleLayerVisibility(map, layer.id, show);
+        }
+    };
 
-    // Parent Toggle: Brick Kilns
-    document.getElementById('toggleBrickKilns').addEventListener('click', (e) => {
-        document.getElementById('brickKilnCountries').classList.toggle('hidden');
-    });
+    // Trigger for initial checked state
+    if (checkbox.checked) {
+        layers.forEach(layer => loadAndToggle(layer, true));
+    }
 
-    // Parent Toggle: Brick Kilns Grid
-    document.getElementById('toggleBrickKilnsGrid').addEventListener('click', (e) => {
-        document.getElementById('BrickKilnsGrid').classList.toggle('hidden');
-    });
-
-    document.getElementById('toggleBrickKilnsAdm3').addEventListener('click', () => {
-        document.getElementById('brickKilnAdm3').classList.toggle('hidden');
-    });
-
-    // Parent Toggle: Africa Brick Kilns
-    document.getElementById('toggleBrickKilnsAFC').addEventListener('click', (e) => {
-        document.getElementById('brickKilnAfcCountries').classList.toggle('hidden');
-    });
-
-    // Toggle Legend Visibility
-    document.getElementById('legendButton').addEventListener('click', () => {
-        const legend = document.getElementById('legend');
-        legend.style.display = (legend.style.display === 'none' || legend.style.display === '') ? 'block' : 'none';
-    });
-
-    document.querySelector('#legend .closeButton').addEventListener('click', () => {
-        document.getElementById('legend').style.display = 'none';
+    checkbox.addEventListener("change", (e) => {
+        const show = e.target.checked;
+        layers.forEach(layer => loadAndToggle(layer, show));
     });
 }
+
+// Function to get HSLA color from CSS variable with optional alpha (opacity) override
+function hslaVar(varName, alpha = 1) {
+  const hsla = getComputedStyle(document.documentElement)
+                 .getPropertyValue(varName)
+                 .trim();
+  // replace existing alpha with new alpha
+  return hsla.replace(/hsla\((\d+),\s*([\d.]+)%,\s*([\d.]+)%,\s*[\d.]+\)/, `hsla($1, $2%, $3%, ${alpha})`);
+}
+
+const layerStyles = {
+
+    //Group 2: Manufacturing or secondary energy generation (Red hues)
+    steel: { circleColor: hslaVar('--blue', 0.5), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--blue') },
+    
+    paperPulp: { circleColor: hslaVar('--pink', 0.5), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--pink') },
+    
+    brickKiln:{ circleColor: hslaVar('--dark-red', 0.5), circleRadius: 2, strokeWidth: 1, strokeColor: hslaVar('--dark-red')},
+    
+    cement:{ circleColor: hslaVar('--vivid-green', 0.5), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--vivid-green') }, 
+    
+    boilers:{ circleColor: hslaVar('--red', 0.25), circleRadius: 20, strokeWidth: 1, strokeColor: hslaVar('--red') },  
+
+    //Group 5: Crop residue burning
+
+};
+
+//Initialize all legend layer toggles
+export function initializeLayerVisibilityControls(map) {
+
+    //Group 1: Extraction or primary energy generation (Cross symbol)
+    setupGroupLayerToggle(map, "toggleCoal", [
+        { id: "coal", load: (map) => loadSymbolLayer(
+        map,
+        "coal",
+        "coal_IGP",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Coal+Plants/coal_plants_main.geojson",
+        "./src/assets/cross_coal.png", 0.25
+        )},
+        { id: "coal_africa", load: (map) => loadSymbolLayer(
+        map,
+        "coal_africa",
+        "coal_Afc",
+        "https://gist.githubusercontent.com/Mseher/b3f5e885ddae2b90be7048f87896ef48/raw/57db894dc8237b9d09a8f3ed1a5e114400cfc49f/Africa_Coal.geojson",
+         "./src/assets/cross_coal.png", 0.25
+        )}
+    ]);
+
+    setupGroupLayerToggle(map, "toggleFossil", [
+        { id: "fossil", load: (map) => loadSymbolLayer(
+            map,
+            "fossil",
+            "fossil_fuel",
+            "https://gist.githubusercontent.com/bilalpervaiz/597c50eff1747c1a3c8c948bef6ccc19/raw/6984d3a37d75dc8ca7489ee031377b2d57da67d2/fossil_fuel.geojson",
+           "./src/assets/cross_fossil-fuel.png", 0.25
+        )}
+    ]);
+
+    // Doesnt work dataset - access denied
+    // setupGroupLayerToggle(map, "toggleOilGas", [
+    //     { id: "oil_gas_IGP", load: (map) => loadGroupLayers(
+    //         map,
+    //         "oil_gas_IGP",
+    //         "oilgasIGP",
+    //         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/oil_gas_refining_main.geojson",
+    //            "./src/assets/cross_oil-gas.png", 0.25
+
+    //     )}
+    // ]);
+
+    
+    //Group 2: Manufacturing or secondary energy generation (Circles)
+    setupGroupLayerToggle(map, "toggleSteel", [
+    { id: "steel_IGP", load: (map) => loadGroupLayers(
+        map,
+        "steel_IGP",
+        "steelIGP",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Steel+Plants/steel_plants_main.geojson",
+        layerStyles.steel.circleColor, layerStyles.steel.circleRadius, layerStyles.steel.strokeWidth, layerStyles.steel.strokeColor
+    )}
+    ]);
+
+    setupGroupLayerToggle(map, "togglePaperPulp", [
+    { id: "paper_pulp_IGP", load: (map) => loadGroupLayers(
+        map,
+        "paper_pulp_IGP",
+        "paperPulpIGP",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Pulp+and+Paper+Plants/paper_pulp_main.geojson",
+    layerStyles.paperPulp.circleColor, layerStyles.paperPulp.circleRadius, layerStyles.paperPulp.strokeWidth, layerStyles.paperPulp.strokeColor     
+    )},
+
+    { id: "paper_pulp_africa", load: (map) => loadGroupLayers(
+        map,
+        "paper_pulp_africa",
+        "paper_Pulp_Afc",
+        "https://gist.githubusercontent.com/Mseher/d77d22cea85ac0f3ef184a48d0aa1bba/raw/0751824b8af6cb919a8ec2aab869367987345545/Paper_pulp_Africa.geojson",
+        layerStyles.paperPulp.circleColor, layerStyles.paperPulp.circleRadius, layerStyles.paperPulp.strokeWidth, layerStyles.paperPulp.strokeColor 
+    )}
+    ]);
+      
+    setupGroupLayerToggle(map, "toggleBrickKiln", brickKilnLayers);
+      
+    setupGroupLayerToggle(map, "toggleCement", [
+    { id: "cement_IGP", load: (map) => loadGroupLayers(
+        map,
+        "cement_IGP",
+        "cementIGP",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Cement+Plants/cement_plants_main.geojson",
+        layerStyles.cement.circleColor, layerStyles.cement.circleRadius, layerStyles.cement.strokeWidth, layerStyles.cement.strokeColor
+    )},
+    { id: "cement_africa", load: (map) => loadGroupLayers(
+        map,
+        "cement_africa",
+        "cement_Afc",
+        "https://gist.githubusercontent.com/Mseher/3c778bdbd8464ddc939b41c87e145bbc/raw/c605634a3e418b2a52a2125a3943d432d688755f/cement_africa.geojson",
+        layerStyles.cement.circleColor, layerStyles.cement.circleRadius, layerStyles.cement.strokeWidth, layerStyles.cement.strokeColor
+    )}
+    ]);
+
+    setupGroupLayerToggle(map, "toggleBoilers", [
+    { id: "boilers", load: (map) => loadGroupLayers(
+        map,
+        "boilers",
+        "boilers_layer",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/boilers/boilers.geojson",
+        layerStyles.boilers.circleColor, layerStyles.boilers.circleRadius, layerStyles.boilers.strokeWidth, layerStyles.boilers.strokeColor
+    )}
+    ]);
+
+    //Group 3: Tertiary or waste management (green hues)
+    setupGroupLayerToggle(map, "toggleLandFillWaste", [
+    { id: "solid_waste_IGP", load: (map) => loadSymbolLayer(
+        map,
+        "solid_waste_IGP",
+        "solidWasteIGP",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Plastic+and+Landfill+Sites/waste_main.geojson",
+        "./src/assets/plus_land-fill-waste.png", 0.25
+        )}
+    ]);
+
+    setupGroupLayerToggle(map, "toggleGPW", [
+    { id: "gpw", load: (map) => loadSymbolLayer(
+        map,
+        "gpw",
+        "GPW",
+        "https://gist.githubusercontent.com/bilalpervaiz/e2c93d2017fc1ed90f9a6d5259701a5e/raw/4dd19fe557d29b9268f11e233169948e95c24803/GPW.geojson",
+        "./src/assets/plus_gpw.png", 0.25)}
+    ]);
+
+    const layerPromise = fetchAndAddPollutionLayer(map);
+    setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
+
+    setupGroupLayerToggle(map, "toggleOpenAQ", [
+    { id: "openaq_latest_layer", load: (map) => loadOpenAQLayer(map, "openaq_latest_layer", "openaq_latest")
+    },
+    ]);
+
+    //   setupGroupLayerToggle(map, "toggleOilGas", [
+    //     { id: "oil_gas_IGP", load: (map) => loadGroupLayers(
+    //       map,
+    //       "oil_gas_IGP",
+    //       "oilgasIGP",
+    //       "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/oil_gas_refining_main.geojson",
+    //       "rgba(63, 138, 192, 0,25)", 10, 1, "rgba(63, 138, 192, 1)"
+    //     )}
+    //   ]);
+      
+
+      // Setup other groups or single layers similarly...
+}
+
+    // Standard Industry Layer Toggles
+    //setupLayerToggle(map, 'toggleCoal', 'coal');
+    // setupLayerToggle(map, 'toggleFossil', 'fossil');
+    // setupLayerToggle(map, 'toggleCementIGP', 'cement_IGP');
+    // setupLayerToggle(map, 'toggleOilGasIGP', 'oil_gas_IGP');
+    // setupLayerToggle(map, 'toggleSteelIGP', 'steel_IGP');
+    // setupLayerToggle(map, 'toggleSolidWasteIGP', 'solid_waste_IGP');
+    // setupLayerToggle(map, 'toggleGPW', 'gpw');
+    // setupLayerToggle(map, 'togglepop', 'population');
+    // setupLayerToggle(map, 'toggledecay', 'pollutant');
+    // setupLayerToggle(map, 'toggleBoilers', 'boilers');
+    // setupLayerToggle(map,'toggleReportedPollution','pollution_reports');
+    // setupLayerToggle(map,'toggleOpenAQData','openaq_latest');
+    // setupGroupLayerToggle(map, 'toggleBrickKilnAll', brickKilnLayers);
+    // setupGroupLayerToggle(map, 'toggleBrickKilnGrid', brickKilnGridLayers);
+    
+    // setupGroupLayerToggle(map, "toggleCoal", [
+    //     { id: "coal", load: (map) => loadGroupLayers(
+    //     map,
+    //     "coal",
+    //     "coal_IGP",
+    //     "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Coal+Plants/coal_plants_main.geojson",
+    //     "rgba(206, 112, 112, 1)"
+    //     )
+    //     }, 
+    //     { id: "coal_africa", load: (map) => loadGroupLayers(
+    //     map,
+    //     "coal_africa",
+    //     "coal_Afc",
+    //     "https://gist.githubusercontent.com/Mseher/b3f5e885ddae2b90be7048f87896ef48/raw/57db894dc8237b9d09a8f3ed1a5e114400cfc49f/Africa_Coal.geojson",
+    //     "rgba(206, 112, 112, 1)"
+    //     )
+    //     }
+    //     ]);
+    //  setupGroupLayerToggle(map, "toggleCementAll", [   
+    //     { id: "cement_IGP", load: (map) => loadGroupLayers(
+    //     map,
+    //     "cement_IGP",
+    //     "cementIGP",
+    //     "https://gist.githubusercontent.com/Mseher/cement_plants_main/raw/0751824b8af6cb919a8ec2aab869367987345545/Paper_pulp_Africa.geojson",
+    //     "rgba(221, 0, 251, 1)"
+    //     )
+    //     },
+    //     { id: "cement_africa", load: (map) => loadGroupLayers(
+    //     map,
+    //     "paper_pulp_IGP",
+    //     "cement_Afc",
+    //     "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Pulp+and+Paper+Plants/paper_pulp_main.geojson",
+    //     "rgba(221, 0, 251, 1)"
+    //     )
+    //     },
+    //     ]);
 

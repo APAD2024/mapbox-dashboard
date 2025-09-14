@@ -1,4 +1,4 @@
-import { addDataLayers } from './layers.js';
+import { loadGroupLayers, loadSymbolLayer } from './layers.js';
 import { initializeGeocoder } from './geocoder.js';
 import { initializeBasemapMenu } from './basemapMenu.js';
 import { initializeAreaChange } from './areaChange.js';
@@ -30,20 +30,17 @@ const map = new mapboxgl.Map({
 map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
 
-
-
 // ---------------------------------------------------------------LAYER LOADING -------------------------------------------------------------
 // Ensure map is initialized
 map.on('load', () => {
-    addDataLayers(map);
+    loadGroupLayers(map);
+    loadSymbolLayer(map);
     initAggregateTool(map);
     initializeGeocoder(map);
 });
 
 
-
 // ----------------------------------------------------------------BASEMAP MENU-----------------------------------------------------------
-
 
 map.on('load', () => {
     initializeBasemapMenu(map);
@@ -88,4 +85,3 @@ map.on('load', () => {
 map.on('load', () => {
     initializeFilters(map);
 });
-

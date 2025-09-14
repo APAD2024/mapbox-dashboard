@@ -14,4 +14,3 @@ export function closePopups() {
         popups[i].remove();
     }
 }
-

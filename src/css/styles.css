@@ -4,8 +4,17 @@ html {
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    /* Prevent any scrollbars from appearing */
+    overflow: hidden; /* Prevent any scrollbars from appearing */
+    font-size: 62.5%; /* 1rem = 10px */
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+.dashboard {
+  height: 100vh;
+  padding: 1.6rem;
+  box-sizing: border-box;
+  position: relative;
 }
 
 #map {
@@ -20,185 +29,343 @@ html {
     /* Adjust height to subtract the height of the top bar */
 }
 
-/* Top bar styling */
+/* #region Top bar styling */
+
 #topBar {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
     width: 100%;
-    height: 60px;
-    background-color: #4b6151;
-    /* Dark green */
-    color: #e3e0db;
-    /* Pale green text */
+    height: 6rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    font-family: 'Open Sans', sans-serif;
     z-index: 2;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
+    overflow: visible;
+    box-sizing: border-box;
+    gap: 1.2rem;
+    justify-content: space-between;
 }
 
-/* Left Section: Logo and Title */
+/* Left and Right Section */
+.left-section, .right-section {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    border-radius: 5rem;
+    gap: 2.4rem;
+    background-color: var(--light-green);
+    font-family: var(--body01);
+    color: var(--dark-green);
+    box-shadow: var(--shadow);
+    height: -webkit-fill-available;
+} 
+
+/* Left Section */
 .left-section {
+     flex-shrink: 0; /* never shrink */
+     padding: 0.8rem 1.6rem;
+}   
+
+.menu-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    width: auto;
+    justify-content: center;
 }
 
-.left-section img {
-    height: 40px;
-    margin-right: 10px;
+.menu-btn .icon {
+    width: 2rem; /* adjust size */
+    height: 2rem;
 }
 
-.left-section h1 {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0;
-    color: #e3e0db;
-    /* Pale green */
-    white-space: nowrap;
+.left-section .logo {
+    height: 40%;
 }
 
+/* Right section */
+.right-section {
+    flex: 1;
+    justify-content: center;
+    padding: 0.8rem 1.6rem;
+}  
 
+/* Right section: Geocoder */
+.geocoder-section {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    z-index: 1009;
+    width: 100%;
+    border-radius: 5rem;
+}
 
-/* Geocoder input styling for width management */
+#geocoder {
+    width: 100% ; /* Take full width of the geocoder section */
+}
+
 .mapboxgl-ctrl-geocoder {
     width: 100%;
+    max-width: 100%;
+    box-shadow: none !important; /* Remove default shadow */
 }
 
-/* Right Section: Filters */
+.mapboxgl-ctrl-geocoder.mapboxgl-ctrl {
+    width: 100%;
+    border-radius: 5rem;
+    background-color: var(--light-green) !important;
+    border: var(--dark-green) 0.12rem solid !important;
+    color: var(--dark-green) !important;
+}
+
+.mapboxgl-ctrl-geocoder--input {
+    width: 100%; /* The input field will fill the entire geocoder container */
+    font-size: 14px; /* Font size for better readability */
+    border-radius: 8px;
+    padding: 6px 12px; /* Padding for proper sizing */
+    color: var(--dark-green) !important;  /* Text color */
+}
+
+.mapboxgl-ctrl-geocoder--input::placeholder {
+    color: var(--dark-green) !important;
+    opacity: 0.7; /* adjust opacity if needed */
+}
+
+.mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--icon {
+    fill: var(--dark-green) !important; /* SVG icon color */
+}
+
+@media screen and (min-width: 640px) {
+    .mapboxgl-ctrl-geocoder {
+        width: 100% !important;   /* take all available space */
+        max-width: none !important; /* remove the cap */
+    }
+}
+
+
+/* Right section: Filters */
 .filter-section {
-    flex: 0 0 40%;
-    /* 30% width */
     display: flex;
     align-items: center;
-    /* Center the labels and dropdowns vertically */
-    justify-content: center;
-    /* Align filters to the center */
-    gap: 15px;
+    gap: 1.2rem;
+    flex-shrink: 0; /* never shrink */
 }
 
 .filter-container {
     display: flex;
     align-items: center;
-    /* Ensure both label and select are vertically centered */
     justify-content: space-between;
-    background-color: #4b6151;
-    /* Match top bar background */
-    border-radius: 8px;
-    padding: 4px 12px;
-    border: 1px solid #e3e0db;
-    color: #e3e0db;
-    width: auto;
+    border-radius: 5rem;
+    padding: 0.4rem 1.2rem;
+    border: 0.12rem solid var(--dark-green);
+    color: var(--dark-green);
 }
 
 .filter-label {
-    font-size: 12px;
-    color: #e3e0db;
-    margin-right: 10px;
+    font-size: 1.2rem;
+    margin-right: 1rem;
     white-space: nowrap;
-    text-align: left;
+    color: var(--dark-green);
+
 }
 
 .filter-select {
     border: none;
     background-color: transparent;
-    color: #e3e0db;
-    font-size: 12px;
+    font-size: 1.2rem;
     width: 100%;
     outline: none;
     cursor: pointer;
     text-align: right;
+    color: var(--dark-green);
+    padding-bottom: none;
 }
 
-
-.filter-select option {
-    color: #2e2e2e;
-    /* Dark text color for dropdown options */
-    width: auto;
+.menu-list {
+  position: absolute;
+  top: 110%; /* right below the button */
+  left: 3rem;
+  margin: 0;
+  padding: 1rem;
+  list-style: none;
+  background-color: var(--light-green);
+  border-radius: 0.8rem;
+  box-shadow: var(--shadow);
+  min-width: 150px;
+  z-index: 100;
+  width: max-content;
 }
 
-
-
-
-
-/* Middle Section: Geocoder */
-.geocoder-section {
-    position: fixed;
-    left: 500px;
-    flex: 0 0 30%;
-    /* Middle section takes 40% of the top bar */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1009;
-    width: 400px;
+.menu-list li a {
+    text-decoration: none;
+    color: var(--dark-green);
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: var(--heading05);
 }
 
-/* Geocoder container */
-#geocoder {
-    width: 100%;
-    /* Take full width of the geocoder section */
-    max-width: 90%;
-    /* Restrict max width to 90% of the .geocoder-section */
-
+.menu-list li a:hover {
+    background-color: var(--dark-green);
+    color: var(--light-green);
+    border-radius: 0.5rem;
 }
 
-/* Geocoder control styling */
-.mapboxgl-ctrl-geocoder.mapboxgl-ctrl {
-    width: 100%;
-    /* Ensure the control takes up full width */
-    border-radius: 8px;
-
+.hidden {
+  display: none;
 }
 
-/* Geocoder input field */
-.mapboxgl-ctrl-geocoder--input {
-    width: 600px;
-    /* The input field will fill the entire geocoder container */
-    font-size: 14px;
-    /* Font size for better readability */
-    border-radius: 8px;
-    padding: 6px 12px;
-    /* Padding for proper sizing */
-}
+/* #endregion */
 
 
+/* #region Buttons right top corner */
 
-
-
-
-/* Move the map controls down */
+/* Map controls */
 .mapboxgl-ctrl-top-right {
-    top: 60px !important;
+    top:  9.6rem !important;
     /* Adjust the distance from the top */
-    right: 10px;
+    right: 1rem!important;
     /* Keep the distance from the right */
 }
 
+.mapboxgl-ctrl-group {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
 
-#menuButton {
+.mapboxgl-ctrl-zoom-in,
+.mapboxgl-ctrl-zoom-out,
+.mapboxgl-ctrl-compass {
+    background-color: var(--light-green)!important;
+    color: var(--dark-green)!important;
+    border: 0.12rem solid var(--dark-green)!important;
+    border-radius: 0.5rem!important;
+    font-size: 18px!important;
+    box-shadow: var(--shadow);
+}
+
+
+/* Basemap Menu Button */
+#basemapMenuButton {
     position: absolute;
-    top: 170px;
-    right: 10px;
-    background: white;
-    padding: 9px;
-    font-family: 'Open Sans', sans-serif;
-    border-radius: 3px;
+    top: 22rem;
+    right: 1.6rem;
+    background: var(--light-green);
+    padding: 0.8rem;
+    border-radius: 0.8rem;
+    border: 0.12rem solid var(--dark-green);
     z-index: 1;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow);
 }
 
-#menuButton i {
+#basemapMenuButton i {
     font-size: 20px;
 }
+
+#areaChange {
+    position: absolute;
+    top: 26.5rem;
+    right: 1.6rem;
+    background: var(--light-green);
+    padding: 0.8rem;
+    border-radius: 0.8rem;
+    border: 0.12rem solid var(--dark-green);
+    z-index: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+}
+
+#areaChange i {
+    font-size: 20px;
+    transition: font-size 0.3s ease;
+}
+
+/************ Aggregate tool ************/
+
+#aggregateToolContainer {
+    position: absolute;
+    top: 31rem;
+    right: 1.6rem;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 0.8rem; /* spacing between button and dropdown */
+    z-index: 10; /* keep above map */
+}
+
+/* Aggregate Tool Button Styling */
+#aggregateTool {
+    background-color: var(--light-green);
+    padding: 0.8rem;
+    border-radius: 0.8rem;
+    border: 0.12rem solid var(--dark-green);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+}
+
+#aggregateTool i {
+    font-size: 20px;
+    color: var(--dark-green);
+}
+
+/* Buffer Size Dropdown Styling */
+#bufferSizeSelector {
+    background: var(--dark-green);
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--light-green);
+    border: none;
+}
+
+.bufferSizeSelector-hidden{
+    display: none;
+}
+
+.bufferSizeSelector-visible{
+    display: block;
+}
+
+/* Tooltip Styling */
+#tooltip {
+    position: fixed; 
+    top: 10rem;
+    left: 50%;          
+    transform: translateX(-50%);
+    height: fit-content;
+    background-color: var(--dark-green);
+    padding: 0.8rem 1.6rem;
+    border-radius: 5rem;
+    z-index: 1000;
+    display: none;           
+    color: var(--light-green);
+    white-space: nowrap;     
+    font-size: 1.6rem;     
+}
+
+/* CSS class to show the tooltip */
+.tooltip-visible {
+    display: block;
+}
+
+/* CSS class to hide the tooltip */
+.tooltip-hidden {
+    display: none;
+}
+
 
 #menu {
     position: absolute;
@@ -212,6 +379,10 @@ html {
     display: none;
     color: #2c3e50;
 }
+
+/* #endregion */
+
+
 /* Heatmap Control Box */
 #heatmapBox {
     position: absolute;
@@ -285,102 +456,9 @@ html {
     right: 5px;
     background: none;
     border: none;
-    font-size: 15px;
+    font-size: var(--heading02);
     cursor: pointer;
-    color: #333;
-}
-
-#areaChange {
-    position: absolute;
-    top: 220px;
-    right: 10px;
-    background: white;
-    padding: 9px;
-    font-family: 'Open Sans', sans-serif;
-    border-radius: 3px;
-    z-index: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-#areaChange i {
-    font-size: 20px;
-    transition: font-size 0.3s ease;
-}
-
-/* Tooltip Styling */
-#tooltip {
-    position: fixed;
-    top: 70px; /* Adjust this value based on the height of your header */
-    left: 50%; /* Center it horizontally */
-    transform: translateX(-50%); /* Offset by half its width for true centering */
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    z-index: 1000;
-    display: none; /* Hidden by default */
-    color: #4b6151; /* Text color */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for visibility */
-}
-
-/* CSS class to show the tooltip */
-.tooltip-visible {
-    display: block;
-}
-
-/* CSS class to hide the tooltip */
-.tooltip-hidden {
-    display: none;
-}
-
-/* Aggregate Tool Button Styling */
-#aggregateTool {
-    position: absolute;
-    top: 270px;
-    right: 10px;
-    background: white;
-    padding: 9px;
-    font-family: 'Open Sans', sans-serif;
-    border-radius: 3px;
-    z-index: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-#aggregateTool i {
-    font-size: 20px;
-}
-
-/* Buffer Size Dropdown Styling */
-#bufferSizeSelector {
-    position: absolute;
-    top: 320px; /* Position below the aggregate tool button */
-    right: 10px; /* Align with the aggregate tool */
-    background: white;
-    font-family: 'Open Sans', sans-serif;
-    border-radius: 3px;
-    padding: 5px;
-    z-index: 1;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    color: #4b6151; /* Match tooltip text color */
-}
-
-.bufferSizeSelector-hidden{
-    display: none;
-}
-
-.bufferSizeSelector-visible{
-    display: block;
+    color: var(--dark-green);
 }
 
 /* Loading spinner styles */
@@ -446,8 +524,8 @@ html {
 
 .map-overlay {
     position: absolute;
-    bottom: 40px;
-    left: 10px;
+    bottom: 1rem;
+    right: 1rem;
     background: #ffffff;
     font-family: 'Arial', sans-serif;
     overflow: hidden;
@@ -575,50 +653,143 @@ html {
 }
 
 
+/* #region Legend  */
+
+#legendButton {
+    position: absolute;
+    bottom: 3.2rem;
+    background: var(--light-green);
+    padding: 1.6rem 2.4rem;
+    border-radius: 1.6rem;
+    border: var(--dark-green) 0.12rem solid;
+    z-index: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    font-size: var(--heading04);
+    font-weight: var(--heading-bold-weight);
+    color: var(--dark-green)
+    ;
+}
+
 
 #legend {
     position: absolute;
-    top: 70px;
-    left: 50px;
-    background: linear-gradient(to bottom right, #f4f4f9, #e0e4e9);
-    color: #2e2e2e;
-    font-size: 14px;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    bottom: 10rem;
+    background: var(--light-green);
+    color: var(--dark-green);
+    font-size: var(--body01);
+    padding: 2.4rem;
+    border-radius: 1.6rem;
+    box-shadow: var(--shadow);
     z-index: 1;
-    width: 200px;
-    font-family: 'Open Sans', sans-serif;
+    width: 25rem;
     display: block;
-
     /* Scroll settings */
-    max-height: 450px; /* Adjust the height as needed */
+    max-height: 45rem; /* Adjust the height as needed */
     overflow-y: auto;
-}
-
-#legend h3 {
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 10px;
-    color: #2a2a2b;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 5px;
 }
 
 /* Optional scrollbar customization for WebKit browsers */
 #legend::-webkit-scrollbar {
-    width: 8px;
+    width: 0.8rem;
+    height: 1rem;
 }
 
 #legend::-webkit-scrollbar-thumb {
-    background: #b0b0b0;
-    border-radius: 10px;
+    background: var(--dark-green);
+    border-radius: 1rem;
+    height: 5rem;
 }
 
 #legend::-webkit-scrollbar-thumb:hover {
-    background: #808080;
+    background: var(--dark-gray);
+    opacity: 0.8;
 }
 
+.legend-group {
+    padding-bottom: 0.8rem;
+}
+
+.legend-group-title {
+    font-size: var(--heading06);
+    font-weight: var(--heading-bold-weight);
+    margin-bottom: 0.8rem;
+}
+
+.legend-section {
+    gap: 1.6rem;
+    display: flex;
+    align-items: center;
+}
+
+.legend-name {
+     display: flex;
+     gap: 1.2rem;
+    align-items: center;
+    height: 3rem;
+}
+
+.legend-key {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.legend-key-img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+}
+
+
+/* #region Checkbox  */
+/* hide default checkbox */
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* outer circle */
+.custom-checkbox .checkmark {
+  display: inline-block;
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 0.2rem solid var(--dark-green);
+  border-radius: 50%;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+/* inner circle (hidden by default) */
+.custom-checkbox .checkmark::after {
+  content: "";
+  position: absolute;
+  top: 10%;   /* margin from top */
+  left: 10%;  /* margin from left */
+  width: 1.4rem; /* smaller size */
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--dark-green); /* inner fill color */
+  display: none;
+}
+
+/* show inner circle when checked */
+.custom-checkbox input:checked + .checkmark::after {
+  display: block;
+}
+
+/* optional: change border color on checked */
+.custom-checkbox input:checked + .checkmark {
+  border-color: var(--dark-green);
+}
+
+/* #endregion  */
 
 .collapsible-header {
     cursor: pointer;
@@ -642,19 +813,6 @@ html {
 
 
 
-
-.legend-section {
-    margin-bottom: 10px;
-}
-
-.legend-key {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    margin-right: 5px;
-    display: inline-block;
-}
-
 .hidden {
     display: none;
 }
@@ -674,23 +832,6 @@ html {
 }
 
 
-#legendButton {
-    position: absolute;
-    top: 70px;
-    left: 10px;
-    background: white;
-    padding: 10px;
-    font-family: 'Open Sans', sans-serif;
-    border-radius: 3px;
-    z-index: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-
 .legend-key.adm3-polygon-icon {
     width: 15px;
     height: 15px;
@@ -701,6 +842,8 @@ html {
     margin-right: 8px;
     vertical-align: middle;
 }
+
+/* #endregion */
 
 /* Hexagonal Grid Legend Colors */
 .kiln-colors {
@@ -815,7 +958,6 @@ label {
     font-size: 12px;
     color: #2c3e50;
     display: block;
-    margin-bottom: 8px;
 }
 
 .row,
@@ -1008,21 +1150,6 @@ label {
 
 .nav-btn:focus {
     outline: none;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    #navBarButtons {
-        bottom: 15px;
-        right: 10px;
-        flex-direction: column;
-        /* Stack the buttons vertically on smaller screens */
-        gap: 8px;
-    }
-
-    .nav-btn {
-        padding: 8px 15px;
-    }
 }
 
 #pollutant-legend {

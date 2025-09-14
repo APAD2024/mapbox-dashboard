@@ -1,5 +1,6 @@
 import { showLoadingSpinner, hideLoadingSpinner } from './utils.js';
 import { isAggregateToolEnabled } from './aggregateTool.js';
+import { logLayerVisibility } from './layerVisibility.js';
 
 
 let  brick_kilns_PK_hex, brick_kilns_IND_hex, brick_kilns_BAN_hex;
@@ -345,531 +346,437 @@ function reportPoint(brickid, lng, lat) {
     });
 }
 
+
+const layerStyles = {
+  brickKiln: { 
+    'circle-color': "rgba(255, 51, 64, 0.5)", 
+    'circle-radius': 1, 
+    'circle-opacity': 1, 
+    'circle-stroke-color': "rgba(255, 51, 64, 1)",
+    'circle-stroke-width': 0
+  }
+};
+
+
 // Lazy load Pakistan Brick Kilns layer
 export function loadBrickKilnLayerPK(map) {
-    if (!map.getSource('bk_pk')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_PAK_coal.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('bk_pk', {
-                    type: 'geojson',
-                    data: data
-                });
-                map.addLayer({
-                    'id': 'BK_PK',
-                    'type': 'circle',
-                    'source': 'bk_pk',
-                    'paint': {
-                        'circle-radius': [
-                            'interpolate',
-                            ['linear'], // Interpolation method
-                            ['zoom'],  // Based on zoom level
-                            5, 2,      // At zoom level 5, circle size is 2
-                            10, 5,     // At zoom level 10, circle size is 5
-                            15, 10     // At zoom level 15, circle size is 10
-                        ],
-                        'circle-stroke-width': 0,
-                        'circle-color': 'green',
-                        'circle-stroke-color': 'white',
-                        'fill-opacity': 0.5
-                    },
-                    layout: {
-                        visibility: 'visible'
-                    }
-                });
+    return new Promise((resolve, reject) => {
+        if (!map.getSource('bk_pk')) {
+            showLoadingSpinner(); // Show the spinner while loading
 
-                if (!isAggregateToolEnabled()) {
-                    // Popup for BK_PK layer
-                    map.on('click', 'BK_PK', (e) => {
-                        if (!isAggregateToolEnabled()) {
+            fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_PAK_coal.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    // Add source if it doesn't exist
+                    if (!map.getSource('bk_pk')) {
+                        map.addSource('bk_pk', { type: 'geojson', data });
+                    } else {
+                        map.getSource('bk_pk').setData(data); // update data if needed
+                    }
+
+                    // Add layer if it doesn't exist
+                    if (!map.getLayer('BK_PK')) {
+                        map.addLayer({
+                            id: 'BK_PK',
+                            type: 'circle',
+                            source: 'bk_pk',
+                            paint: {
+                                ...layerStyles.brickKiln
+                            },
+                            layout: {
+                                visibility: 'visible'
+                            }
+                        });
+                    } else {
+                        map.setLayoutProperty('BK_PK', 'visibility', 'visible');
+                    }
+
+                    // Setup popup if tool not enabled
+                    if (!isAggregateToolEnabled()) {
+                        map.on('click', 'BK_PK', (e) => {
                             const properties = e.features[0].properties;
                             const popupContent = `
                                 <div class="popup-table">
                                     <h3>${properties.id}</h3>
                                     <table>
-                                    <tr><th>Pollutant</th><td> tons/season</td></tr>
-                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10']}</td></tr>
-                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm25']}</td></tr>
-                                    <tr><th>NO<sub>2</sub></th><td>${properties['nox']}</td></tr>
-                                    <tr><th>SO<sub>2</sub></th><td>${properties['so2']}</td></tr>
-                                </table>
+                                        <tr><th>Pollutant</th><td> tons/season</td></tr>
+                                        <tr><th>PM<sub>10</sub></th><td>${properties['pm10']}</td></tr>
+                                        <tr><th>PM<sub>2.5</sub></th><td>${properties['pm25']}</td></tr>
+                                        <tr><th>NO<sub>2</sub></th><td>${properties['nox']}</td></tr>
+                                        <tr><th>SO<sub>2</sub></th><td>${properties['so2']}</td></tr>
+                                    </table>
                                     <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
                                     </button>
                                 </div>
                             `;
-
                             new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
                                 .setHTML(popupContent)
                                 .addTo(map);
-                        }
-                    });
-                }
+                        });
+                    }
 
-
-                brickKilnPKLoaded = true;
-                logLayerVisibility(['BK_PK']); // Log the visibility
-                hideLoadingSpinner(); // Hide the spinner when the layer is loaded
-            })
-            .catch(error => {
-                console.error('Error loading Brick Kiln data for Pakistan:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    } else {
-        map.setLayoutProperty('BK_PK', 'visibility', 'visible');
-    }
+                    logLayerVisibility(map, ['BK_PK']); // Log the visibility
+                    hideLoadingSpinner(); // Hide spinner
+                    resolve(); // ✅ Resolve promise when done
+                })
+                .catch(error => {
+                    console.error('Error loading Brick Kiln data for Pakistan:', error);
+                    hideLoadingSpinner();
+                    reject(error); // ✅ Reject promise on error
+                });
+        } else {
+            map.setLayoutProperty('BK_PK', 'visibility', 'visible');
+            resolve(); // ✅ Already loaded, resolve immediately
+        }
+    });
 }
+
 
 // Lazy load India's Brick Kilns layer
 export function loadBrickKilnLayerIND(map) {
-    if (!map.getSource('bk_ind')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_IND_coal.geojson ')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('bk_ind', {
-                    type: 'geojson',
-                    data: data
-                });
-                map.addLayer({
-                    'id': 'BK_IND',
-                    'type': 'circle',
-                    'source': 'bk_ind',
-                    'paint': {
-                        'circle-radius': [
-                            'interpolate',
-                            ['linear'], // Interpolation method
-                            ['zoom'],  // Based on zoom level
-                            5, 2,      // At zoom level 5, circle size is 2
-                            10, 5,     // At zoom level 10, circle size is 5
-                            15, 10     // At zoom level 15, circle size is 10
-                        ],
-                        'circle-stroke-width': 0,
-                        'circle-color': 'green',
-                        'circle-stroke-color': 'white',
-                        'fill-opacity': 0.5
-                    },
-                    layout: {
-                        visibility: 'visible'
-                    }
-                });
+    return new Promise((resolve, reject) => {
+        if (!map.getSource('bk_ind')) {
+            showLoadingSpinner();
 
-                if (!isAggregateToolEnabled()) {
-                    // Popup for BK_IND layer
-                    map.on('click', 'BK_IND', (e) => {
-                        if (!isAggregateToolEnabled()) {
-                            const properties = e.features[0].properties;
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(`
-                                    <div class="popup-table">
-                                    <h3>${properties.id}</h3>
+            fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_IND_coal.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    if (!map.getSource('bk_ind')) {
+                        map.addSource('bk_ind', { type: 'geojson', data });
+                    } else {
+                        map.getSource('bk_ind').setData(data);
+                    }
+
+                    if (!map.getLayer('BK_IND')) {
+                        map.addLayer({
+                            id: 'BK_IND',
+                            type: 'circle',
+                            source: 'bk_ind',
+                            paint: { ...layerStyles.brickKiln },
+                            layout: { visibility: 'visible' }
+                        });
+                    } else {
+                        map.setLayoutProperty('BK_IND', 'visibility', 'visible');
+                    }
+
+                    if (!isAggregateToolEnabled()) {
+                        map.on('click', 'BK_IND', (e) => {
+                            const props = e.features[0].properties;
+                            const popupHTML = `
+                                <div class="popup-table">
+                                    <h3>${props.id}</h3>
                                     <table>
-                                    <tr><th>Pollutant</th><td> tons/season</td></tr>
-                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10']}</td></tr>
-                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm25']}</td></tr>
-                                    <tr><th>NO<sub>2</sub></th><td>${properties['nox']}</td></tr>
-                                    <tr><th>SO<sub>2</sub></th><td>${properties['so2']}</td></tr>
-                                </table>
-                                    <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
+                                        <tr><th>Pollutant</th><td> tons/season</td></tr>
+                                        <tr><th>PM<sub>10</sub></th><td>${props['pm10']}</td></tr>
+                                        <tr><th>PM<sub>2.5</sub></th><td>${props['pm25']}</td></tr>
+                                        <tr><th>NO<sub>2</sub></th><td>${props['nox']}</td></tr>
+                                        <tr><th>SO<sub>2</sub></th><td>${props['so2']}</td></tr>
+                                    </table>
+                                    <button id="reportButton" onclick="reportPoint('${props.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
                                     </button>
                                 </div>
-                                    `)
-                                .addTo(map);
-                        }
+                            `;
+                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                        });
+                    }
 
-                    });
-                }
-
-
-                brickKilnINDLoaded = true;
-                logLayerVisibility(['BK_IND']); // Log the visibility
-                hideLoadingSpinner(); // Hide the spinner when the layer is loaded
-            })
-            .catch(error => {
-                console.error('Error loading Brick Kiln data for India:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    } else {
-        map.setLayoutProperty('BK_IND', 'visibility', 'visible');
-    }
+                    logLayerVisibility(map, ['BK_IND']);
+                    hideLoadingSpinner();
+                    resolve();
+                })
+                .catch(err => {
+                    console.error('Error loading Brick Kiln data for India:', err);
+                    hideLoadingSpinner();
+                    reject(err);
+                });
+        } else {
+            map.setLayoutProperty('BK_IND', 'visibility', 'visible');
+            resolve();
+        }
+    });
 }
 
 // Lazy load Bangladesh's Brick Kilns layer
 export function loadBrickKilnLayerBAN(map) {
-    if (!map.getSource('bk_ban')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('bk_ban', {
-                    type: 'geojson',
-                    data: data
-                });
-                map.addLayer({
-                    'id': 'BK_BAN',
-                    'type': 'circle',
-                    'source': 'bk_ban',
-                    'paint': {
-                        'circle-radius': [
-                            'interpolate',
-                            ['linear'], // Interpolation method
-                            ['zoom'],  // Based on zoom level
-                            5, 2,      // At zoom level 5, circle size is 2
-                            10, 5,     // At zoom level 10, circle size is 5
-                            15, 10     // At zoom level 15, circle size is 10
-                        ],
-                        'circle-stroke-width': 0,
-                        'circle-color': 'green',
-                        'circle-stroke-color': 'white',
-                        'fill-opacity': 0.5
-                    },
-                    layout: {
-                        visibility: 'visible'
-                    }
-                });
+    return new Promise((resolve, reject) => {
+        if (!map.getSource('bk_ban')) {
+            showLoadingSpinner();
 
-                if (!isAggregateToolEnabled()) {
-                    // Popup for BK_BAN layer
-                    map.on('click', 'BK_BAN', (e) => {
-                        if (!isAggregateToolEnabled()) {
-                            const properties = e.features[0].properties;
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(`
-                                    <div class="popup-table">
-                                    <h3>${properties.id}</h3>
+            fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    if (!map.getSource('bk_ban')) {
+                        map.addSource('bk_ban', { type: 'geojson', data });
+                    } else {
+                        map.getSource('bk_ban').setData(data);
+                    }
+
+                    if (!map.getLayer('BK_BAN')) {
+                        map.addLayer({
+                            id: 'BK_BAN',
+                            type: 'circle',
+                            source: 'bk_ban',
+                            paint: { ...layerStyles.brickKiln },
+                            layout: { visibility: 'visible' }
+                        });
+                    } else {
+                        map.setLayoutProperty('BK_BAN', 'visibility', 'visible');
+                    }
+
+                    if (!isAggregateToolEnabled()) {
+                        map.on('click', 'BK_BAN', (e) => {
+                            const props = e.features[0].properties;
+                            const popupHTML = `
+                                <div class="popup-table">
+                                    <h3>${props.id}</h3>
                                     <table>
-                                    <tr><th>Pollutant</th><td> tons/season</td></tr>
-                                    <tr><th>PM<sub>10</sub></th><td>${properties['pm10']}</td></tr>
-                                    <tr><th>PM<sub>2.5</sub></th><td>${properties['pm25']}</td></tr>
-                                    <tr><th>NO<sub>2</sub></th><td>${properties['nox']}</td></tr>
-                                    <tr><th>SO<sub>2</sub></th><td>${properties['so2']}</td></tr>
-                                </table>
-                                    <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
+                                        <tr><th>Pollutant</th><td> tons/season</td></tr>
+                                        <tr><th>PM<sub>10</sub></th><td>${props['pm10']}</td></tr>
+                                        <tr><th>PM<sub>2.5</sub></th><td>${props['pm25']}</td></tr>
+                                        <tr><th>NO<sub>2</sub></th><td>${props['nox']}</td></tr>
+                                        <tr><th>SO<sub>2</sub></th><td>${props['so2']}</td></tr>
+                                    </table>
+                                    <button id="reportButton" onclick="reportPoint('${props.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
                                     </button>
                                 </div>
-                                    `)
-                                .addTo(map);
-                        }
+                            `;
+                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                        });
+                    }
 
-                    });
-                }
-
-
-                brickKilnBANLoaded = true;
-                logLayerVisibility(['BK_BAN']); // Log the visibility
-                hideLoadingSpinner(); // Hide the spinner when the layer is loaded
-            })
-            .catch(error => {
-                console.error('Error loading Brick Kiln data for Bangladesh:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    } else {
-        map.setLayoutProperty('BK_BAN', 'visibility', 'visible');
-    }
+                    logLayerVisibility(map, ['BK_BAN']);
+                    hideLoadingSpinner();
+                    resolve();
+                })
+                .catch(err => {
+                    console.error('Error loading Brick Kiln data for Bangladesh:', err);
+                    hideLoadingSpinner();
+                    reject(err);
+                });
+        } else {
+            map.setLayoutProperty('BK_BAN', 'visibility', 'visible');
+            resolve();
+        }
+    });
 }
 
 // Lazy load DRC's Brick Kilns layer
 export function loadBrickKilnLayerDRC(map) {
-    if (!map.getSource('bk_drc')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/0b6eb6f902059d8f82bf8dad118ca901/raw/f331dc0d690283f4f1bbf65d5f632f25a960e636/Brick_kilns_DRC.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('bk_drc', {
-                    type: 'geojson',
-                    data: data
-                });
-                map.addLayer({
-                    'id': 'brick_kilns_DRC',
-                    'type': 'circle',
-                    'source': 'bk_drc',
-                    'paint': {
-                        'circle-radius': [
-                            'interpolate',
-                            ['linear'], // Interpolation method
-                            ['zoom'],  // Based on zoom level
-                            5, 2,      // At zoom level 5, circle size is 2
-                            10, 5,     // At zoom level 10, circle size is 5
-                            15, 10     // At zoom level 15, circle size is 10
-                        ],
-                        'circle-stroke-width': 0,
-                        'circle-color': 'green',
-                        'circle-stroke-color': 'white',
-                        'fill-opacity': 0.5
-                    },
-                    layout: {
-                        visibility: 'visible'
+    return new Promise((resolve, reject) => {
+        if (!map.getSource('bk_drc')) {
+            showLoadingSpinner();
+            fetch('https://gist.githubusercontent.com/Mseher/0b6eb6f902059d8f82bf8dad118ca901/raw/f331dc0d690283f4f1bbf65d5f632f25a960e636/Brick_kilns_DRC.geojson')
+                .then(res => res.json())
+                .then(data => {
+                    if (!map.getSource('bk_drc')) map.addSource('bk_drc', { type: 'geojson', data });
+                    else map.getSource('bk_drc').setData(data);
+
+                    if (!map.getLayer('brick_kilns_DRC')) {
+                        map.addLayer({
+                            id: 'brick_kilns_DRC',
+                            type: 'circle',
+                            source: 'bk_drc',
+                            paint: { ...layerStyles.brickKiln },
+                            layout: { visibility: 'visible' }
+                        });
+                    } else map.setLayoutProperty('brick_kilns_DRC', 'visibility', 'visible');
+
+                    if (!isAggregateToolEnabled()) {
+                        map.on('click', 'brick_kilns_DRC', (e) => {
+                            const props = e.features[0].properties;
+                            const popupHTML = `
+                                <div class="popup-table">
+                                    <h3>${props.name}</h3>
+                                    <table>
+                                        <tr><th>Description</th></tr>
+                                        <tr><td>${props.query}</td></tr>
+                                    </table>
+                                    <button id="reportButton" onclick="reportPoint('${e.lngLat.lon}', '${e.lngLat.lat}')">Report This Point</button>
+                                </div>
+                            `;
+                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                        });
                     }
+
+                    logLayerVisibility(map, ['brick_kilns_DRC']);
+                    hideLoadingSpinner();
+                    resolve();
+                })
+                .catch(err => {
+                    console.error('Error loading Brick Kiln data for DRC:', err);
+                    hideLoadingSpinner();
+                    reject(err);
                 });
-
-                if (!isAggregateToolEnabled()) {
-                    // Popup for BK_BAN layer
-                    map.on('click', 'brick_kilns_DRC', (e) => {
-                        if (!isAggregateToolEnabled()) {
-                            const properties = e.features[0].properties;
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(
-                                    `
-                                    <div class="popup-table">
-                                        <h3>${properties.name}</h3>
-                                        <table>
-                                            <tr><th>Description</th></tr>
-                                            <tr><td>${properties.query}</td></tr>
-                                        </table>
-                                        <button id="reportButton" onclick="reportPoint( '${e.lngLat.lon}', '${e.lngLat.lat}')">
-                                            Report This Point
-                                        </button>
-                                    </div>
-                                    `)
-                                .addTo(map);
-                        }
-
-                    });
-                }
-
-
-                brickKilnDRCLoaded = true;
-                logLayerVisibility(['brick_kilns_DRC']); // Log the visibility
-                hideLoadingSpinner(); // Hide the spinner when the layer is loaded
-            })
-            .catch(error => {
-                console.error('Error loading Brick Kiln data for DRC:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    } else {
-        map.setLayoutProperty('brick_kilns_DRC', 'visibility', 'visible');
-    }
+        } else {
+            map.setLayoutProperty('brick_kilns_DRC', 'visibility', 'visible');
+            resolve();
+        }
+    });
 }
 
 // Lazy load Ghana's Brick Kilns layer
 export function loadBrickKilnLayerGHA(map) {
-    if (!map.getSource('bk_gha')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/afd4b57da73d01e87aed16c40435b265/raw/0ac4c732755089bf8a5e8f929494b78eba168407/Brick_kilns_GHA.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('bk_gha', {
-                    type: 'geojson',
-                    data: data
-                });
-                map.addLayer({
-                    'id': 'brick_kilns_GHA',
-                    'type': 'circle',
-                    'source': 'bk_gha',
-                    'paint': {
-                        'circle-radius': [
-                            'interpolate',
-                            ['linear'], // Interpolation method
-                            ['zoom'],  // Based on zoom level
-                            5, 2,      // At zoom level 5, circle size is 2
-                            10, 5,     // At zoom level 10, circle size is 5
-                            15, 10     // At zoom level 15, circle size is 10
-                        ],
-                        'circle-stroke-width': 0,
-                        'circle-color': 'green',
-                        'circle-stroke-color': 'white',
-                        'fill-opacity': 0.5
-                    },
-                    layout: {
-                        visibility: 'visible'
+    return new Promise((resolve, reject) => {
+        if (!map.getSource('bk_gha')) {
+            showLoadingSpinner();
+            fetch('https://gist.githubusercontent.com/Mseher/afd4b57da73d01e87aed16c40435b265/raw/0ac4c732755089bf8a5e8f929494b78eba168407/Brick_kilns_GHA.geojson')
+                .then(res => res.json())
+                .then(data => {
+                    if (!map.getSource('bk_gha')) map.addSource('bk_gha', { type: 'geojson', data });
+                    else map.getSource('bk_gha').setData(data);
+
+                    if (!map.getLayer('brick_kilns_GHA')) {
+                        map.addLayer({
+                            id: 'brick_kilns_GHA',
+                            type: 'circle',
+                            source: 'bk_gha',
+                            paint: { ...layerStyles.brickKiln },
+                            layout: { visibility: 'visible' }
+                        });
+                    } else map.setLayoutProperty('brick_kilns_GHA', 'visibility', 'visible');
+
+                    if (!isAggregateToolEnabled()) {
+                        map.on('click', 'brick_kilns_GHA', (e) => {
+                            const props = e.features[0].properties;
+                            const popupHTML = `
+                                <div class="popup-table">
+                                    <h3>${props.name}</h3>
+                                    <table>
+                                        <tr><th>Description</th></tr>
+                                        <tr><td>${props.query}</td></tr>
+                                    </table>
+                                    <button id="reportButton" onclick="reportPoint('${e.lngLat.lon}', '${e.lngLat.lat}')">Report This Point</button>
+                                </div>
+                            `;
+                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                        });
                     }
+
+                    logLayerVisibility(map, ['brick_kilns_GHA']);
+                    hideLoadingSpinner();
+                    resolve();
+                })
+                .catch(err => {
+                    console.error('Error loading Brick Kiln data for Ghana:', err);
+                    hideLoadingSpinner();
+                    reject(err);
                 });
-
-                if (!isAggregateToolEnabled()) {
-                    // Popup for BK_BAN layer
-                    map.on('click', 'brick_kilns_GHA', (e) => {
-                        if (!isAggregateToolEnabled()) {
-                            const properties = e.features[0].properties;
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(`
-                                    <div class="popup-table">
-                                        <h3>${properties.name}</h3>
-                                        <table>
-                                            <tr><th>Description</th></tr>
-                                            <tr><td>${properties.query}</td></tr>
-                                        </table>
-            
-
-                                        <button id="reportButton" onclick="reportPoint( '${e.lngLat.lon}', '${e.lngLat.lat}')">
-                                            Report This Point
-                                        </button>
-                                    </div>
-                                    `)
-                                .addTo(map);
-                        }
-
-                    });
-                }
-
-
-                brickKilnGHALoaded = true;
-                logLayerVisibility(['brick_kilns_GHA']); // Log the visibility
-                hideLoadingSpinner(); // Hide the spinner when the layer is loaded
-            })
-            .catch(error => {
-                console.error('Error loading Brick Kiln data for Ghana:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    } else {
-        map.setLayoutProperty('brick_kilns_GHA', 'visibility', 'visible');
-    }
+        } else {
+            map.setLayoutProperty('brick_kilns_GHA', 'visibility', 'visible');
+            resolve();
+        }
+    });
 }
-
 
 // Lazy load Nigeria's Brick Kilns layer
 export function loadBrickKilnLayerNGA(map) {
-    if (!map.getSource('bk_nga')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/60e33f59b421102d50ec291bc971a7ac/raw/f7c627d730122481dc0a321db1db26ae677ecfef/Brick_Kilns_NGA.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('bk_nga', {
-                    type: 'geojson',
-                    data: data
-                });
-                map.addLayer({
-                    'id': 'brick_kilns_NGA',
-                    'type': 'circle',
-                    'source': 'bk_nga',
-                    'paint': {
-                        'circle-radius': [
-                            'interpolate',
-                            ['linear'], // Interpolation method
-                            ['zoom'],  // Based on zoom level
-                            5, 2,      // At zoom level 5, circle size is 2
-                            10, 5,     // At zoom level 10, circle size is 5
-                            15, 10     // At zoom level 15, circle size is 10
-                        ],
-                        'circle-stroke-width': 0,
-                        'circle-color': 'green',
-                        'circle-stroke-color': 'white',
-                        'fill-opacity': 0.5
-                    },
-                    layout: {
-                        visibility: 'visible'
+    return new Promise((resolve, reject) => {
+        if (!map.getSource('bk_nga')) {
+            showLoadingSpinner();
+            fetch('https://gist.githubusercontent.com/Mseher/60e33f59b421102d50ec291bc971a7ac/raw/f7c627d730122481dc0a321db1db26ae677ecfef/Brick_Kilns_NGA.geojson')
+                .then(res => res.json())
+                .then(data => {
+                    if (!map.getSource('bk_nga')) map.addSource('bk_nga', { type: 'geojson', data });
+                    else map.getSource('bk_nga').setData(data);
+
+                    if (!map.getLayer('brick_kilns_NGA')) {
+                        map.addLayer({
+                            id: 'brick_kilns_NGA',
+                            type: 'circle',
+                            source: 'bk_nga',
+                            paint: { ...layerStyles.brickKiln },
+                            layout: { visibility: 'visible' }
+                        });
+                    } else map.setLayoutProperty('brick_kilns_NGA', 'visibility', 'visible');
+
+                    if (!isAggregateToolEnabled()) {
+                        map.on('click', 'brick_kilns_NGA', (e) => {
+                            const props = e.features[0].properties;
+                            const popupHTML = `
+                                <div class="popup-table">
+                                    <h3>${props.name}</h3>
+                                    <table>
+                                        <tr><th>Description</th></tr>
+                                        <tr><td>${props.query}</td></tr>
+                                    </table>
+                                    <button id="reportButton" onclick="reportPoint('${e.lngLat.lon}', '${e.lngLat.lat}')">Report This Point</button>
+                                </div>
+                            `;
+                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                        });
                     }
+
+                    logLayerVisibility(map, ['brick_kilns_NGA']);
+                    hideLoadingSpinner();
+                    resolve();
+                })
+                .catch(err => {
+                    console.error('Error loading Brick Kiln data for Nigeria:', err);
+                    hideLoadingSpinner();
+                    reject(err);
                 });
-
-                if (!isAggregateToolEnabled()) {
-                    // Popup for BK_BAN layer
-                    map.on('click', 'brick_kilns_NGA', (e) => {
-                        if (!isAggregateToolEnabled()) {
-                            const properties = e.features[0].properties;
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(`
-                                    <div class="popup-table">
-                                        <h3>${properties.name}</h3>
-                                        <table>
-                                            <tr><th>Description</th></tr>
-                                            <tr><td>${properties.query}</td></tr>
-                                        </table>
-            
-
-                                        <button id="reportButton" onclick="reportPoint( '${e.lngLat.lon}', '${e.lngLat.lat}')">
-                                            Report This Point
-                                        </button>
-                                    </div>
-                                    `)
-                                .addTo(map);
-                        }
-
-                    });
-                }
-
-
-                brickKilnNGALoaded = true;
-                logLayerVisibility(['brick_kilns_NGA']); // Log the visibility
-                hideLoadingSpinner(); // Hide the spinner when the layer is loaded
-            })
-            .catch(error => {
-                console.error('Error loading Brick Kiln data for Nigeria:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    } else {
-        map.setLayoutProperty('brick_kilns_NGA', 'visibility', 'visible');
-    }
+        } else {
+            map.setLayoutProperty('brick_kilns_NGA', 'visibility', 'visible');
+            resolve();
+        }
+    });
 }
 
 // Lazy load Uganda's Brick Kilns layer
 export function loadBrickKilnLayerUGA(map) {
-    if (!map.getSource('bk_uga')) {
-        showLoadingSpinner(); // Show the spinner while loading
-        fetch('https://gist.githubusercontent.com/Mseher/1c8112ab0fb10ebc4f2e28970c6833c3/raw/67165a077349ddfc9ed5bb10efbde13dcc2bad96/Brick_Kilns_UGA.geojson')
-            .then(response => response.json())
-            .then(data => {
-                map.addSource('bk_uga', {
-                    type: 'geojson',
-                    data: data
-                });
-                map.addLayer({
-                    'id': 'brick_kilns_UGA',
-                    'type': 'circle',
-                    'source': 'bk_uga',
-                    'paint': {
-                        'circle-radius': [
-                            'interpolate',
-                            ['linear'], // Interpolation method
-                            ['zoom'],  // Based on zoom level
-                            5, 2,      // At zoom level 5, circle size is 2
-                            10, 5,     // At zoom level 10, circle size is 5
-                            15, 10     // At zoom level 15, circle size is 10
-                        ],
-                        'circle-stroke-width': 0,
-                        'circle-color': 'green',
-                        'circle-stroke-color': 'white',
-                        'fill-opacity': 0.5
-                    },
-                    layout: {
-                        visibility: 'visible'
+    return new Promise((resolve, reject) => {
+        if (!map.getSource('bk_uga')) {
+            showLoadingSpinner();
+            fetch('https://gist.githubusercontent.com/Mseher/1c8112ab0fb10ebc4f2e28970c6833c3/raw/67165a077349ddfc9ed5bb10efbde13dcc2bad96/Brick_Kilns_UGA.geojson')
+                .then(res => res.json())
+                .then(data => {
+                    if (!map.getSource('bk_uga')) map.addSource('bk_uga', { type: 'geojson', data });
+                    else map.getSource('bk_uga').setData(data);
+
+                    if (!map.getLayer('brick_kilns_UGA')) {
+                        map.addLayer({
+                            id: 'brick_kilns_UGA',
+                            type: 'circle',
+                            source: 'bk_uga',
+                            paint: { ...layerStyles.brickKiln },
+                            layout: { visibility: 'visible' }
+                        });
+                    } else map.setLayoutProperty('brick_kilns_UGA', 'visibility', 'visible');
+
+                    if (!isAggregateToolEnabled()) {
+                        map.on('click', 'brick_kilns_UGA', (e) => {
+                            const props = e.features[0].properties;
+                            const popupHTML = `
+                                <div class="popup-table">
+                                    <h3>${props.name}</h3>
+                                    <table>
+                                        <tr><th>Description</th></tr>
+                                        <tr><td>${props.query}</td></tr>
+                                    </table>
+                                    <button id="reportButton" onclick="reportPoint('${e.lngLat.lon}', '${e.lngLat.lat}')">Report This Point</button>
+                                </div>
+                            `;
+                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                        });
                     }
+
+                    logLayerVisibility(map, ['brick_kilns_UGA']);
+                    hideLoadingSpinner();
+                    resolve();
+                })
+                .catch(err => {
+                    console.error('Error loading Brick Kiln data for Uganda:', err);
+                    hideLoadingSpinner();
+                    reject(err);
                 });
-
-                if (!isAggregateToolEnabled()) {
-                    // Popup for BK_BAN layer
-                    map.on('click', 'brick_kilns_UGA', (e) => {
-                        if (!isAggregateToolEnabled()) {
-                            const properties = e.features[0].properties;
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(`
-                                    <div class="popup-table">
-                                        <h3>${properties.name}</h3>
-                                        <table>
-                                            <tr><th>Description</th></tr>
-                                            <tr><td>${properties.query}</td></tr>
-                                        </table>
-            
-
-                                        <button id="reportButton" onclick="reportPoint( '${e.lngLat.lon}', '${e.lngLat.lat}')">
-                                            Report This Point
-                                        </button>
-                                    </div>
-                                    `)
-                                .addTo(map);
-                        }
-
-                    });
-                }
-
-
-                brickKilnUGALoaded = true;
-                logLayerVisibility(['brick_kilns_UGA']); // Log the visibility
-                hideLoadingSpinner(); // Hide the spinner when the layer is loaded
-            })
-            .catch(error => {
-                console.error('Error loading Brick Kiln data for Uganda:', error);
-                hideLoadingSpinner(); // Hide the spinner even if there is an error
-            });
-    } else {
-        map.setLayoutProperty('brick_kilns_UGA', 'visibility', 'visible');
-    }
+        } else {
+            map.setLayoutProperty('brick_kilns_UGA', 'visibility', 'visible');
+            resolve();
+        }
+    });
 }
+
