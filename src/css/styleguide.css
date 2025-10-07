@@ -14,13 +14,19 @@
 
 --dark-red:  hsla(356, 100%, 30%, 1);
 --red: hsla(356, 100%, 60%, 1);
+--red-t: hsla(356, 100%, 60%, 0.5);
+
 --pink: hsla(356, 100%, 80%, 1);
+--pink-t: hsla(356, 100%, 80%, 0.5);
 
 --vivid-green: hsla(115, 50%, 50%, 1);
 --vivid-light-green:  hsla(115, 50%, 75%, 1);
+--vivid-green-t: hsla(115, 50%, 50%, 0.5);
 
 --blue: hsla(205, 50%, 50%, 1);
+--blue-t: hsla(205, 50%, 50%, 0.5);
 --light-blue:  hsla(205, 50%, 70%, 1);
+
 
 /* Text-size styles */
 /* base size: body01--bold (16px) */
@@ -39,6 +45,9 @@
 
 /* Effect styles */
 --shadow:  4px 4px 0px rgba(0, 0, 0, 0.25);
+
+--shadow-short: 2px 2px 0px rgba(0, 0, 0, 0.25);
+
 }
 
 body {
@@ -74,3 +83,4 @@ h4 {
 h5 {
   font-size: var(--heading05);
 }
+

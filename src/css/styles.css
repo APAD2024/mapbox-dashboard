@@ -245,22 +245,28 @@ html {
     box-shadow: var(--shadow);
 }
 
-
-/* Basemap Menu Button */
-#basemapMenuButton {
+/*FAB */
+.FAB {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
     position: absolute;
-    top: 22rem;
-    right: 1.6rem;
     background: var(--light-green);
     padding: 0.8rem;
     border-radius: 0.8rem;
     border: 0.12rem solid var(--dark-green);
     z-index: 1;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-short);
+    width: 2.4rem;
+    height: 2.4rem;
+}
+
+/* Basemap Menu Button */
+#basemapMenuButton {
+    top: 22rem;
+    right: 1.6rem;
 }
 
 #basemapMenuButton i {
@@ -268,19 +274,8 @@ html {
 }
 
 #areaChange {
-    position: absolute;
     top: 26.5rem;
     right: 1.6rem;
-    background: var(--light-green);
-    padding: 0.8rem;
-    border-radius: 0.8rem;
-    border: 0.12rem solid var(--dark-green);
-    z-index: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
 }
 
 #areaChange i {
@@ -289,46 +284,40 @@ html {
 }
 
 /************ Aggregate tool ************/
-
 #aggregateToolContainer {
     position: absolute;
-    top: 31rem;
-    right: 1.6rem;
+    bottom: 3rem;
+    left: 16rem;
     display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
+    flex-direction: column-reverse;
+    align-items: self-start;
     gap: 0.8rem; /* spacing between button and dropdown */
     z-index: 10; /* keep above map */
 }
 
-/* Aggregate Tool Button Styling */
-#aggregateTool {
-    background-color: var(--light-green);
-    padding: 0.8rem;
-    border-radius: 0.8rem;
-    border: 0.12rem solid var(--dark-green);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
+#aggregateToolButton.FAB {
+    position: static;
+    background: var(--dark-green);
+    border: 0.12rem solid var(--light-green);
 }
 
-#aggregateTool i {
+#aggregateToolButton i {
     font-size: 20px;
-    color: var(--dark-green);
+    color: var(--light-green);
 }
 
 /* Buffer Size Dropdown Styling */
 #bufferSizeSelector {
     background: var(--dark-green);
-    font-family: 'Open Sans', sans-serif;
     border-radius: 0.8rem;
     padding: 0.4rem 0.8rem;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 1.4rem;
     color: var(--light-green);
     border: none;
+    padding-right: 2.4rem !important; /* space for the arrow */
+    height: -webkit-fill-available;
+    border: 0.12rem solid var(--light-green);
 }
 
 .bufferSizeSelector-hidden{
@@ -353,7 +342,10 @@ html {
     display: none;           
     color: var(--light-green);
     white-space: nowrap;     
-    font-size: 1.6rem;     
+    font-size: 1.6rem;
+    opacity: 0.8;
+    border: 0.12rem solid var(--light-green);
+
 }
 
 /* CSS class to show the tooltip */
@@ -365,7 +357,6 @@ html {
 .tooltip-hidden {
     display: none;
 }
-
 
 #menu {
     position: absolute;
@@ -380,8 +371,53 @@ html {
     color: #2c3e50;
 }
 
+#buttonOpenAQData {
+    bottom: 3rem;
+    left: 20.5rem;
+}
+
+#buttonOpenAQData.FAB {
+    background: var(--dark-green);
+    border: 0.12rem solid var(--light-green);
+
+}
+
+#buttonOpenAQData i {
+    font-size: 20px;
+    color: var(--light-green);
+}
 /* #endregion */
 
+/* Agregate Results Box */
+#aggregateResults {
+position: absolute;
+  bottom: 1.6rem;
+  right: 1.6rem;
+  z-index: 999;
+  background: var(--light-green);
+  padding: 12px;
+  border-radius: 8px;
+  overflow-y: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  height: 46rem !important;  
+  width: 30rem;
+  display: none;
+
+}
+
+#aggregateResults.popup-table {
+    font-family: var(--body01);
+    font-size: 1.2rem;
+    line-height: 1.4;
+    color: var(--dark-green);
+    padding: 1.2rem 0;
+}
+
+#emissionsChart {
+    height: 19rem !important;
+    margin-top: 1.2rem;
+    font-size: 8px !important;
+}   
 
 /* Heatmap Control Box */
 #heatmapBox {
@@ -1038,83 +1074,90 @@ label {
 }
 
 
+/* #region Pop up styling */
 
-/* General popup container styling */
+/* Container */
 .popup-table {
-    font-family: 'Arial', sans-serif;
-    font-size: 12px;
-    color: #2c3e50;
-    background-color: #fafafa;
-    /* Softer white background */
-    max-width: 250px;
+  font-family: var(--body01);
+  font-size: 1.2rem;
+  line-height: 1.4;
+  color: var(--dark-green);
+  max-width: 24rem;
+  min-width: 16rem;
+  padding: 1.2rem 0;
 }
 
-/* Title/heading style */
+/* Type (small text on top) */
+.popup-table .type {
+  font-size: var(--heading06);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  margin: 0 1.2rem 0 0;
+}
+
+/* Name (bold) */
 .popup-table h3 {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #4b6151;
-    padding-bottom: 5px;
-    /* Keep the padding, but remove the border */
+  font-size: var(--heading05);
+  font-weight: var(--heading-bold-weight);
+  margin: 0 1.2rem 0 0;
 }
 
+/* Country, region, capacity */
+.popup-table div {
+  margin: 0.4rem 0;
+  font-size: var(--heading06);
+}
 
-/* Table styling for the popup content */
+/* Table styling for pollutants */
 .popup-table table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.4rem;
 }
 
-.popup-table th,
-.popup-table td {
-    padding: 5px;
-    text-align: left;
-    vertical-align: top;
+.popup-table table td {
+  padding: 0.2rem 0.4rem;
+  vertical-align: top;
 }
 
-.popup-table th {
-    font-weight: bold;
-    color: #4b6151;
-    /* Darker text for labels */
+.popup-table table td:first-child {
+  font-weight: bold;
+  width: 40%;
+  text-transform: uppercase;
+  color: var(--dark-green);
 }
 
-.popup-table td {
-    color: #555;
-    /* Softer gray for data */
+.popup-table table td:last-child {
+  text-align: right;
+  color: var(--dark-green);
 }
 
-/* Border below each row */
-.popup-table tr:not(:last-child) {
-    border-bottom: 0.5px solid #e6e6e6;
-    /* Light gray border */
-}
-
-/* Override the default Mapbox popup styles */
+/* Optional: popup box styling */
 .mapboxgl-popup-content {
-    border: 0.5px solid #d2cfcf;
-    /* Soft border */
-    background-color: #fafafa;
-    /* Softer white background */
-    border-radius: 16px;
-    /* More rounder corners */
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    /* Stronger shadow for elevation */
-    padding: 10px;
-    /* Ensure the content has some padding */
-}
-/* Override the aria-hidden attribute on the close button */
-.mapboxgl-popup-close-button{
-    visibility: none !important; /* Ensure the button is visible */
-    
+  border-radius: 2rem !important;
+  padding: 0.8rem 1.2rem !important;
+  background-color: var(--light-green) !important;
+  box-shadow: var(--shadow-short) !important;
 }
 
+.mapboxgl-popup-close-button {
+  top: 0.8rem !important;           
+  right: 0.8rem !important;        
+  color: var(--dark-green) !important;        
+  width: 20px !important;
+  height: 20px !important;
+  font-size: 14px !important;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+}
 
-/* Optional: Customize the popup arrow to match the content */
 .mapboxgl-popup-tip {
-    border-color: #fafafa;
-    /* Match the background color of the popup */
+  border-top-color: var(--light-green) !important; 
 }
+
+/* #endregion  */
+
 
 /* Navigation Buttons */
 #navBarButtons {

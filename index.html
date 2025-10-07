@@ -96,7 +96,7 @@
         </div>
       </div>
       <!------------------------------------------------------------- Basemap Menu ------------------------------------------------------------------>
-      <div id="basemapMenuButton"><i class="fas fa-globe"></i></div>
+      <div class= "FAB" id="basemapMenuButton"><i class="fas fa-globe"></i></div>
       <div id="menu">
         <button class="closeButton">&times;</button>
 
@@ -184,26 +184,25 @@
       </div>
 
       <!-------------------------------------------------------- Continent Switch Button ------------------------------------------------------------->
-      <div id="areaChange" title="Move to Africa">
+      <div class= "FAB" id="areaChange" title="Move to Africa">
         <i class="fas fa-globe-africa"></i>
       </div>
 
-      <!-- Loading spinner (add this inside the <body> of your HTML) -->
-      <div id="loadingSpinner" class="loading-spinner" style="display: none">
-        <div class="spinner"></div>
-        <p>Loading layers...</p>
+      <!-------------------------------------------------------- Air Quality Button ------------------------------------------------------------->
+      <div class= "FAB" id="buttonOpenAQData" title="Toggle Air Quality Layer">
+        <i class="fa-solid fa-wind"></i>
       </div>
 
       <!-------------------------------------------------------------- Aggregate Tool -------------------------------------------------------->
       <!-- Tooltip Element -->
       <div id="tooltip" class="tooltip-hidden">
-        Turn on the layers to see aggregated pollutant data.
+        Click on the map to aggregate data within the selected buffer size.
       </div>
 
       <!-- Aggregate Tool -->
       <div id="aggregateToolContainer">
         <!-- Aggregate Tool Button -->
-        <div id="aggregateTool" title="Aggregate Data">
+        <div class= "FAB" id="aggregateToolButton" title="Aggregate Data">
           <i class="fas fa-calculator"></i>
         </div>
 
@@ -211,8 +210,7 @@
         <select
           id="bufferSizeSelector"
           title="Select Buffer Size"
-          class="bufferSizeSelector-hidden"
-        >
+          class="bufferSizeSelector-hidden">
           <option value="5">5 km</option>
           <option value="10">10 km</option>
           <option value="20">20 km</option>
@@ -220,12 +218,20 @@
         </select>
       </div>
 
+      <div id="aggregateResults"></div>
+
       <!----------------------------------------------------------------- Map ----------------------------------------------------------------------->
 
       <div id="map"></div>
 
+      <!-- Loading spinner (add this inside the <body> of your HTML) -->
+      <div id="loadingSpinner" class="loading-spinner" style="display: none">
+        <div class="spinner"></div>
+        <p>Loading layers...</p>
+      </div>
+
       <!------------------------------------------------------------- Legend Layers ----------------------------------------------------------------->
-      <div id="legendButton">Legend</div>
+      <div id="legendButton">Layers</div>
       
       <div id="legend">
         <button class="closeButton">&times;</button>
@@ -259,15 +265,15 @@
               </div>
             </div>
 
-            <!-- Oil Gas  DOESNT WORK THE DATA -->
-            <div class="legend-section" id="legend-oil-gas" draggable="true">
+            <!-- Furnace Oil -->
+            <div class="legend-section" id="legend-furnace-oil" draggable="true">
               <label class="custom-checkbox">
-                <input id="toggleOilGas" type="checkbox" data-layer="oil_gas" checked/>
+                <input id="toggleFurnaceOil" type="checkbox" data-layer="furnace_oil" checked/>
                 <span class="checkmark"></span>
               </label>
               <div class="legend-name">
-                <img src="./src/assets/cross_oil-gas.png" alt="Fossil Fuel icon" class="legend-key-img"></img>
-                <p>Oil Gas Refineries</p>
+                <img src="./src/assets/cross_furnace-oil.png" alt="Furnace Oil icon" class="legend-key-img"></img>
+                <p>Furnace Oil</p>
               </div>
             </div>
         </div>
@@ -385,28 +391,11 @@
             </div>
         </div>
 
-        <div class="legend-group">
-          <div class="legend-group-title">Others</div>
-          
-          <!-- OpenAQ Stations -->
-          <div class="legend-section" id="legend-openaq_latest" draggable="true">
-            <label class="custom-checkbox">
-              <input id="toggleOpenAQ" type="checkbox" data-layer="openaq_latest" />
-              <span class="checkmark"></span>
-            </label>
-            <div class="legend-name">
-              <div class="legend-key" style="width: 1rem; height: 1rem; background-color: hsla(26, 91%, 50%, 0.5); border: 0.1rem solid hsla(26, 91%, 50%, 1)"></div>
-              <p>Air Quality Stations</p>
-            </div>
-          </div>
-
-        </div>
-         
 
 
            
 
-          <!-- Population Grid -->
+           <!-- Population Grid
           <div class="legend-section" id="legend-population" draggable="true">
             <input
               id="togglepop"
@@ -425,9 +414,9 @@
               <div class="label"></div>
               <div class="label">17192</div>
             </div>
-          </div>
+          </div> -->
 
-          <!-- Pollutant Decay -->
+          <!-- Pollutant Decay
           <div
             class="legend-section"
             id="legend-populationDecay"
@@ -447,7 +436,7 @@
               <div class="labeldecay"></div>
               <div class="labeldecay">Max</div>
             </div>
-          </div>
+          </div>  -->
 
 
           

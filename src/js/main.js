@@ -1,4 +1,4 @@
-import { loadGroupLayers, loadSymbolLayer } from './layers.js';
+import { loadGroupLayers, loadSymbolLayer  } from './layers.js';
 import { initializeGeocoder } from './geocoder.js';
 import { initializeBasemapMenu } from './basemapMenu.js';
 import { initializeAreaChange } from './areaChange.js';
@@ -65,13 +65,8 @@ map.on('load', () => {
     initializeADM3FilterPanel(map);
 });
 
-
-
 // -----------------------------------------------------------AREA CHANGE-----------------------------------------------------------
 initializeAreaChange(map);
-
-
-
 
 
 // ----------------------------------------------------------- MAP OVERLAY CHARTS-------------------------------------------------------------
@@ -85,3 +80,5 @@ map.on('load', () => {
 map.on('load', () => {
     initializeFilters(map);
 });
+
+

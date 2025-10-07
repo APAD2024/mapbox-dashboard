@@ -14,7 +14,8 @@ export const layerIds = [
   "brick_kilns_IND",
   "brick_kilns_BAN",
   "cement_IGP",
-  "oil_gas_IGP",
+   "furnace_oil_IGP",
+  //"oil_gas_IGP",
   "paper_pulp_IGP",
   "steel_IGP",
   "solid_waste_IGP",
@@ -109,7 +110,7 @@ export function fetchAndAddPollutionLayer(map) {
           source: "pollution_reports",
           layout: {
             "icon-image": "custom-marker",
-            "icon-size": 0.25,
+            "icon-size": 0.1,
             "icon-anchor": "bottom",
             visibility: "visible",
           },
@@ -220,56 +221,297 @@ async function fetchOpenAQLatestAsGeoJSON() {
   };
 }
 
-export async function loadOpenAQLayer(map, layerId, sourceId) {
+export function generatePopupHTML(properties) {
+  if (!properties) return "";
+
+  const type = properties.type ?? "";
+  const name = properties.name ?? "Unknown";
+  const country = properties.country ?? "Unknown";
+  const region = properties.region ?? "";
+  const capacity = properties.capacity ?? "---";
+  const pm10 = properties.pm10 ?? "---";
+  const pm25 = properties.pm25 ?? "---";
+  const so2 = properties.so2 ?? "---";
+  const nox = properties.nox ?? "---";
+
+  // Show region + country, but if region is empty, only show country
+  const locationText = region ? `${region}, ${country}` : country;
+
+  return `
+    <div class="popup-table">
+      ${type ? `<div class="type">${type}</div>` : ""}
+      <h3>${name}</h3>
+      <div>${locationText}</div>
+      <div>Capacity: ${capacity}</div>
+      <table>
+        <tr><td>PM10</td><td>${pm10}</td></tr>
+        <tr><td>PM2.5</td><td>${pm25}</td></tr>
+        <tr><td>SO2</td><td>${so2}</td></tr>
+        <tr><td>NOx</td><td>${nox}</td></tr>
+      </table>
+    </div>
+  `;
+}
+// Keep track of the currently open popup
+let currentPopup = null;
+
+// Reusable function to show a single popup at a time
+export function showPopup(map, lngLat, properties) {
+  if (currentPopup) {
+    currentPopup.remove();
+    currentPopup = null;
+  }
+
+  const html = generatePopupHTML(properties);
+
+  currentPopup = new mapboxgl.Popup()
+    .setLngLat(lngLat)
+    .setHTML(html)
+    .addTo(map);
+}
+
+
+export function loadOpenAQLayer(map) {
   showLoadingSpinner();
-  try {
-    const geojson = await fetchOpenAQLatestAsGeoJSON();
+  // Lazy load OpenAQ Air Quality layer
+  if (!map.getSource("openaq_latest")) {
+    showLoadingSpinner(); // Show the spinner while loading
 
-    // Add or update source
-    if (!map.getSource(sourceId)) {
-      map.addSource(sourceId, { type: "geojson", data: geojson });
-    } else {
-      map.getSource(sourceId).setData(geojson);
-    }
+    fetchOpenAQLatestAsGeoJSON()
+      .then((data) => {
+        // Add the GeoJSON as a new source
+        map.addSource("openaq_latest", {
+          type: "geojson",
+          data: data,
+        });
 
-    // Add circle layer if not already present
-    if (!map.getLayer(layerId)) {
-      map.addLayer({
-        id: layerId,
-        type: "circle",
-        source: sourceId,
-        paint: {
-          "circle-color": "hsla(26, 91%, 65%, 1)",
-          "circle-radius": 3,
-          "circle-stroke-width": 1,
-          "circle-stroke-color": "hsla(26, 91%, 50%, 1)",
-        },
-        layout: { visibility: "visible" },
-      });
+        // Add a circle layer for air quality stations
+        map.addLayer({
+          id: "openaq_latest",
+          type: "circle",
+          source: "openaq_latest",
+          paint: {
+            "circle-radius": 5,
+            "circle-color": "rgba(73, 84, 24, 1)",
+            "circle-stroke-width": 0.6,
+            "circle-stroke-color": "#fff",
+          },
+          layout: {
+            visibility: "none",
+          },
+        });
 
-      // Popup
-      map.on("click", layerId, (e) => {
-        const props = e.features[0].properties;
-        let tableRows = "";
-        for (const key in props) {
-          if (props[key] != null) {
-            tableRows += `<tr><th>${key}</th><td>${props[key]}</td></tr>`;
+        // Add popups for air quality stations
+        map.on("click", "openaq_latest", (e) => {
+          const properties = e.features[0].properties;
+
+          // Dynamically generate rows for available pollutants
+          const excludeKeys = [
+            "id",
+            "name",
+            "lat",
+            "lon",
+            "type",
+            "fuel",
+            "region",
+            "country",
+            "status",
+            "capacity",
+            "last_update",
+          ];
+          let tableRows = "";
+
+          // Function to convert numbers in string to subscript using <sub> tags
+          function toSubTag(str) {
+            return str.replace(/(\d+)/g, "<sub>$1</sub>");
           }
-        }
-        const popupHTML = `
-          <div class="popup-table">
-            <h3>${props.name || "Air Quality Station"}</h3>
-            <table>${tableRows}</table>
-          </div>`;
-        new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+
+          // Inside your popup generation loop
+          for (const [key, value] of Object.entries(properties)) {
+            if (!excludeKeys.includes(key) && value != null) {
+              // Format the label
+              let label = key.replace(/([a-z])([A-Z])/g, "$1 $2").toUpperCase();
+
+              // Special case for PM25 -> PM2.5
+              if (label === "PM25") label = "PM2.5";
+
+              // Wrap any numbers in <sub>
+              label = toSubTag(label);
+
+              const roundedValue = Number(value).toFixed(2);
+
+              tableRows += `
+            <tr>
+                <td><strong>${label}</strong></td>
+                <td>${roundedValue}</td>
+            </tr>
+        `;
+            }
+          }
+
+          // Add last_update row if exists
+          if (properties.last_update) {
+            tableRows += `
+                        <tr>
+                            <td><strong>Last Update<strong></td>
+                            <td>${properties.last_update}</td>
+                        </tr>
+                    `;
+          }
+
+          const popupContent = `
+                    <div class="popup-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Pollutant</th>
+                                    <th>Value (µg/m³)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${
+                                  tableRows ||
+                                  '<tr><td colspan="2">No recent measurements</td></tr>'
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+          new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(popupContent)
+            .addTo(map);
+        });
+
+        hideLoadingSpinner(); // Hide the spinner after loading
+      })
+      .catch((error) => {
+        console.error("Error loading OpenAQ data:", error);
+        hideLoadingSpinner(); // Hide spinner even if there is an error
+      });
+  }
+}
+
+export function loadGroupLayers(
+  map,
+  layerId,
+  sourceId,
+  url,
+  circleColor = "#000",
+  circleRadius = 5,
+  strokeWidth = 2,
+  strokeColor = "#fff"
+) {
+  showLoadingSpinner();
+
+  return fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      // Add or update the source
+      if (!map.getSource(sourceId)) {
+        map.addSource(sourceId, { type: "geojson", data });
+      } else {
+        map.getSource(sourceId).setData(data); // update data if already exists
+      }
+
+      // Add the circle layer only if it doesn't exist
+      if (!map.getLayer(layerId)) {
+        map.addLayer({
+          id: layerId,
+          type: "circle",
+          source: sourceId,
+          paint: {
+            "circle-color": circleColor,
+            "circle-radius": circleRadius,
+            "circle-stroke-width": strokeWidth,
+            "circle-stroke-color": strokeColor
+                    },
+          layout: { visibility: "visible" },
+        });
+      }
+
+    // popup
+    if (!isAggregateToolEnabled()) {
+    map.on("click", layerId, (e) => {
+    showPopup(map, e.lngLat, e.features[0].properties);
+    });
+    }
+
+      hideLoadingSpinner();
+    })
+    .catch(err => {
+      console.error(`Error loading layer ${layerId}:`, err);
+      hideLoadingSpinner();
+    });
+}
+
+export async function loadSymbolLayer(
+  map,
+  layerId,
+  sourceId,
+  url,
+  imageSrc,     // local path to your image
+  iconSize = 1
+) {
+  showLoadingSpinner();
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!map.getSource(sourceId)) {
+      map.addSource(sourceId, { type: "geojson", data });
+    } else {
+      map.getSource(sourceId).setData(data);
+    }
+    
+
+    // Unique image name (can prefix with layerId)
+    const imageName = `${layerId}-icon`;
+
+    // Only add the image if it doesn't already exist
+    if (!map.hasImage(imageName)) {
+      await new Promise((resolve, reject) => {
+        map.loadImage(imageSrc, (err, image) => {
+          if (err) return reject(err);
+          try {
+            map.addImage(imageName, image);
+            resolve();
+          } catch (e) {
+            // Ignore if image already exists (race condition)
+            resolve();
+          }
+        });
       });
     }
+
+    // Then use that imageName in the layer
+    map.addLayer({
+      id: layerId,
+      type: "symbol",
+      source: sourceId,
+      layout: {
+        "icon-image": imageName,
+        "icon-size": iconSize,
+        visibility: "visible",
+      },
+    });
+
+    // popup
+    if (!isAggregateToolEnabled()) {
+    map.on("click", layerId, (e) => {
+    showPopup(map, e.lngLat, e.features[0].properties);
+    });
+    }
+
   } catch (err) {
-    console.error(`Error loading OpenAQ layer ${layerId}:`, err);
+    console.error(`Error loading symbol layer ${layerId}:`, err);
   } finally {
     hideLoadingSpinner();
   }
 }
+
 
 // Reusable function to add data layers with fetch and lazy loading
 // export function addDataLayers(map) {
@@ -1485,151 +1727,5 @@ export async function loadOpenAQLayer(map, layerId, sourceId) {
 //   }
 //   return Promise.resolve();
 // }
-
-
-
-export function loadGroupLayers(
-  map,
-  layerId,
-  sourceId,
-  url,
-  circleColor = "#000",
-  circleRadius = 5,
-  strokeWidth = 2,
-  strokeColor = "#fff"
-) {
-  showLoadingSpinner();
-
-  return fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      // Add or update the source
-      if (!map.getSource(sourceId)) {
-        map.addSource(sourceId, { type: "geojson", data });
-      } else {
-        map.getSource(sourceId).setData(data); // update data if already exists
-      }
-
-      // Add the circle layer only if it doesn't exist
-      if (!map.getLayer(layerId)) {
-        map.addLayer({
-          id: layerId,
-          type: "circle",
-          source: sourceId,
-          paint: {
-            "circle-color": circleColor,
-            "circle-radius": circleRadius,
-            "circle-stroke-width": strokeWidth,
-            "circle-stroke-color": strokeColor
-                    },
-          layout: { visibility: "visible" },
-        });
-      }
-
-      // Optional popup
-      if (!isAggregateToolEnabled()) {
-        map.on("click", layerId, (e) => {
-          const props = e.features[0].properties;
-          let tableRows = "";
-          for (const key in props) {
-            if (props[key] != null && key !== "name" && key !== "country") {
-              tableRows += `<tr><th>${key}</th><td>${props[key]}</td></tr>`;
-            }
-          }
-          const popupHTML = `
-            <div class="popup-table">
-              <h3>${props.name || ""}${props.country ? ", " + props.country : ""}</h3>
-              <table>${tableRows}</table>
-            </div>
-          `;
-          new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
-        });
-      }
-
-      hideLoadingSpinner();
-    })
-    .catch(err => {
-      console.error(`Error loading layer ${layerId}:`, err);
-      hideLoadingSpinner();
-    });
-}
-
-export async function loadSymbolLayer(
-  map,
-  layerId,
-  sourceId,
-  url,
-  imageSrc,     // local path to your image
-  iconSize = 1
-) {
-  showLoadingSpinner();
-
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (!map.getSource(sourceId)) {
-      map.addSource(sourceId, { type: "geojson", data });
-    } else {
-      map.getSource(sourceId).setData(data);
-    }
-    
-
-    // Unique image name (can prefix with layerId)
-    const imageName = `${layerId}-icon`;
-
-    // Only add the image if it doesn't already exist
-    if (!map.hasImage(imageName)) {
-      await new Promise((resolve, reject) => {
-        map.loadImage(imageSrc, (err, image) => {
-          if (err) return reject(err);
-          try {
-            map.addImage(imageName, image);
-            resolve();
-          } catch (e) {
-            // Ignore if image already exists (race condition)
-            resolve();
-          }
-        });
-      });
-    }
-
-    // Then use that imageName in the layer
-    map.addLayer({
-      id: layerId,
-      type: "symbol",
-      source: sourceId,
-      layout: {
-        "icon-image": imageName,
-        "icon-size": iconSize,
-        visibility: "visible",
-      },
-    });
-
-    if (!isAggregateToolEnabled()) {
-      map.on("click", layerId, (e) => {
-        const props = e.features[0].properties;
-        let tableRows = "";
-        for (const key in props) {
-          if (props[key] != null && key !== "name" && key !== "country") {
-            tableRows += `<tr><th>${key}</th><td>${props[key]}</td></tr>`;
-          }
-        }
-        const popupHTML = `
-          <div class="popup-table">
-            <h3>${props.name || ""}${props.country ? ", " + props.country : ""}</h3>
-            <table>${tableRows}</table>
-          </div>
-        `;
-        new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
-      });
-    }
-
-  } catch (err) {
-    console.error(`Error loading symbol layer ${layerId}:`, err);
-  } finally {
-    hideLoadingSpinner();
-  }
-}
 
 

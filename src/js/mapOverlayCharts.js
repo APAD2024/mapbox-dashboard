@@ -10,9 +10,6 @@ const pollutantLayers = [
     'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA'
 ];
 
-
-
-
 export function initializeOverlayCharts(map) {
     const collapseBtn = document.getElementById('collapseBtn');
     const expandBtn = document.getElementById('expandBtn');

@@ -27,7 +27,7 @@ let layerVisibility = {};
 const defaultLayerIds = [
     'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN',
     'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_igp',
-    'oil_gas_igp', 'paper_pulp_igp', 'steel_igp',
+    'furnace_oil_IGP', 'paper_pulp_igp', 'steel_igp',
     'solid_waste_igp', 'coal_africa', 'cement_africa', 'paper_pulp_africa',
     'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA',
     'brick_kilns_NGA', 'adm3_PAK', 'adm3_IND', 'adm3_BAN','boilers','pollution_reports','openaq_latest'
@@ -92,7 +92,6 @@ export function toggleLayerVisibility(map, layerIds, isChecked) {
         }
     });
 }
-
 /**
  * Sets up a toggle for a group of layers
  * @param {Object} map - The Mapbox or Leaflet map instance
@@ -141,8 +140,16 @@ export function setupGroupLayerToggle(map, checkboxId, layers) {
 
     const loadAndToggle = (layer, show) => {
         if (!loadedLayers[layer.id]) {
-            loadedLayers[layer.id] = layer.load(map,).then(() => {
+            loadedLayers[layer.id] = layer.load(map).then(() => {
                 toggleLayerVisibility(map, layer.id, show);
+
+                // Add pointer cursor on hover for this layer
+                map.on('mouseenter', layer.id, () => {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                map.on('mouseleave', layer.id, () => {
+                    map.getCanvas().style.cursor = aggregateToolEnabled ? 'crosshair' : '';
+                });
             });
         } else {
             toggleLayerVisibility(map, layer.id, show);
@@ -159,6 +166,7 @@ export function setupGroupLayerToggle(map, checkboxId, layers) {
         layers.forEach(layer => loadAndToggle(layer, show));
     });
 }
+
 
 // Function to get HSLA color from CSS variable with optional alpha (opacity) override
 function hslaVar(varName, alpha = 1) {
@@ -196,14 +204,14 @@ export function initializeLayerVisibilityControls(map) {
         "coal",
         "coal_IGP",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Coal+Plants/coal_plants_main.geojson",
-        "./src/assets/cross_coal.png", 0.25
+        "./src/assets/cross_coal.png", 0.1
         )},
         { id: "coal_africa", load: (map) => loadSymbolLayer(
         map,
         "coal_africa",
         "coal_Afc",
         "https://gist.githubusercontent.com/Mseher/b3f5e885ddae2b90be7048f87896ef48/raw/57db894dc8237b9d09a8f3ed1a5e114400cfc49f/Africa_Coal.geojson",
-         "./src/assets/cross_coal.png", 0.25
+         "./src/assets/cross_coal.png", 0.1
         )}
     ]);
 
@@ -213,21 +221,19 @@ export function initializeLayerVisibilityControls(map) {
             "fossil",
             "fossil_fuel",
             "https://gist.githubusercontent.com/bilalpervaiz/597c50eff1747c1a3c8c948bef6ccc19/raw/6984d3a37d75dc8ca7489ee031377b2d57da67d2/fossil_fuel.geojson",
-           "./src/assets/cross_fossil-fuel.png", 0.25
+           "./src/assets/cross_fossil-fuel.png", 0.1
         )}
     ]);
 
-    // Doesnt work dataset - access denied
-    // setupGroupLayerToggle(map, "toggleOilGas", [
-    //     { id: "oil_gas_IGP", load: (map) => loadGroupLayers(
-    //         map,
-    //         "oil_gas_IGP",
-    //         "oilgasIGP",
-    //         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/oil_gas_refining_main.geojson",
-    //            "./src/assets/cross_oil-gas.png", 0.25
-
-    //     )}
-    // ]);
+    setupGroupLayerToggle(map, "toggleFurnaceOil", [
+        { id: "furnace_oil_IGP", load: (map) => loadSymbolLayer(
+            map,
+            "furnace_oil_IGP",
+            "furnaceoilIGP",
+            "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_main.geojson",
+               "./src/assets/cross_furnace-oil.png", 0.1
+        )}
+    ]);
 
     
     //Group 2: Manufacturing or secondary energy generation (Circles)
@@ -295,7 +301,7 @@ export function initializeLayerVisibilityControls(map) {
         "solid_waste_IGP",
         "solidWasteIGP",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Plastic+and+Landfill+Sites/waste_main.geojson",
-        "./src/assets/plus_land-fill-waste.png", 0.25
+        "./src/assets/plus_land-fill-waste.png", 0.1
         )}
     ]);
 
@@ -305,16 +311,11 @@ export function initializeLayerVisibilityControls(map) {
         "gpw",
         "GPW",
         "https://gist.githubusercontent.com/bilalpervaiz/e2c93d2017fc1ed90f9a6d5259701a5e/raw/4dd19fe557d29b9268f11e233169948e95c24803/GPW.geojson",
-        "./src/assets/plus_gpw.png", 0.25)}
+        "./src/assets/plus_gpw.png", 0.1)}
     ]);
 
     const layerPromise = fetchAndAddPollutionLayer(map);
     setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
-
-    setupGroupLayerToggle(map, "toggleOpenAQ", [
-    { id: "openaq_latest_layer", load: (map) => loadOpenAQLayer(map, "openaq_latest_layer", "openaq_latest")
-    },
-    ]);
 
     //   setupGroupLayerToggle(map, "toggleOilGas", [
     //     { id: "oil_gas_IGP", load: (map) => loadGroupLayers(
@@ -382,4 +383,5 @@ export function initializeLayerVisibilityControls(map) {
     //     )
     //     },
     //     ]);
+
 
