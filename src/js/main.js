@@ -8,7 +8,7 @@ import { initializeLayerVisibilityControls } from './layerVisibility.js';
 import { initializeLegend } from './legend.js';
 
 
-import { initializeOverlayCharts } from './mapOverlayCharts.js';
+// import { initializeOverlayCharts } from './mapOverlayCharts.js';
 
 import { initializeFilters } from './filters.js';
 
@@ -71,9 +71,9 @@ initializeAreaChange(map);
 
 // ----------------------------------------------------------- MAP OVERLAY CHARTS-------------------------------------------------------------
 
-map.on('load', () => {
-    initializeOverlayCharts(map);
-});
+// map.on('load', () => {
+//     initializeOverlayCharts(map);
+// });
 
 
 // --------------------------------------------------------POLLUTANT FILETRS-------------------------------------------------------

@@ -18,6 +18,7 @@ import {
 
 import { loadGroupLayers, fetchAndAddPollutionLayer, loadSymbolLayer, loadOpenAQLayer } from './layers.js';
 
+
 const layerPromise = fetchAndAddPollutionLayer(map);
 setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
 // Store visibility states
