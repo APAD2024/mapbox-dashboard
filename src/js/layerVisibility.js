@@ -332,6 +332,37 @@ export function initializeLayerVisibilityControls(map) {
       // Setup other groups or single layers similarly...
 }
 
+
+export function buttonLayerVisibility(map, layerId, isVisible) {
+  if (!map.getLayer(layerId)) return;
+  map.setLayoutProperty(layerId, 'visibility', isVisible ? 'visible' : 'none');
+}
+
+export function initLayerVisibility(map) {
+  const aqButton = document.getElementById('buttonOpenAQData');
+  const tooltipAQ = document.getElementById('tooltipAQ');
+
+  if (aqButton) {
+    aqButton.addEventListener('click', async () => {
+      const layerId = 'openaq_latest';
+
+      // If not loaded, load first
+      if (!map.getLayer(layerId)) {
+        await loadOpenAQLayer(map);
+      }
+
+
+      const currentVisibility = map.getLayoutProperty(layerId, 'visibility');
+      const isVisible = currentVisibility === 'visible';
+
+      buttonLayerVisibility(map, layerId, !isVisible);
+      aqButton.classList.toggle('active', !isVisible);
+      tooltipAQ.style.display = !isVisible ? 'block' : 'none';
+    });
+  }
+}
+
+
     // Standard Industry Layer Toggles
     //setupLayerToggle(map, 'toggleCoal', 'coal');
     // setupLayerToggle(map, 'toggleFossil', 'fossil');

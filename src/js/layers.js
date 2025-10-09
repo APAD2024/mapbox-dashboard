@@ -273,6 +273,7 @@ export function showPopup(map, lngLat, properties) {
 
 export function loadOpenAQLayer(map) {
   showLoadingSpinner();
+
   // Lazy load OpenAQ Air Quality layer
   if (!map.getSource("openaq_latest")) {
     showLoadingSpinner(); // Show the spinner while loading
@@ -291,13 +292,13 @@ export function loadOpenAQLayer(map) {
           type: "circle",
           source: "openaq_latest",
           paint: {
-            "circle-radius": 5,
-            "circle-color": "rgba(73, 84, 24, 1)",
+            "circle-radius": 3,
+            "circle-color":  "#C3D1CE",
             "circle-stroke-width": 0.6,
-            "circle-stroke-color": "#fff",
+            "circle-stroke-color": "#112F30",
           },
           layout: {
-            visibility: "none",
+            visibility: 'visible',
           },
         });
 

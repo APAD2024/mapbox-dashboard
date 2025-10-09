@@ -278,6 +278,8 @@ html {
     right: 1.6rem;
 }
 
+
+
 #areaChange i {
     font-size: 20px;
     transition: font-size 0.3s ease;
@@ -297,14 +299,23 @@ html {
 
 #aggregateToolButton.FAB {
     position: static;
-    background: var(--dark-green);
-    border: 0.12rem solid var(--light-green);
 }
 
 #aggregateToolButton i {
     font-size: 20px;
-    color: var(--light-green);
+    color: var(--dark-green);
 }
+
+#aggregateToolButton.FAB.active {
+  background-color: var(--dark-green);
+  color: var(--light-green);
+  border: 0.12rem solid var(--light-green);
+}
+
+#aggregateToolButton.FAB.active i{
+  color: var(--light-green);
+}
+
 
 /* Buffer Size Dropdown Styling */
 #bufferSizeSelector {
@@ -354,9 +365,39 @@ html {
 }
 
 /* CSS class to hide the tooltip */
-.tooltip-hidden {
+.tooltip-hidden  {
     display: none;
 }
+
+#tooltipAQ {
+    position: fixed; 
+    top: 10rem;
+    left: 50%;          
+    transform: translateX(-50%);
+    height: fit-content;
+    background-color: var(--dark-green);
+    padding: 0.8rem 1.6rem;
+    border-radius: 5rem;
+    z-index: 1000;
+    display: none;           
+    color: var(--light-green);
+    white-space: nowrap;     
+    font-size: 1.6rem;
+    opacity: 0.8;
+    border: 0.12rem solid var(--light-green);
+
+}
+
+/* CSS class to show the tooltip */
+.tooltip-visible {
+    display: block;
+}
+
+/* CSS class to hide the tooltip */
+.tooltip-hidden  {
+    display: none;
+}
+
 
 #menu {
     position: absolute;
@@ -376,16 +417,22 @@ html {
     left: 20.5rem;
 }
 
-#buttonOpenAQData.FAB {
-    background: var(--dark-green);
-    border: 0.12rem solid var(--light-green);
-
-}
-
 #buttonOpenAQData i {
     font-size: 20px;
-    color: var(--light-green);
+    color: var(--dark-green);
 }
+
+#buttonOpenAQData.active {
+  background-color: var(--dark-green);
+  color: var(--light-green);
+  border: 0.12rem solid var(--light-green);
+}
+
+#buttonOpenAQData.active i{
+  color: var(--light-green);
+}
+
+
 /* #endregion */
 
 /* Agregate Results Box */

@@ -3,6 +3,7 @@ import { initializeGeocoder } from './geocoder.js';
 import { initializeBasemapMenu } from './basemapMenu.js';
 import { initializeAreaChange } from './areaChange.js';
 import { initAggregateTool } from './aggregateTool.js';
+import { initLayerVisibility } from './layerVisibility.js';
 
 import { initializeLayerVisibilityControls } from './layerVisibility.js';
 import { initializeLegend } from './legend.js';
@@ -37,6 +38,8 @@ map.on('load', () => {
     loadSymbolLayer(map);
     initAggregateTool(map);
     initializeGeocoder(map);
+    initLayerVisibility(map); 
+    initializeFilters(map);
 });
 
 
@@ -67,18 +70,4 @@ map.on('load', () => {
 
 // -----------------------------------------------------------AREA CHANGE-----------------------------------------------------------
 initializeAreaChange(map);
-
-
-// ----------------------------------------------------------- MAP OVERLAY CHARTS-------------------------------------------------------------
-
-// map.on('load', () => {
-//     initializeOverlayCharts(map);
-// });
-
-
-// --------------------------------------------------------POLLUTANT FILETRS-------------------------------------------------------
-map.on('load', () => {
-    initializeFilters(map);
-});
-
 

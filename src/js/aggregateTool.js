@@ -7,6 +7,34 @@ let aggregateToolEnabled = false;
 let emissionsChart;
 let countsChart;
 
+// Brick kiln layers (add all variants here)
+const BRICK_KILN_LAYERS = [
+  "brick_kilns_PK",
+  "brick_kilns_IND",
+  "brick_kilns_BAN",
+  "brick_kilns_DRC",
+  "brick_kilns_GHA",
+  "brick_kilns_UGA",
+  "brick_kilns_NGA"
+];
+
+// All other emission-related layers
+const COUNTABLE_LAYERS = [
+  'coal',
+  'coal_africa',
+  'fossil',
+  'furnace_oil_IGP',
+  'steel_IGP',
+  'steel_africa',
+  'paper_pulp_IGP',
+  'paper_pulp_africa',
+  'cement_IGP',
+  'cement_africa',
+  'boilers',
+  'solid_waste_IGP',
+  'gpw'
+];
+
 const layerNames = {
     'coal': 'Coal Plants',
     'coal_africa': 'Coal Plants',
@@ -119,6 +147,7 @@ function handleAggregation(map, lngLat) {
     resultBox.style.display = 'block';
     resultBox.innerHTML = `
         <h5>Aggregated Data (${bufferRadius} km buffer)</h5>
+        <p>Brick Kilns: </p>
         <canvas id="emissionsChart" width="400" height="250"></canvas>
         <canvas id="countsChart" width="400" height="250"></canvas>
     `;
@@ -152,51 +181,77 @@ function handleAggregation(map, lngLat) {
 }
 
 
-// Dynamic bar chart counting points per visible layer
 function generateCountsChart(map, buffer) {
     const layerCounts = {};
+    let brickKilnsCount = 0;
 
     map.getStyle().layers.forEach(layer => {
-        if (map.getLayer(layer.id) && map.getLayoutProperty(layer.id, 'visibility') === 'visible') {
-            const features = map.queryRenderedFeatures({ layers: [layer.id] });
+        const id = layer.id;
+
+        // skip layers not in either list
+        if (!BRICK_KILN_LAYERS.includes(id) && !COUNTABLE_LAYERS.includes(id)) return;
+
+        if (map.getLayer(id) && map.getLayoutProperty(id, 'visibility') === 'visible') {
+            const features = map.queryRenderedFeatures({ layers: [id] });
 
             let count = 0;
             features.forEach(feature => {
-                if (feature.geometry.type === 'Point' && turf.booleanPointInPolygon(turf.point(feature.geometry.coordinates), buffer)) {
+                if (
+                    feature.geometry.type === 'Point' &&
+                    turf.booleanPointInPolygon(turf.point(feature.geometry.coordinates), buffer)
+                ) {
                     count++;
                 }
             });
 
-            if (count > 0) layerCounts[layer.id] = count;
+            if (count > 0) {
+                if (BRICK_KILN_LAYERS.includes(id)) {
+                    brickKilnsCount += count; // count but don’t add to chart
+                } else if (COUNTABLE_LAYERS.includes(id)) {
+                    layerCounts[id] = count;
+                }
+            }
         }
     });
 
-    const labels = Object.keys(layerCounts).map(id => layerNames[id] || id);    
+    // Update “Brick Kilns” text
+    const resultBox = document.getElementById('aggregateResults');
+    const brickKilnsParagraph = resultBox.querySelector('p');
+    brickKilnsParagraph.textContent = `Brick Kilns: ${brickKilnsCount.toLocaleString()}`;
+
+    // Create bar chart for the other layers
+    const labels = Object.keys(layerCounts).map(id => layerNames[id] || id);
     const values = Object.values(layerCounts);
     const colors = Object.keys(layerCounts).map(id => layerColors[id] || 'gray');
 
-
     const ctx = document.getElementById('countsChart').getContext('2d');
-
     if (countsChart) countsChart.destroy();
 
     countsChart = new Chart(ctx, {
         type: 'bar',
-        data: { 
-            labels, datasets: [{ 
-                label: 'Number of Points', 
-                data: values, 
-                backgroundColor: colors, 
-                borderColor: colors.map(c => c.replace('0.6', '1')), 
+        data: {
+            labels,
+            datasets: [{
+                label: 'Number of Points',
+                data: values,
+                backgroundColor: colors,
+                borderColor: colors.map(c => c.replace('0.6', '1')),
                 borderWidth: 1,
-            }] },
+            }]
+        },
         options: {
             responsive: true,
-            plugins: { title: { display: true, text: 'Point Counts per Layer' }, legend: { display: false } },
+            plugins: {
+                title: { display: true, text: 'Point Counts per Layer' },
+                legend: { display: false }
+            },
             scales: { y: { beginAtZero: true } }
         }
     });
 }
+
+
+
 
 function generateEmissionsChart(emissionsData) {
     const emissionProperties = ['nox', 'so2', 'pm10', 'pm25'];
