@@ -64,9 +64,9 @@ map.on('load', () => {
 });
 
 
-map.on('load', () => {
-    initializeADM3FilterPanel(map);
-});
+// map.on('load', () => {
+//     initializeADM3FilterPanel(map);
+// });
 
 // -----------------------------------------------------------AREA CHANGE-----------------------------------------------------------
 initializeAreaChange(map);

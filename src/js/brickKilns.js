@@ -5,7 +5,7 @@ import { logLayerVisibility } from './layerVisibility.js';
 
 let  brick_kilns_PK_hex, brick_kilns_IND_hex, brick_kilns_BAN_hex;
 const layerIds = [
-    'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA'
+    'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'brick_kilns_PK_hex', 'brick_kilns_IND_hex', 'brick_kilns_BAN_hex', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA'
 ];
 
 export let brickKilnPKLoaded = false;
@@ -14,7 +14,7 @@ export let brickKilnBANLoaded = false;
 
 
 export function loadBrickKilnLayerPKhex(map) {
-    if (!map.getSource('brick_kilns_PK_hex')) {
+    if (!map.getSource('brickKilnsPKHex')) {
         showLoadingSpinner(); // Show the spinner while loading
 
         // Fetch the brick kilns GeoJSON data and create a hexagonal grid
@@ -34,16 +34,16 @@ export function loadBrickKilnLayerPKhex(map) {
                 });
 
                 // Add the hex grid as a source
-                map.addSource('brick_kilns_PK_hex', {
+                map.addSource('brickKilnsPKHex', {
                     type: 'geojson',
                     data: hexGrid
                 });
 
                 // Add the hexagonal grid as a fill layer
                 map.addLayer({
-                    'id': 'brick_kilns_PK',
+                    'id': 'brick_kilns_PK_hex',
                     'type': 'fill',
-                    'source': 'brick_kilns_PK_hex',
+                    'source': 'brickKilnsPKHex',
                     'maxzoom': 12,
                     layout: {
                         visibility: 'visible'  // Make the grid visible immediately
@@ -73,14 +73,14 @@ export function loadBrickKilnLayerPKhex(map) {
 
                 // Wait for the map to become idle, meaning all sources and tiles have been loaded
                 map.on('idle', function () {
-                    if (map.getLayer('brick_kilns_PK') && map.getSource('brick_kilns_PK_hex')) {
+                    if (map.getLayer('brickKilnsPKHex') && map.getSource('brickKilnsPKHex')) {
                         hideLoadingSpinner();  // Hide the spinner once the grid is fully loaded
                     }
                 });
 
                 if (!isAggregateToolEnabled()) {
                     // Add a click event to display a popup with brick kiln density details
-                    map.on('click', 'brick_kilns_PK', (e) => {
+                    map.on('click', 'brick_kilns_PK_hex', (e) => {
                         if (!isAggregateToolEnabled()) {
                             const properties = e.features[0].properties;
 
@@ -103,12 +103,12 @@ export function loadBrickKilnLayerPKhex(map) {
                     });
 
                     // Change the cursor to pointer when hovering over the grid
-                    map.on('mouseenter', 'brick_kilns_PK', () => {
+                    map.on('mouseenter', 'brick_kilns_PK_hex', () => {
                         map.getCanvas().style.cursor = 'pointer';
                     });
 
                     // Reset the cursor when leaving the grid
-                    map.on('mouseleave', 'brick_kilns_PK', () => {
+                    map.on('mouseleave', 'brick_kilns_PK_hex', () => {
                         map.getCanvas().style.cursor = '';
                     });
                 }
@@ -120,13 +120,13 @@ export function loadBrickKilnLayerPKhex(map) {
             });
 
     } else {
-        map.setLayoutProperty('brick_kilns_PK', 'visibility', 'visible');
+        map.setLayoutProperty('brick_kilns_PK_hex', 'visibility', 'visible');
     }
 }
 
 
 export function loadBrickKilnLayerINDhex(map) {
-    if (!map.getSource('brick_kilns_IND_hex')) {
+    if (!map.getSource('brickKilnsINDHex')) {
         showLoadingSpinner();
 
         fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_IND_coal.geojson')
@@ -141,15 +141,15 @@ export function loadBrickKilnLayerINDhex(map) {
                     hex.properties.pointCount = pointsWithinHex.features.length;
                 });
 
-                map.addSource('brick_kilns_IND_hex', {
+                map.addSource('brickKilnsINDHex', {
                     type: 'geojson',
                     data: hexGrid
                 });
 
                 map.addLayer({
-                    'id': 'brick_kilns_IND',
+                    'id': 'brick_kilns_IND_hex',
                     'type': 'fill',
-                    'source': 'brick_kilns_IND_hex',
+                    'source': 'brickKilnsINDHex',
                     'maxzoom': 12,
                     layout: {
                         visibility: 'visible' // Fix typo: should be 'visible'
@@ -182,14 +182,14 @@ export function loadBrickKilnLayerINDhex(map) {
 
                 // Wait for the map to become idle, meaning all sources and tiles have been loaded
                 map.on('idle', function () {
-                    if (map.getLayer('brick_kilns_IND') && map.getSource('brick_kilns_IND_hex')) {
+                    if (map.getLayer('brick_kilns_IND_hex') && map.getSource('brickKilnsINDHex')) {
                         hideLoadingSpinner();  // Hide the spinner once the grid is fully loaded
                     }
                 });
 
                 if (!isAggregateToolEnabled()) {
                     // Add popup click event
-                    map.on('click', 'brick_kilns_IND', (e) => {
+                    map.on('click', 'brick_kilns_IND_hex', (e) => {
                         if (!isAggregateToolEnabled()) {
                             const properties = e.features[0].properties;
                             const popupContent = `
@@ -209,11 +209,11 @@ export function loadBrickKilnLayerINDhex(map) {
                     });
 
                     // Change cursor to pointer when hovering over the grid
-                    map.on('mouseenter', 'brick_kilns_IND', () => {
+                    map.on('mouseenter', 'brick_kilns_IND_hex', () => {
                         map.getCanvas().style.cursor = 'pointer';
                     });
 
-                    map.on('mouseleave', 'brick_kilns_IND', () => {
+                    map.on('mouseleave', 'brick_kilns_IND_hex', () => {
                         map.getCanvas().style.cursor = '';
                     });
                 }
@@ -225,12 +225,12 @@ export function loadBrickKilnLayerINDhex(map) {
                 hideLoadingSpinner();
             });
     } else {
-        map.setLayoutProperty('brick_kilns_IND', 'visibility', 'visible');
+        map.setLayoutProperty('brick_kilns_IND_hex', 'visibility', 'visible');
     }
 }
 
 export function loadBrickKilnLayerBANhex(map) {
-    if (!map.getSource('brick_kilns_BAN_hex')) {
+    if (!map.getSource('brickKilnsBANHex')) {
         showLoadingSpinner();
 
         fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson')
@@ -245,15 +245,15 @@ export function loadBrickKilnLayerBANhex(map) {
                     hex.properties.pointCount = pointsWithinHex.features.length;
                 });
 
-                map.addSource('brick_kilns_BAN_hex', {
+                map.addSource('brickKilnsBANHex', {
                     type: 'geojson',
                     data: hexGrid
                 });
 
                 map.addLayer({
-                    'id': 'brick_kilns_BAN',
+                    'id': 'brick_kilns_BAN_hex',
                     'type': 'fill',
-                    'source': 'brick_kilns_BAN_hex',
+                    'source': 'brickKilnsBANHex',
                     'maxzoom': 12,
                     layout: {
                         visibility: 'visible' // Fix typo: should be 'visible'
@@ -285,14 +285,14 @@ export function loadBrickKilnLayerBANhex(map) {
                 });
                 // Wait for the map to become idle, meaning all sources and tiles have been loaded
                 map.on('idle', function () {
-                    if (map.getLayer('brick_kilns_BAN') && map.getSource('brick_kilns_BAN_hex')) {
+                    if (map.getLayer('brick_kilns_BAN_hex') && map.getSource('brickKilnsBANHex')) {
                         hideLoadingSpinner();  // Hide the spinner once the grid is fully loaded
                     }
                 });
 
                 if (!isAggregateToolEnabled()) {
                     // Add popup click event
-                    map.on('click', 'brick_kilns_BAN', (e) => {
+                    map.on('click', 'brick_kilns_BAN_hex', (e) => {
                         if (!isAggregateToolEnabled()) {
                             const properties = e.features[0].properties;
                             const popupContent = `
@@ -311,11 +311,11 @@ export function loadBrickKilnLayerBANhex(map) {
 
                     });
 
-                    map.on('mouseenter', 'brick_kilns_BAN', () => {
+                    map.on('mouseenter', 'brick_kilns_BAN_hex', () => {
                         map.getCanvas().style.cursor = 'pointer';
                     });
 
-                    map.on('mouseleave', 'brick_kilns_BAN', () => {
+                    map.on('mouseleave', 'brick_kilns_BAN_hex', () => {
                         map.getCanvas().style.cursor = '';
                     });
                 }
@@ -327,7 +327,7 @@ export function loadBrickKilnLayerBANhex(map) {
                 hideLoadingSpinner();
             });
     } else {
-        map.setLayoutProperty('brick_kilns_BAN', 'visibility', 'visible');
+        map.setLayoutProperty('brick_kilns_BAN_hex', 'visibility', 'visible');
     }
 }
 
@@ -361,25 +361,25 @@ const layerStyles = {
 // Lazy load Pakistan Brick Kilns layer
 export function loadBrickKilnLayerPK(map) {
     return new Promise((resolve, reject) => {
-        if (!map.getSource('bk_pk')) {
+        if (!map.getSource('brickKilnsPK')) {
             showLoadingSpinner(); // Show the spinner while loading
 
             fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_PAK_coal.geojson')
                 .then(response => response.json())
                 .then(data => {
                     // Add source if it doesn't exist
-                    if (!map.getSource('bk_pk')) {
-                        map.addSource('bk_pk', { type: 'geojson', data });
+                    if (!map.getSource('brickKilnsPK')) {
+                        map.addSource('brickKilnsPK', { type: 'geojson', data });
                     } else {
-                        map.getSource('bk_pk').setData(data); // update data if needed
+                        map.getSource('brickKilnsPK').setData(data); // update data if needed
                     }
 
                     // Add layer if it doesn't exist
-                    if (!map.getLayer('BK_PK')) {
+                    if (!map.getLayer('brick_kilns_PK')) {
                         map.addLayer({
-                            id: 'BK_PK',
+                            id: 'brick_kilns_PK',
                             type: 'circle',
-                            source: 'bk_pk',
+                            source: 'brickKilnsPK',
                             paint: {
                                 ...layerStyles.brickKiln
                             },
@@ -388,12 +388,12 @@ export function loadBrickKilnLayerPK(map) {
                             }
                         });
                     } else {
-                        map.setLayoutProperty('BK_PK', 'visibility', 'visible');
+                        map.setLayoutProperty('brick_kilns_PK', 'visibility', 'visible');
                     }
 
                     // Setup popup if tool not enabled
                     if (!isAggregateToolEnabled()) {
-                        map.on('click', 'BK_PK', (e) => {
+                        map.on('click', 'brick_kilns_PK', (e) => {
                             const properties = e.features[0].properties;
                             const popupContent = `
                                 <div class="popup-table">
@@ -417,7 +417,7 @@ export function loadBrickKilnLayerPK(map) {
                         });
                     }
 
-                    logLayerVisibility(map, ['BK_PK']); // Log the visibility
+                    logLayerVisibility(map, ['brick_kilns_PK']); // Log the visibility
                     hideLoadingSpinner(); // Hide spinner
                     resolve(); // ✅ Resolve promise when done
                 })
@@ -427,7 +427,7 @@ export function loadBrickKilnLayerPK(map) {
                     reject(error); // ✅ Reject promise on error
                 });
         } else {
-            map.setLayoutProperty('BK_PK', 'visibility', 'visible');
+            map.setLayoutProperty('brick_kilns_PK', 'visibility', 'visible');
             resolve(); // ✅ Already loaded, resolve immediately
         }
     });
@@ -437,32 +437,32 @@ export function loadBrickKilnLayerPK(map) {
 // Lazy load India's Brick Kilns layer
 export function loadBrickKilnLayerIND(map) {
     return new Promise((resolve, reject) => {
-        if (!map.getSource('bk_ind')) {
+        if (!map.getSource('brickKilnsIND')) {
             showLoadingSpinner();
 
             fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_IND_coal.geojson')
                 .then(response => response.json())
                 .then(data => {
-                    if (!map.getSource('bk_ind')) {
-                        map.addSource('bk_ind', { type: 'geojson', data });
+                    if (!map.getSource('brickKillnsIND')) {
+                        map.addSource('brickKillnsIND', { type: 'geojson', data });
                     } else {
-                        map.getSource('bk_ind').setData(data);
+                        map.getSource('brickKillnsIND').setData(data);
                     }
 
-                    if (!map.getLayer('BK_IND')) {
+                    if (!map.getLayer('brick_kilns_IND')) {
                         map.addLayer({
-                            id: 'BK_IND',
+                            id: 'brick_kilns_IND',
                             type: 'circle',
-                            source: 'bk_ind',
+                            source: 'brickKillnsIND',
                             paint: { ...layerStyles.brickKiln },
                             layout: { visibility: 'visible' }
                         });
                     } else {
-                        map.setLayoutProperty('BK_IND', 'visibility', 'visible');
+                        map.setLayoutProperty('brick_kilns_IND', 'visibility', 'visible');
                     }
 
                     if (!isAggregateToolEnabled()) {
-                        map.on('click', 'BK_IND', (e) => {
+                        map.on('click', 'brick_kilns_IND', (e) => {
                             const props = e.features[0].properties;
                             const popupHTML = `
                                 <div class="popup-table">
@@ -483,7 +483,7 @@ export function loadBrickKilnLayerIND(map) {
                         });
                     }
 
-                    logLayerVisibility(map, ['BK_IND']);
+                    logLayerVisibility(map, ['brick_kilns_IND']);
                     hideLoadingSpinner();
                     resolve();
                 })
@@ -493,7 +493,7 @@ export function loadBrickKilnLayerIND(map) {
                     reject(err);
                 });
         } else {
-            map.setLayoutProperty('BK_IND', 'visibility', 'visible');
+            map.setLayoutProperty('brick_kilns_IND', 'visibility', 'visible');
             resolve();
         }
     });
@@ -502,32 +502,32 @@ export function loadBrickKilnLayerIND(map) {
 // Lazy load Bangladesh's Brick Kilns layer
 export function loadBrickKilnLayerBAN(map) {
     return new Promise((resolve, reject) => {
-        if (!map.getSource('bk_ban')) {
+        if (!map.getSource('brickKilnsBAN')) {
             showLoadingSpinner();
 
             fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson')
                 .then(response => response.json())
                 .then(data => {
-                    if (!map.getSource('bk_ban')) {
-                        map.addSource('bk_ban', { type: 'geojson', data });
+                    if (!map.getSource('brickKilnsBAN')) {
+                        map.addSource('brickKilnsBAN', { type: 'geojson', data });
                     } else {
-                        map.getSource('bk_ban').setData(data);
+                        map.getSource('brickKillnsBAN').setData(data);
                     }
 
-                    if (!map.getLayer('BK_BAN')) {
+                    if (!map.getLayer('brick_kilns_BAN')) {
                         map.addLayer({
-                            id: 'BK_BAN',
+                            id: 'brick_kilns_BAN',
                             type: 'circle',
-                            source: 'bk_ban',
+                            source: 'brickKillnsBAN',
                             paint: { ...layerStyles.brickKiln },
                             layout: { visibility: 'visible' }
                         });
                     } else {
-                        map.setLayoutProperty('BK_BAN', 'visibility', 'visible');
+                        map.setLayoutProperty('brick_kilns_BAN', 'visibility', 'visible');
                     }
 
                     if (!isAggregateToolEnabled()) {
-                        map.on('click', 'BK_BAN', (e) => {
+                        map.on('click', 'brick_kilns_BAN', (e) => {
                             const props = e.features[0].properties;
                             const popupHTML = `
                                 <div class="popup-table">
@@ -548,7 +548,7 @@ export function loadBrickKilnLayerBAN(map) {
                         });
                     }
 
-                    logLayerVisibility(map, ['BK_BAN']);
+                    logLayerVisibility(map, ['brick_kilns_BAN']);
                     hideLoadingSpinner();
                     resolve();
                 })
@@ -558,7 +558,7 @@ export function loadBrickKilnLayerBAN(map) {
                     reject(err);
                 });
         } else {
-            map.setLayoutProperty('BK_BAN', 'visibility', 'visible');
+            map.setLayoutProperty('brick_kilns_BAN', 'visibility', 'visible');
             resolve();
         }
     });

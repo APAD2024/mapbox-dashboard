@@ -1,32 +1,29 @@
 import {
     loadBrickKilnLayerBAN,
-    loadBrickKilnLayerBANhex,
     loadBrickKilnLayerDRC,
     loadBrickKilnLayerGHA,
     loadBrickKilnLayerIND,
-    loadBrickKilnLayerINDhex,
     loadBrickKilnLayerNGA,
     loadBrickKilnLayerPK,
-    loadBrickKilnLayerPKhex,
     loadBrickKilnLayerUGA
 } from './brickKilns.js';
 
-import {
-    loadADM3BrickKilnsIndia,
-    loadADM3BrickKilnsPakistan
-} from './brickKilnadm3.js';
+// import {
+//     loadADM3BrickKilnsIndia,
+//     loadADM3BrickKilnsPakistan
+// } from './brickKilnadm3.js';
 
-import { loadGroupLayers, fetchAndAddPollutionLayer, loadSymbolLayer, loadOpenAQLayer } from './layers.js';
+import { loadGroupLayers, loadSymbolLayer, loadOpenAQLayer, loadPollutionReportsLayer } from './layers.js';
 
 
-const layerPromise = fetchAndAddPollutionLayer(map);
-setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
+// const layerPromise = fetchAndAddPollutionLayer(map);
+// setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
 // Store visibility states
 let layerVisibility = {};
 
 // Default list of layers (modify as needed)
 const defaultLayerIds = [
-    'coal', 'population', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN',
+    'coal', 'population', 'fossil_fuel', 'gpw',
     'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_igp',
     'furnace_oil_IGP', 'paper_pulp_igp', 'steel_igp',
     'solid_waste_igp', 'coal_africa', 'cement_africa', 'paper_pulp_africa',
@@ -101,20 +98,14 @@ export function toggleLayerVisibility(map, layerIds, isChecked) {
  */
 
 const brickKilnLayers = [
-    { id: 'BK_PK', load: loadBrickKilnLayerPK },
-    { id: 'BK_IND', load: loadBrickKilnLayerIND },
-    { id: 'BK_BAN', load: loadBrickKilnLayerBAN },
+    { id: 'brick_kilns_PK', load: loadBrickKilnLayerPK },
+    { id: 'brick_kilns_IND', load: loadBrickKilnLayerIND },
+    { id: 'brick_kilns_BAN', load: loadBrickKilnLayerBAN },
     { id: 'brick_kilns_DRC', load: loadBrickKilnLayerDRC },
     { id: 'brick_kilns_GHA', load: loadBrickKilnLayerGHA },
     { id: 'brick_kilns_UGA', load: loadBrickKilnLayerUGA },
     { id: 'brick_kilns_NGA', load: loadBrickKilnLayerNGA }
 ];
-
-// const brickKilnGridLayers = [
-//     { id: 'BK_PK_hex', load: loadBrickKilnLayerBANhex },
-//     { id: 'BK_IND_hex', load: loadBrickKilnLayerINDhex },
-//     { id: 'BK_BAN_hex', load: loadBrickKilnLayerPKhex }
-// ];
 
 // Function to handle checkbox changes for standard layers
 export function setupLayerToggle(map, checkboxId, layerPromise, layerId) {
@@ -216,11 +207,11 @@ export function initializeLayerVisibilityControls(map) {
         )}
     ]);
 
-    setupGroupLayerToggle(map, "toggleFossil", [
-        { id: "fossil", load: (map) => loadSymbolLayer(
+    setupGroupLayerToggle(map, "toggleFossilFuel", [
+        { id: "fossil_fuel", load: (map) => loadSymbolLayer(
             map,
-            "fossil",
             "fossil_fuel",
+            "fossilFuel",
             "https://gist.githubusercontent.com/bilalpervaiz/597c50eff1747c1a3c8c948bef6ccc19/raw/6984d3a37d75dc8ca7489ee031377b2d57da67d2/fossil_fuel.geojson",
            "./src/assets/cross_fossil-fuel.png", 0.1
         )}
@@ -245,7 +236,14 @@ export function initializeLayerVisibilityControls(map) {
         "steelIGP",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Steel+Plants/steel_plants_main.geojson",
         layerStyles.steel.circleColor, layerStyles.steel.circleRadius, layerStyles.steel.strokeWidth, layerStyles.steel.strokeColor
-    )}
+    )},
+    { id: "steel_africa", load: (map) => loadGroupLayers(
+        map,
+        "steel_africa",
+        "steel_Afc",
+        "https://gist.githubusercontent.com/Mseher/23af19444bdc70b115afcb6cc45879ec/raw/eda2bc6398aaa50595cfc7ed81bbca1d15d78c31/Steel_Plants_Africa.geojson",
+        layerStyles.steel.circleColor, layerStyles.steel.circleRadius, layerStyles.steel.strokeWidth, layerStyles.steel.strokeColor
+        )}
     ]);
 
     setupGroupLayerToggle(map, "togglePaperPulp", [
@@ -266,7 +264,7 @@ export function initializeLayerVisibilityControls(map) {
     )}
     ]);
       
-    setupGroupLayerToggle(map, "toggleBrickKiln", brickKilnLayers);
+    setupGroupLayerToggle(map, "toggleBrickKilns", brickKilnLayers);
       
     setupGroupLayerToggle(map, "toggleCement", [
     { id: "cement_IGP", load: (map) => loadGroupLayers(
@@ -315,8 +313,8 @@ export function initializeLayerVisibilityControls(map) {
         "./src/assets/plus_gpw.png", 0.1)}
     ]);
 
-    const layerPromise = fetchAndAddPollutionLayer(map);
-    setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
+    // const layerPromise = fetchAndAddPollutionLayer(map);
+    // setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
 
     //   setupGroupLayerToggle(map, "toggleOilGas", [
     //     { id: "oil_gas_IGP", load: (map) => loadGroupLayers(
@@ -332,35 +330,82 @@ export function initializeLayerVisibilityControls(map) {
       // Setup other groups or single layers similarly...
 }
 
+// export function buttonLayerVisibility(map, layerId, isVisible) {
+//   if (!map.getLayer(layerId)) return;
+//   map.setLayoutProperty(layerId, 'visibility', isVisible ? 'visible' : 'none');
+// }
+
+// export function initLayerVisibility(map) {
+//   const aqButton = document.getElementById('buttonOpenAQData');
+//   const tooltipAQ = document.getElementById('tooltipAQ');
+
+//   if (aqButton) {
+//     aqButton.addEventListener('click', async () => {
+//       const layerId = 'openaq_latest';
+
+//       // If not loaded, load first
+//       if (!map.getLayer(layerId)) {
+//         await loadOpenAQLayer(map);
+//       }
+
+
+//       const currentVisibility = map.getLayoutProperty(layerId, 'visibility');
+//       const isVisible = currentVisibility === 'visible';
+
+//       buttonLayerVisibility(map, layerId, !isVisible);
+//       aqButton.classList.toggle('active', !isVisible);
+//       tooltipAQ.style.display = !isVisible ? 'block' : 'none';
+//     });
+//   }
+// }
+
 
 export function buttonLayerVisibility(map, layerId, isVisible) {
   if (!map.getLayer(layerId)) return;
   map.setLayoutProperty(layerId, 'visibility', isVisible ? 'visible' : 'none');
 }
 
+// Reusable config for all buttons/layers
+const layerConfigs = [
+  {
+    buttonId: 'buttonOpenAQData',
+    tooltipId: 'tooltipAQ',
+    layerId: 'openaq_latest',
+    loadFn: loadOpenAQLayer,
+  },
+  {
+    buttonId: 'buttonPollutionReports',
+    tooltipId: 'tooltipPollutionReports',
+    layerId: 'pollution_reports',
+    loadFn: loadPollutionReportsLayer,
+  },
+];
+
 export function initLayerVisibility(map) {
-  const aqButton = document.getElementById('buttonOpenAQData');
-  const tooltipAQ = document.getElementById('tooltipAQ');
+  layerConfigs.forEach(({ buttonId, tooltipId, layerId, loadFn }) => {
+    const button = document.getElementById(buttonId);
+    const tooltip = document.getElementById(tooltipId);
 
-  if (aqButton) {
-    aqButton.addEventListener('click', async () => {
-      const layerId = 'openaq_latest';
+    if (!button) return;
 
-      // If not loaded, load first
+    button.addEventListener('click', async () => {
+      // Load layer if not yet added
       if (!map.getLayer(layerId)) {
-        await loadOpenAQLayer(map);
+        await loadFn(map);
       }
-
 
       const currentVisibility = map.getLayoutProperty(layerId, 'visibility');
       const isVisible = currentVisibility === 'visible';
 
       buttonLayerVisibility(map, layerId, !isVisible);
-      aqButton.classList.toggle('active', !isVisible);
-      tooltipAQ.style.display = !isVisible ? 'block' : 'none';
+      button.classList.toggle('active', !isVisible);
+      if (tooltip) tooltip.style.display = !isVisible ? 'block' : 'none';
     });
-  }
+  });
 }
+
+
+
 
 
     // Standard Industry Layer Toggles

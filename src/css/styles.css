@@ -20,7 +20,6 @@ html {
 #map {
     position: absolute;
     top: 0;
-    /* Offset to account for the top bar height */
     bottom: 0;
     left: 0;
     right: 0;
@@ -34,7 +33,7 @@ html {
 #topBar {
     position: relative;
     width: 100%;
-    height: 6rem;
+    height: 5rem;
     display: flex;
     align-items: center;
     z-index: 2;
@@ -42,11 +41,12 @@ html {
     box-sizing: border-box;
     gap: 1.2rem;
     justify-content: space-between;
+    padding: 0.4rem;
 }
 
 /* Left and Right Section */
 .left-section, .right-section {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     position: relative;
     border-radius: 5rem;
@@ -56,13 +56,18 @@ html {
     color: var(--dark-green);
     box-shadow: var(--shadow);
     height: -webkit-fill-available;
+    padding: 0.8rem 1.6rem;
 } 
 
 /* Left Section */
 .left-section {
-     flex-shrink: 0; /* never shrink */
-     padding: 0.8rem 1.6rem;
+  justify-content: flex-start;  
 }   
+
+/* Right section: takes up all remaining space */
+.right-section {
+  flex: 1; /* fills remaining width */
+}
 
 .menu-btn {
     background: none;
@@ -83,13 +88,6 @@ html {
     height: 40%;
 }
 
-/* Right section */
-.right-section {
-    flex: 1;
-    justify-content: center;
-    padding: 0.8rem 1.6rem;
-}  
-
 /* Right section: Geocoder */
 .geocoder-section {
     display: flex;
@@ -99,56 +97,100 @@ html {
     z-index: 1009;
     width: 100%;
     border-radius: 5rem;
+    max-width: 80rem;
 }
 
 #geocoder {
-    width: 100% ; /* Take full width of the geocoder section */
+    width: 100% ;
 }
 
 .mapboxgl-ctrl-geocoder {
-    width: 100%;
-    max-width: 100%;
-    box-shadow: none !important; /* Remove default shadow */
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 5rem !important;
+    background-color: var(--light-green) !important;
+    border: 0.12rem solid var(--dark-green) !important;
+    transition: width 0.3s ease;    
+    box-shadow: none !important;
 }
 
-.mapboxgl-ctrl-geocoder.mapboxgl-ctrl {
-    width: 100%;
-    border-radius: 5rem;
-    background-color: var(--light-green) !important;
-    border: var(--dark-green) 0.12rem solid !important;
-    color: var(--dark-green) !important;
-}
 
 .mapboxgl-ctrl-geocoder--input {
-    width: 100%; /* The input field will fill the entire geocoder container */
-    font-size: 14px; /* Font size for better readability */
-    border-radius: 8px;
-    padding: 6px 12px; /* Padding for proper sizing */
-    color: var(--dark-green) !important;  /* Text color */
+width: 100%;
+  width: 100% !important;
+  height: 2.4rem !important;
+  padding: 0.6rem 1.2rem 0.6rem 3rem !important;
+  font-size: 1.4rem;
+  font-family: var(--heading05) !important;
+  color: var(--dark-green) !important;
+  background: transparent !important;
+  transition: all 0.3s ease;
 }
 
 .mapboxgl-ctrl-geocoder--input::placeholder {
     color: var(--dark-green) !important;
-    opacity: 0.7; /* adjust opacity if needed */
+    opacity: 0.7; 
 }
 
-.mapboxgl-ctrl-geocoder .mapboxgl-ctrl-geocoder--icon {
-    fill: var(--dark-green) !important; /* SVG icon color */
+.mapboxgl-ctrl-geocoder--icon {
+    fill: var(--dark-green) !important;
+    left: 1rem !important; /* position inside input */
+    top: 50% !important;
+    transform: translateY(-50%) !important;
 }
 
-@media screen and (min-width: 640px) {
-    .mapboxgl-ctrl-geocoder {
-        width: 100% !important;   /* take all available space */
-        max-width: none !important; /* remove the cap */
-    }
+/* When screen shrinks below 1024px:
+   → stack right-section below left-section */
+@media (max-width: 1024px) {
+  #topBar {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 2rem; 
+  }
+
+  .right-section {
+    width: 100%;
+    justify-content: center;
+    height: fit-content;
+  }
+
+  .geocoder-section {
+    width: 100%;
+    margin: 0;
+  }
 }
+/* When screen shrinks below 640px:
+   → move filter-section under search bar */
+@media (max-width: 640px) {
+
+  .right-section {
+    gap: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    height: fit-content;
+    border-radius: 1.6rem;
+  }
+
+  .geocoder-section {
+    width: 100%;
+    order: 1;
+  }
+
+  .filter-section {
+    width: 100%;
+    order: 2;
+    justify-content: center;
+  }
+
+}
+
 
 
 /* Right section: Filters */
 .filter-section {
     display: flex;
     align-items: center;
-    gap: 1.2rem;
+    gap: 0.8rem;
     flex-shrink: 0; /* never shrink */
 }
 
@@ -218,8 +260,43 @@ html {
 /* #endregion */
 
 
-/* #region Buttons right top corner */
+/* #region FAB */
+.FAB {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    position: absolute;
+    background: var(--light-green);
+    padding: 0.8rem;
+    border-radius: 0.8rem;
+    border: 0.12rem solid var(--dark-green);
+    z-index: 1;
+    cursor: pointer;
+    box-shadow: var(--shadow-short);
+    height: 2.4rem;
+    width: fit-content;
+    min-width: 2.4rem;
+}
 
+.FAB i {
+    color: var(--dark-green);
+}
+
+.FAB:hover {
+    background: var(--dark-green);
+    color: var(--light-green);
+    border: 0.12rem solid var(--light-green);
+}
+
+.FAB:hover i {
+    color: var(--light-green);
+    transition: color 0.3s ease, font-size 0.3s ease;
+}
+
+/* #endregion */
+
+/* #region Buttons right top corner */
 /* Map controls */
 .mapboxgl-ctrl-top-right {
     top:  9.6rem !important;
@@ -245,24 +322,6 @@ html {
     box-shadow: var(--shadow);
 }
 
-/*FAB */
-.FAB {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.4rem;
-    position: absolute;
-    background: var(--light-green);
-    padding: 0.8rem;
-    border-radius: 0.8rem;
-    border: 0.12rem solid var(--dark-green);
-    z-index: 1;
-    cursor: pointer;
-    box-shadow: var(--shadow-short);
-    width: 2.4rem;
-    height: 2.4rem;
-}
-
 /* Basemap Menu Button */
 #basemapMenuButton {
     top: 22rem;
@@ -278,18 +337,21 @@ html {
     right: 1.6rem;
 }
 
-
-
 #areaChange i {
     font-size: 20px;
     transition: font-size 0.3s ease;
 }
 
-/************ Aggregate tool ************/
+/* #endregion */
+
+/* #region Buttons left bottom corner */
+
+/*Aggregate tool Buttons */
+
 #aggregateToolContainer {
     position: absolute;
     bottom: 3rem;
-    left: 16rem;
+    left: 10rem;
     display: flex;
     flex-direction: column-reverse;
     align-items: self-start;
@@ -297,27 +359,10 @@ html {
     z-index: 10; /* keep above map */
 }
 
-#aggregateToolButton.FAB {
+#aggregateToolButton {
     position: static;
 }
 
-#aggregateToolButton i {
-    font-size: 20px;
-    color: var(--dark-green);
-}
-
-#aggregateToolButton.FAB.active {
-  background-color: var(--dark-green);
-  color: var(--light-green);
-  border: 0.12rem solid var(--light-green);
-}
-
-#aggregateToolButton.FAB.active i{
-  color: var(--light-green);
-}
-
-
-/* Buffer Size Dropdown Styling */
 #bufferSizeSelector {
     background: var(--dark-green);
     border-radius: 0.8rem;
@@ -339,8 +384,20 @@ html {
     display: block;
 }
 
+/* Button for AQ Data */
+#buttonOpenAQData {
+    bottom: 3rem;
+    left: 14.5rem;
+}
+
+/* Button for Report Pollution */
+#buttonPollutionReports {
+    bottom: 3rem;
+    left: 19rem;
+}
+
 /* Tooltip Styling */
-#tooltip {
+.tooltip {
     position: fixed; 
     top: 10rem;
     left: 50%;          
@@ -357,45 +414,6 @@ html {
     opacity: 0.8;
     border: 0.12rem solid var(--light-green);
 
-}
-
-/* CSS class to show the tooltip */
-.tooltip-visible {
-    display: block;
-}
-
-/* CSS class to hide the tooltip */
-.tooltip-hidden  {
-    display: none;
-}
-
-#tooltipAQ {
-    position: fixed; 
-    top: 10rem;
-    left: 50%;          
-    transform: translateX(-50%);
-    height: fit-content;
-    background-color: var(--dark-green);
-    padding: 0.8rem 1.6rem;
-    border-radius: 5rem;
-    z-index: 1000;
-    display: none;           
-    color: var(--light-green);
-    white-space: nowrap;     
-    font-size: 1.6rem;
-    opacity: 0.8;
-    border: 0.12rem solid var(--light-green);
-
-}
-
-/* CSS class to show the tooltip */
-.tooltip-visible {
-    display: block;
-}
-
-/* CSS class to hide the tooltip */
-.tooltip-hidden  {
-    display: none;
 }
 
 
@@ -411,27 +429,6 @@ html {
     display: none;
     color: #2c3e50;
 }
-
-#buttonOpenAQData {
-    bottom: 3rem;
-    left: 20.5rem;
-}
-
-#buttonOpenAQData i {
-    font-size: 20px;
-    color: var(--dark-green);
-}
-
-#buttonOpenAQData.active {
-  background-color: var(--dark-green);
-  color: var(--light-green);
-  border: 0.12rem solid var(--light-green);
-}
-
-#buttonOpenAQData.active i{
-  color: var(--light-green);
-}
-
 
 /* #endregion */
 
@@ -472,7 +469,6 @@ position: absolute;
     bottom: 60px;
     right: 10px;
     background: #ffffff;
-    font-family: 'Arial', sans-serif;
     border-radius: 10px;
     /* Rounded corners */
     padding: 10px;
@@ -610,7 +606,6 @@ position: absolute;
     bottom: 1rem;
     right: 1rem;
     background: #ffffff;
-    font-family: 'Arial', sans-serif;
     overflow: hidden;
     border-radius: 8px;
     padding: 10px 12px;
@@ -719,7 +714,6 @@ position: absolute;
     }
 }
 
-
 #filtersearch {
     position: absolute;
     top: 110px;
@@ -735,61 +729,30 @@ position: absolute;
     justify-content: center;
 }
 
-
 /* #region Legend  */
 
 #legendButton {
     position: absolute;
     bottom: 3.2rem;
-    background: var(--light-green);
-    padding: 1.6rem 2.4rem;
-    border-radius: 1.6rem;
-    border: var(--dark-green) 0.12rem solid;
-    z-index: 1;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
-    font-size: var(--heading04);
+    font-size: var(--heading05);
     font-weight: var(--heading-bold-weight);
-    color: var(--dark-green)
-    ;
 }
-
 
 #legend {
     position: absolute;
-    bottom: 10rem;
+    bottom: 8rem;
     background: var(--light-green);
     color: var(--dark-green);
     font-size: var(--body01);
-    padding: 2.4rem;
+    padding: 1.6rem 1.6rem 0.4rem 1.6rem;
     border-radius: 1.6rem;
     box-shadow: var(--shadow);
     z-index: 1;
     width: 25rem;
     display: block;
-    /* Scroll settings */
-    max-height: 45rem; /* Adjust the height as needed */
+    max-height: 45rem; 
     overflow-y: auto;
-}
-
-/* Optional scrollbar customization for WebKit browsers */
-#legend::-webkit-scrollbar {
-    width: 0.8rem;
-    height: 1rem;
-}
-
-#legend::-webkit-scrollbar-thumb {
-    background: var(--dark-green);
-    border-radius: 1rem;
-    height: 5rem;
-}
-
-#legend::-webkit-scrollbar-thumb:hover {
-    background: var(--dark-gray);
-    opacity: 0.8;
 }
 
 .legend-group {
@@ -962,7 +925,6 @@ position: absolute;
 }
 
 .legend-subunit {
-    font-family: Arial, sans-serif;
     font-size: 12px;
     text-align: left;
     /* Ensure the text aligns to the left */
@@ -996,7 +958,6 @@ position: absolute;
 }
 
 .circle-label {
-    font-family: Arial, sans-serif;
     font-size: 12px;
     text-align: left;
     /* Ensure the text aligns to the left */
@@ -1037,9 +998,8 @@ position: absolute;
 
 /* Labels and Population Count for Grid */
 label {
-    font-family: Arial, sans-serif;
-    font-size: 12px;
-    color: #2c3e50;
+    font-size: var(--heading06);
+    color: var(--dark-green);
     display: block;
 }
 
@@ -1092,7 +1052,6 @@ label {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     z-index: 100;
-    font-family: Arial, sans-serif;
     width: 250px;
 }
 
@@ -1283,7 +1242,6 @@ label {
 }
 
 #pollutant-legend .circle-label {
-    font-family: Arial, sans-serif;
     font-size: 12px;
     text-align: left;
     justify-content: flex-end;

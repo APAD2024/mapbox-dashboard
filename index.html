@@ -42,7 +42,7 @@
   <body>
     <div class="dashboard">
 
-      <!----------------------------------------------------------------- Header ----------------------------------------------------------->
+      <!--------------------------- TOP BAR --------------------------->
       <div id="topBar">
         <!-- Left Section: Logo and Title -->
         <div class="left-section">
@@ -95,7 +95,10 @@
           </div>
         </div>
       </div>
-      <!------------------------------------------------------------- Basemap Menu ------------------------------------------------------------------>
+
+      <!--------------------------- FLOATING BUTTONS TOP RIGHT  --------------------------->
+      
+      <!-- Basemap Menu -->
       <div class= "FAB" id="basemapMenuButton"><i class="fas fa-globe"></i></div>
       <div id="menu">
         <button class="closeButton">&times;</button>
@@ -131,7 +134,6 @@
         <input id="dark-v11" type="radio" name="rtoggle" value="dark-v11" />
         <label for="dark-v11">Dark</label><br />
 
-        <!-- New Option for Google Air Quality Map -->
         <input
           id="google-air-quality"
           type="radio"
@@ -183,14 +185,15 @@
         </div>
       </div>
 
-      <!-------------------------------------------------------- Continent Switch Button ------------------------------------------------------------->
+      <!-- Continent Switch Button -->
       <div class= "FAB" id="areaChange" title="Move to Africa">
         <i class="fas fa-globe-africa"></i>
       </div>
 
-      <!-------------------------------------------------------- Air Quality Button ------------------------------------------------------------->
-      
-      <div id="tooltipAQ" class="tooltip-hidden">
+      <!--------------------------- FLOATING BUTTONS BOTTOM LEFT --------------------------->
+
+      <!-- Air Quality Button -->
+      <div class="tooltip" id="tooltipAQ">
         Air Quality Data activated
       </div>
 
@@ -198,21 +201,25 @@
         <i class="fa-solid fa-wind" alt="Air quality icon"></i>
       </div>
 
+      <!-- Report Poluttion Button -->
+      <div class="tooltip" id="tooltipPollutionReports" >
+        Report Polution activated
+      </div>
+
+      <div class= "FAB" id="buttonPollutionReports" title="Button Report Polution Layer">
+        <i class="fa-solid fa-star-of-life" alt="Report"></i>
+      </div>
       
-      <!-------------------------------------------------------------- Aggregate Tool -------------------------------------------------------->
-      <!-- Tooltip Element -->
-      <div id="tooltip" class="tooltip-hidden">
+      <!--Aggregate Tool -->
+      <div class="tooltip" id="tooltipAggregate" >
         Click on the map to aggregate data within the selected buffer size.
       </div>
 
-      <!-- Aggregate Tool -->
       <div id="aggregateToolContainer">
-        <!-- Aggregate Tool Button -->
         <div class= "FAB" id="aggregateToolButton" title="Aggregate Data">
           <i class="fas fa-calculator"></i>
         </div>
 
-        <!-- Buffer Size Dropdown -->
         <select
           id="bufferSizeSelector"
           title="Select Buffer Size"
@@ -226,7 +233,7 @@
 
       <div id="aggregateResults"></div>
 
-      <!----------------------------------------------------------------- Map ----------------------------------------------------------------------->
+      <!--------------------------- MAP --------------------------->
 
       <div id="map"></div>
 
@@ -236,8 +243,8 @@
         <p>Loading layers...</p>
       </div>
 
-      <!------------------------------------------------------------- Legend Layers ----------------------------------------------------------------->
-      <div id="legendButton">Layers</div>
+      <!---------------------------LEGEND LAYERS --------------------------->
+      <div class= "FAB" id="legendButton">Layers</div>
       
       <div id="legend">
         <button class="closeButton">&times;</button>
@@ -249,7 +256,7 @@
           <!-- Coal -->
           <div class="legend-section" id="legend-coal" draggable="true">
               <label class="custom-checkbox">
-                  <input id="toggleCoal" type="checkbox" data-layer="coal" checked />
+                  <input id="toggleCoal" type="checkbox" checked />
                   <span class="checkmark"></span>
               </label>
               <div class="legend-name">
@@ -259,10 +266,9 @@
           </div>
 
             <!-- Fossil Fuel -->
-            <div class="legend-section" id="legend-fossil" draggable="true">
+            <div class="legend-section" id="legend-fossil-fuel" draggable="true">
               <label class="custom-checkbox">
-                <input id="toggleFossil" type="checkbox"
-                  data-layer="fossil" checked/>
+                <input id="toggleFossilFuel" type="checkbox" checked/>
                 <span class="checkmark"></span>
               </label>
               <div class="legend-name">
@@ -274,7 +280,7 @@
             <!-- Furnace Oil -->
             <div class="legend-section" id="legend-furnace-oil" draggable="true">
               <label class="custom-checkbox">
-                <input id="toggleFurnaceOil" type="checkbox" data-layer="furnace_oil" checked/>
+                <input id="toggleFurnaceOil" type="checkbox" checked/>
                 <span class="checkmark"></span>
               </label>
               <div class="legend-name">
@@ -282,6 +288,7 @@
                 <p>Furnace Oil</p>
               </div>
             </div>
+            
         </div>
 
         <div class="legend-group">
@@ -289,9 +296,9 @@
             <!-- Group 2: Manufacturing or secondary energy generation -->
 
             <!-- Steel  -->
-            <div class="legend-section" id="legend-steel-IGP" draggable="true">
+            <div class="legend-section" id="legend-steel" draggable="true">
               <label class="custom-checkbox">
-                <input id="toggleSteel" type="checkbox" data-layer="steel_IGP" checked/>
+                <input id="toggleSteel" type="checkbox" checked/>
                 <span class="checkmark"></span>
               </label>
               <div class="legend-name">
@@ -304,7 +311,7 @@
             <!-- Paper Pulp -->
             <div class="legend-section" id="legend-paper-pulp" draggable="true">
               <label class="custom-checkbox">
-                <input id="togglePaperPulp" type="checkbox" data-layer="paper_pulp" checked/>
+                <input id="togglePaperPulp" type="checkbox" checked/>
                 <span class="checkmark"></span>
               </label>
               <div class="legend-name">
@@ -316,7 +323,7 @@
             <!-- Cement -->
               <div class="legend-section" id="legend-cement" draggable="true">
                 <label class="custom-checkbox"> 
-                  <input id="toggleCement" type="checkbox" data-layer="cement" checked/>
+                  <input id="toggleCement" type="checkbox" checked/>
                   <span class="checkmark"></span>
                 </label>  
                 <div class="legend-name">
@@ -328,7 +335,7 @@
             <!-- Boilers -->
             <div class="legend-section" id="legend-boilers" draggable="true">
               <label class="custom-checkbox"> 
-                <input id="toggleBoilers" type="checkbox" data-layer="boilers" checked />
+                <input id="toggleBoilers" type="checkbox" checked />
                 <span class="checkmark"></span>
               </label>  
               <div class="legend-name">
@@ -340,7 +347,7 @@
             <!-- Brick Kilns -->
             <div class="legend-section" id="legend-brickKiln" draggable="true">
               <label class="custom-checkbox"> 
-                <input id="toggleBrickKiln" type="checkbox" data-layer="brickKiln" />
+                <input id="toggleBrickKilns" type="checkbox" />
                 <span class="checkmark"></span>
               </label>
               <div class="legend-name">
@@ -359,7 +366,7 @@
             <!-- Land Fill Waste -->
             <div class="legend-section" id="legend-land-fill-waste"     draggable= "true">
               <label class="custom-checkbox"> 
-                <input id="toggleLandFillWaste" type="checkbox" data-layer="land_fill_waste" checked/>
+                <input id="toggleLandFillWaste" type="checkbox" checked/>
                 <span class="checkmark"></span>
               </label>
               <div class="legend-name">
@@ -371,7 +378,7 @@
             <!-- GPW -->
             <div class="legend-section" id="legend-gpw" draggable="true">
               <label class="custom-checkbox">
-                <input id="toggleGPW" type="checkbox" data-layer="gpw" checked/>
+                <input id="toggleGPW" type="checkbox" checked/>
                 <span class="checkmark"></span>
               </label>
               <div class="legend-name">
@@ -381,22 +388,7 @@
             </div>
         </div>
 
-        <div class="legend-group">
-          <div class="legend-group-title">Unregulated pollution</div>
-          <!-- Group 4: Unregulated pollution -->
-
-          <!-- Pollution Reports -->
-          <div class="legend-section" id="legend-pollution" draggable="true">
-            <label class="custom-checkbox">
-              <input id="toggleReportedPollution" type="checkbox" data-layer="pollution_reports" checked/>
-             <span class="checkmark"></span>
-            </label>
-            <div class="legend-name">
-                <img src="./src/assets/star_open-waste-burning.png" alt="GPW icon" class="legend-key-img"></img>
-                <p>Reported Pollution</p>
-            </div>
-        </div>
-
+       
 
 
            
@@ -446,7 +438,7 @@
 
 
           
-        </div>
+    
       </div>
       </div>
 

@@ -85,7 +85,7 @@ export function toggleAggregateTool(map) {
     
     const resultBox = document.getElementById('aggregateResults');
     const bufferSizeSelector = document.getElementById('bufferSizeSelector');
-    const tooltip = document.getElementById('tooltip');
+    const tooltip = document.getElementById('tooltipAggregate');
 
     if (aggregateToolEnabled) {
         map.getCanvas().style.cursor = 'crosshair';

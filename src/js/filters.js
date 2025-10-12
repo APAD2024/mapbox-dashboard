@@ -1,3 +1,4 @@
+import {toggleLayerVisibility} from './layerVisibility.js';
 import {
     loadBrickKilnLayerBAN,
     loadBrickKilnLayerDRC,
@@ -8,78 +9,24 @@ import {
     loadBrickKilnLayerUGA
 } from './brickKilns.js';
 
-// // Region-specific data
-// const igpCountries = ['India', 'Pakistan', 'Bangladesh'];
-// const africaCountries = ['Nigeria', 'Uganda', 'Congo', 'Ghana'];
-
 const allCountries = ['India', 'Pakistan', 'Bangladesh', 'Nigeria', 'Uganda', 'Congo', 'Ghana'];
 
-// // Asset options per region (linked to actual layer IDs)
-// const igpAssets = [
-//     { id: 'coal', label: 'Coal IGP' },
-//     { id: 'cement_IGP', label: 'Cement' },
-//     { id: 'oil_gas_IGP', label: 'Oil Gas Refineries' },
-//     { id: 'paper_pulp_IGP', label: 'Paper Pulp' },
-//     { id: 'steel_IGP', label: 'Steel' },
-//     { id: 'solid_waste_IGP', label: 'Solid Waste' },
-//     { id: 'fossil', label: 'Fossil Fuel' },
-//     { id: 'gpw', label: 'GPW' },
-//     { id: 'brick_kiln', label: 'Brick Kiln' },
-//     {id:'boilers',label:'Boilers'},
-//     {id:'pollution_reports',label:'Reported Pollution'},
-//     {id:'openaq_latest',label:'Pollutants'}
-// ];
+const assetGroups = {
+  "Coal": ["coal", "coal_africa"],
+  "Fossil Fuel": ["fossil_fuel"],
+  "Furnace Oil": ["furnace_oil_IGP"],
+  "Steel": ["steel_IGP", "steel_africa"],
+  "Paper Pulp": ["paper_pulp_IGP", "paper_pulp_africa"],
+  "Cement": ["cement_IGP", "cement_africa"],
+  "Boilers": ["boilers"],
+  "Brick Kilns": ["brick_kilns_PK", "brick_kilns_IND", "brick_kilns_BAN", "brick_kilns_DRC", "brick_kilns_GHA", "brick_kilns_UGA", "brick_kilns_NGA"],
+  "Land Fill Waste": ["solid_waste_IGP"],
+  "GPW": ["gpw"]
+};
 
-// const africaAssets = [
-//     { id: 'coal_africa', label: 'Coal' },
-//     { id: 'cement_africa', label: 'Cement' },
-//     { id: 'paper_pulp_africa', label: 'Paper Pulp' },
-//     { id: 'steel_africa', label: 'Steel Plants' },
-//     { id: 'brick_kiln', label: 'Brick Kiln' }
-// ];
 
-const allAssets = [
-    { id: 'coal', label: 'Coal IGP' },
-    { id: 'cement_IGP', label: 'Cement' },
-    { id: 'oil_gas_IGP', label: 'Oil Gas Refineries' },
-    { id: 'paper_pulp_IGP', label: 'Paper Pulp' },
-    { id: 'steel_IGP', label: 'Steel' },
-    { id: 'solid_waste_IGP', label: 'Solid Waste' },
-    { id: 'fossil', label: 'Fossil Fuel' },
-    { id: 'gpw', label: 'GPW' },
-    { id: 'brick_kiln', label: 'Brick Kiln' },
-    {id:'boilers',label:'Boilers'},
-    {id:'pollution_reports',label:'Reported Pollution'},
-    {id:'openaq_latest',label:'Pollutants'},
-    { id: 'coal_africa', label: 'Coal' },
-    { id: 'cement_africa', label: 'Cement' },
-    { id: 'paper_pulp_africa', label: 'Paper Pulp' },
-    { id: 'steel_africa', label: 'Steel Plants' },
-    { id: 'furnace_oil_IGP', label: 'Furnace Oil' }
-];
+ const layerIds = Object.values(assetGroups).flat();
 
-// Layer IDs used in filters
-const layerIds = [
-    'coal', 'fossil', 'gpw', 'BK_PK', 'BK_IND', 'BK_BAN', 'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN',
-    'cement_IGP', 'oil_gas_IGP', 'paper_pulp_IGP', 'steel_IGP', 'solid_waste_IGP',
-    'coal_africa', 'cement_africa', 'paper_pulp_africa', 'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA',
-    'brick_kilns_UGA', 'brick_kilns_NGA','boilers','pollution_reports','openaq_latest', 'furnace_oil_IGP'
-];
-
-// const brickKilnIGP = ['BK_PK', 'BK_IND', 'BK_BAN'];
-// const brickKilnAfc = ['brick_kilns_DRC', 'brick_kilns_GHA',
-//     'brick_kilns_UGA', 'brick_kilns_NGA']
-
-// // Function to update country filter dropdown
-// export function updateCountryFilter(region) {
-//     const countryFilter = document.getElementById('countryFilter');
-//     countryFilter.innerHTML = '<option value="">All</option>';  // Reset and add "All" option
-
-//     const countries = region === 'Africa' ? africaCountries : igpCountries;
-//     countries.forEach(country => {
-//         countryFilter.innerHTML += `<option value="${country}">${country}</option>`;
-//     });
-// }
 
 // Function to update country filter dropdown (always shows all)
 export function updateCountryFilter() {
@@ -90,95 +37,13 @@ export function updateCountryFilter() {
     });
 }
 
-// // Function to update asset filter dropdown
-// export function updateAssetFilter(region) {
-//     const assetFilter = document.getElementById('assetFilter');
-//     assetFilter.innerHTML = '<option value="">All</option>';  // Reset and add "All" option
-
-//     const assets = region === 'Africa' ? africaAssets : igpAssets;
-//     assets.forEach(asset => {
-//         assetFilter.innerHTML += `<option value="${asset.id}">${asset.label}</option>`;
-//     });
-// }
-
 // Function to update asset filter dropdown (always shows all)
 export function updateAssetFilter() {
-    const assetFilter = document.getElementById('assetFilter');
-    assetFilter.innerHTML = '<option value="">All</option>';
-    allAssets.forEach(asset => {
-        assetFilter.innerHTML += `<option value="${asset.id}">${asset.label}</option>`;
-    });
-}
-
-// // Function to determine region and update filters accordingly
-// export function checkRegionAndUpdateFilters(map) {
-//     const currentCenter = map.getCenter();
-//     const africaCenter = [20.0, 5.0];
-//     const asiaCenter = [78.8181577, 28.7650135];
-
-//     // Determine the region based on map center
-//     const isAfrica = Math.abs(currentCenter.lng - africaCenter[0]) < 20;
-
-//     updateCountryFilter(isAfrica ? 'Africa' : 'IGP');
-//     updateAssetFilter(isAfrica ? 'Africa' : 'IGP');
-// }
-
-// Function to handle asset filter changes
-export function handleAssetFilterChange(map) {
-    const selectedAsset = document.getElementById('assetFilter').value;
-    const isBrickKiln = selectedAsset === 'brick_kiln';
-
-    layerIds.forEach(layerId => {
-        let visibility = 'none';
-
-        if (selectedAsset === '' || selectedAsset === layerId) {
-            visibility = 'visible';
-        }
-
-        if (isBrickKiln && (brickKilnIGP.includes(layerId) || brickKilnAfc.includes(layerId))) {
-            visibility = 'visible';
-
-            // Dynamically load the Brick Kiln layer if not already present
-            if (!map.getLayer(layerId)) {
-                if (layerId === 'BK_PK') loadBrickKilnLayerPK(map);
-                if (layerId === 'BK_IND') loadBrickKilnLayerIND(map);
-                if (layerId === 'BK_BAN') loadBrickKilnLayerBAN(map);
-
-                if (layerId === 'brick_kilns_DRC') loadBrickKilnLayerDRC(map);
-                if (layerId === 'brick_kilns_NGA') loadBrickKilnLayerNGA(map);
-                if (layerId === 'brick_kilns_UGA') loadBrickKilnLayerUGA(map);
-                if (layerId === 'brick_kilns_GHA') loadBrickKilnLayerGHA(map);
-            }
-        }
-
-        // Set visibility if layer already exists
-        if (map.getLayer(layerId)) {
-            map.setLayoutProperty(layerId, 'visibility', visibility);
-        }
-
-        // Sync legend checkbox if exists
-        const checkbox = document.querySelector(`input[data-layer="${layerId}"]`);
-        if (checkbox) {
-            checkbox.checked = (visibility === 'visible');
-        }
-    });
-
-    //Reapply country and pollutant filters
-    handleCountryAndPollutantFilters(map);
-}
-
-// Function to handle country filter changes
-export function handleCountryFilterChange(map) {
-    const selectedCountry = document.getElementById('countryFilter').value;
-    const visibleLayers = getVisibleLayers(map);
-
-    // Apply country filter to all visible layers
-    visibleLayers.forEach(layerId => {
-        map.setFilter(layerId, [
-            'all',
-            ...(selectedCountry ? [['==', 'country', selectedCountry]] : [])  // Filter by country if selected
-        ]);
-    });
+  const assetFilter = document.getElementById('assetFilter');
+  assetFilter.innerHTML = '<option value="">All</option>';
+  Object.keys(assetGroups).forEach(label => {
+    assetFilter.innerHTML += `<option value="${label}">${label}</option>`;
+  });
 }
 
 // Function to handle both country and pollutant filters
@@ -192,6 +57,44 @@ export function handleCountryAndPollutantFilters(map) {
             'all',
             ...(selectedCountry ? [['==', 'country', selectedCountry]] : []),
             ...(selectedPollutant ? [['>', selectedPollutant, 0]] : [])
+        ]);
+    });
+}
+
+
+export function handleAssetFilterChange(map) {
+  const selectedLabel = document.getElementById('assetFilter').value;
+
+  Object.entries(assetGroups).forEach(([label, layerIds]) => {
+    const isVisible = selectedLabel === "" || selectedLabel === label;
+
+    layerIds.forEach(layerId => {
+      if (map.getLayer(layerId)) {
+        map.setLayoutProperty(layerId, 'visibility', isVisible ? 'visible' : 'none');
+      }
+    });
+
+    
+
+    // Sync the legend checkbox
+    const checkbox = document.getElementById(`toggle${label.replace(/\s+/g, '')}`);
+    if (checkbox) checkbox.checked = isVisible;
+  });
+}
+
+
+
+
+// Function to handle country filter changes
+export function handleCountryFilterChange(map) {
+    const selectedCountry = document.getElementById('countryFilter').value;
+    const visibleLayers = getVisibleLayers(map);
+
+    // Apply country filter to all visible layers
+    visibleLayers.forEach(layerId => {
+        map.setFilter(layerId, [
+            'all',
+            ...(selectedCountry ? [['==', 'country', selectedCountry]] : [])  // Filter by country if selected
         ]);
     });
 }
@@ -210,3 +113,4 @@ export function initializeFilters(map) {
     document.getElementById('countryFilter').addEventListener('change', () => handleCountryFilterChange(map));
     document.getElementById('polutantType').addEventListener('change', () => handleCountryAndPollutantFilters(map));
 }
+
