@@ -4,7 +4,7 @@
 
 export const map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/light-v11', // style URL
+    style: 'mapbox://styles/mapbox/dark-v11', // style URL
     center: [78.8181577, 28.7650135], // starting position
     zoom: 4 // starting zoom
 });

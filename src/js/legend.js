@@ -6,6 +6,14 @@ import { toggleLayerVisibility, initializeLayerVisibilityControls } from './laye
 export function initializeLegend(map) {
     initializeLayerVisibilityControls(map); // Set up individual layer/brick kiln toggles
 
+
+    // MARK LEGEND BUTTON AS ACTIVE IF LEGEND IS VISIBLE ON LOAD
+    const legend = document.getElementById('legend');
+    const legendButton = document.getElementById('legendButton');
+    if (legend && legendButton && legend.style.display !== 'none') {
+        legendButton.classList.add('active');
+    }
+
     // Define group mappings
     const layerGroups = {
         'legend-brickKiln': ['BK_PK', 'BK_IND', 'BK_BAN'],
@@ -92,13 +100,21 @@ export function initializeLegend(map) {
     });
 
     // Toggle entire legend visibility
-    document.getElementById('legendButton').addEventListener('click', () => {
+    legendButton.addEventListener('click', () => {
         const legend = document.getElementById('legend');
-        legend.style.display = (legend.style.display === 'none' || legend.style.display === '') ? 'block' : 'none';
+        const isVisible = legend.style.display === 'block';
+
+        legend.style.display = isVisible ? 'none' : 'block';
+        legendButton.classList.toggle('active', !isVisible);
     });
 
+
     document.querySelector('#legend .closeButton').addEventListener('click', () => {
-        document.getElementById('legend').style.display = 'none';
+    const legend = document.getElementById('legend');
+    legend.style.display = 'none';
+
+    const legendButton = document.getElementById('legendButton');
+    legendButton.classList.remove('active');
     });
 
     // Checkbox change → update visibility

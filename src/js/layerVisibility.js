@@ -399,7 +399,20 @@ export function initLayerVisibility(map) {
 
       buttonLayerVisibility(map, layerId, !isVisible);
       button.classList.toggle('active', !isVisible);
-      if (tooltip) tooltip.style.display = !isVisible ? 'block' : 'none';
+
+      if (tooltip) {
+        if (!isVisible) {
+          tooltip.style.display = 'block';
+
+          // Hide tooltip after 3 seconds
+          clearTimeout(tooltip.hideTimeout);
+          tooltip.hideTimeout = setTimeout(() => {
+            tooltip.style.display = 'none';
+          }, 3000);
+        } else {
+          tooltip.style.display = 'none';
+        }
+      }
     });
   });
 }

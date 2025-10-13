@@ -92,6 +92,14 @@ export function toggleAggregateTool(map) {
         tooltip.style.display = 'block';
         bufferSizeSelector.style.display = 'block';
         closePopups(); // disable popups during aggregation
+
+        // 👇 Hide tooltip when user clicks on map (first interaction)
+        const hideTooltipOnClick = () => {
+            tooltip.style.display = 'none';
+            map.off('click', hideTooltipOnClick); // remove listener after first click
+        };
+        map.on('click', hideTooltipOnClick);
+
     } else {
         map.getCanvas().style.cursor = '';
         tooltip.style.display = 'none';
@@ -146,11 +154,19 @@ function handleAggregation(map, lngLat) {
     const resultBox = document.getElementById('aggregateResults');
     resultBox.style.display = 'block';
     resultBox.innerHTML = `
-        <h5>Aggregated Data (${bufferRadius} km buffer)</h5>
+        <div class="aggregate-header">
+            <h5>Aggregated Data (${bufferRadius} km buffer)</h5>
+            <button id="closeAggregateResults" class="closeButton">&times;</button>
+        </div>
         <p>Brick Kilns: </p>
         <canvas id="emissionsChart" width="400" height="250"></canvas>
         <canvas id="countsChart" width="400" height="250"></canvas>
     `;
+
+      document.getElementById('closeAggregateResults').addEventListener('click', () => {
+        resultBox.style.display = 'none';
+        clearBuffer(map);
+    });
 
     // Delay to ensure canvas is rendered
     setTimeout(() => {

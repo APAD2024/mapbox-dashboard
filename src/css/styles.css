@@ -67,6 +67,7 @@ html {
 /* Right section: takes up all remaining space */
 .right-section {
   flex: 1; /* fills remaining width */
+flex-wrap: wrap;
 }
 
 .menu-btn {
@@ -82,10 +83,6 @@ html {
 .menu-btn .icon {
     width: 2rem; /* adjust size */
     height: 2rem;
-}
-
-.left-section .logo {
-    height: 40%;
 }
 
 /* Right section: Geocoder */
@@ -144,24 +141,49 @@ width: 100%;
 @media (max-width: 1024px) {
   #topBar {
     flex-wrap: wrap;
-    justify-content: center;
-    padding: 0 2rem; 
+    padding: 0 2rem;
+    align-items: flex-start;
   }
 
   .right-section {
     width: 100%;
-    justify-content: center;
     height: fit-content;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    border-radius: 1.6rem;
+  }
+
+.left-section {
+    border-radius: 1.6rem;
+    font-family: var(--body01);
+    height: auto;
   }
 
   .geocoder-section {
     width: 100%;
     margin: 0;
   }
+
+  .filter-section {
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .filter.container {
+    width: -webkit-fill-available;
+  }
+
 }
 /* When screen shrinks below 640px:
    → move filter-section under search bar */
 @media (max-width: 640px) {
+
+   #topBar {
+    flex-wrap: wrap;
+    padding: 0 2rem; 
+    align-items: flex-start;
+  }
 
   .right-section {
     gap: 1rem;
@@ -169,6 +191,15 @@ width: 100%;
     align-items: stretch;
     height: fit-content;
     border-radius: 1.6rem;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .left-section {
+    gap: 0.8rem;
+    border-radius: 1.6rem;
+    font-family: var(--body01);
+    height: auto;
   }
 
   .geocoder-section {
@@ -180,6 +211,11 @@ width: 100%;
     width: 100%;
     order: 2;
     justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .filter.container {
+    width: -webkit-fill-available;
   }
 
 }
@@ -286,13 +322,30 @@ width: 100%;
 .FAB:hover {
     background: var(--dark-green);
     color: var(--light-green);
-    border: 0.12rem solid var(--light-green);
-}
 
+}
 .FAB:hover i {
     color: var(--light-green);
-    transition: color 0.3s ease, font-size 0.3s ease;
 }
+
+.FAB:active,
+.FAB.active {
+  background: var(--dark-green);
+  color: var(--light-green);
+  border: 0.12rem solid var(--light-green);
+  transform: translateY(0);
+}
+
+.FAB:active i,
+.FAB.active i {
+  color: var(--light-green);
+  transition: color 0.18s ease, transform 0.12s ease;
+}
+
+.FAB:active {
+  transform: translateY(1px);
+}
+
 
 /* #endregion */
 
@@ -443,7 +496,7 @@ position: absolute;
   border-radius: 8px;
   overflow-y: auto;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  height: 46rem !important;  
+  height: fit-content !important;  
   width: 30rem;
   display: none;
 
@@ -737,6 +790,12 @@ position: absolute;
     cursor: pointer;
     font-size: var(--heading05);
     font-weight: var(--heading-bold-weight);
+}
+
+#legendButton.active {
+  background-color: var(--dark-green);
+  color: var(--light-green);
+  border: 0.12rem solid var(--light-green);
 }
 
 #legend {
