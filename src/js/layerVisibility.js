@@ -170,50 +170,67 @@ function hslaVar(varName, alpha = 1) {
 }
 
 const layerStyles = {
+    //Group 1: Extraction or primary energy generation (Cross symbol)
+    coal: { circleColor: hslaVar('--vivid-green', 0.2), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--vivid-green') },
+
+    fossilFuel: { circleColor: hslaVar('--blue', 0.2), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--blue') },
+
+    furnaceOil: { circleColor: hslaVar('--purple', 0.25), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--purple') },
 
     //Group 2: Manufacturing or secondary energy generation (Red hues)
-    steel: { circleColor: hslaVar('--blue', 0.5), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--blue') },
+    steel: { circleColor: hslaVar('--yellow', 0.5), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--yellow') },
     
     paperPulp: { circleColor: hslaVar('--pink', 0.5), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--pink') },
     
-    brickKiln:{ circleColor: hslaVar('--dark-red', 0.5), circleRadius: 2, strokeWidth: 1, strokeColor: hslaVar('--dark-red')},
-    
-    cement:{ circleColor: hslaVar('--vivid-green', 0.5), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--vivid-green') }, 
+    cement:{ circleColor: hslaVar('--dark-orange', 0.25), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--dark-orange') }, 
+
+    brickKiln:{ circleColor: hslaVar('--red', 0.25), circleRadius: 1, strokeWidth: 0, strokeColor: hslaVar('--red')},
     
     boilers:{ circleColor: hslaVar('--red', 0.25), circleRadius: 20, strokeWidth: 1, strokeColor: hslaVar('--red') },  
 
-    //Group 5: Crop residue burning
+    //Group 3: tertiary
+    landFillWaste :{ circleColor: hslaVar('--yellow', 0), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--yellow') },
 
+    gpw: { circleColor: hslaVar('--blue', 0), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--blue') },
 };
 
 //Initialize all legend layer toggles
 export function initializeLayerVisibilityControls(map) {
-
-    //Group 1: Extraction or primary energy generation (Cross symbol)
+    
     setupGroupLayerToggle(map, "toggleCoal", [
-        { id: "coal", load: (map) => loadSymbolLayer(
+    { id: "coal", load: (map) => loadGroupLayers(
         map,
         "coal",
         "coal_IGP",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Coal+Plants/coal_plants_main.geojson",
-        "./src/assets/cross_coal.png", 0.1
-        )},
-        { id: "coal_africa", load: (map) => loadSymbolLayer(
+        layerStyles.coal.circleColor, layerStyles.coal.circleRadius, layerStyles.coal.strokeWidth, layerStyles.coal.strokeColor
+    )},
+    { id: "coal_africa", load: (map) => loadGroupLayers(
         map,
         "coal_africa",
         "coal_Afc",
         "https://gist.githubusercontent.com/Mseher/b3f5e885ddae2b90be7048f87896ef48/raw/57db894dc8237b9d09a8f3ed1a5e114400cfc49f/Africa_Coal.geojson",
-         "./src/assets/cross_coal.png", 0.1
+        layerStyles.coal.circleColor, layerStyles.coal.circleRadius, layerStyles.coal.strokeWidth, layerStyles.coal.strokeColor
         )}
     ]);
 
     setupGroupLayerToggle(map, "toggleFossilFuel", [
-        { id: "fossil_fuel", load: (map) => loadSymbolLayer(
+        { id: "fossil_fuel", load: (map) => loadGroupLayers(
             map,
             "fossil_fuel",
             "fossilFuel",
             "https://gist.githubusercontent.com/bilalpervaiz/597c50eff1747c1a3c8c948bef6ccc19/raw/6984d3a37d75dc8ca7489ee031377b2d57da67d2/fossil_fuel.geojson",
-           "./src/assets/cross_fossil-fuel.png", 0.1
+            layerStyles.fossilFuel.circleColor, layerStyles.fossilFuel.circleRadius, layerStyles.fossilFuel.strokeWidth, layerStyles.fossilFuel.strokeColor
+        )}
+    ]);
+
+     setupGroupLayerToggle(map, "toggleFurnaceOil", [
+        { id: "furnace_oil_IGP", load: (map) => loadGroupLayers(
+            map,
+            "furnace_oil_IGP",
+            "furnaceoilIGP",
+            "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_main.geojson",
+            layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
         )}
     ]);
 
@@ -227,7 +244,29 @@ export function initializeLayerVisibilityControls(map) {
         )}
     ]);
 
-    
+    //Group 3: Tertiary or waste management (green hues)
+
+    setupGroupLayerToggle(map, "toggleLandFillWaste", [
+    { id: "solid_waste_IGP", load: (map) => loadGroupLayers(
+        map,
+        "solid_waste_IGP",
+        "solidWasteIGP",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Plastic+and+Landfill+Sites/waste_main.geojson",
+        layerStyles.landFillWaste.circleColor, layerStyles.landFillWaste.circleRadius, layerStyles.landFillWaste.strokeWidth, layerStyles.landFillWaste.strokeColor
+    )}
+    ]);
+
+     setupGroupLayerToggle(map, "toggleGPW", [
+    { id: "gpw", load: (map) => loadGroupLayers(
+        map,
+        "gpw",
+        "GPW",
+        "https://gist.githubusercontent.com/bilalpervaiz/e2c93d2017fc1ed90f9a6d5259701a5e/raw/4dd19fe557d29b9268f11e233169948e95c24803/GPW.geojson",
+        layerStyles.gpw.circleColor, layerStyles.gpw.circleRadius, layerStyles.gpw.strokeWidth, layerStyles.gpw.strokeColor
+    )}
+    ]);
+   
+
     //Group 2: Manufacturing or secondary energy generation (Circles)
     setupGroupLayerToggle(map, "toggleSteel", [
     { id: "steel_IGP", load: (map) => loadGroupLayers(
@@ -293,26 +332,7 @@ export function initializeLayerVisibilityControls(map) {
     )}
     ]);
 
-    //Group 3: Tertiary or waste management (green hues)
-    setupGroupLayerToggle(map, "toggleLandFillWaste", [
-    { id: "solid_waste_IGP", load: (map) => loadSymbolLayer(
-        map,
-        "solid_waste_IGP",
-        "solidWasteIGP",
-        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Plastic+and+Landfill+Sites/waste_main.geojson",
-        "./src/assets/plus_land-fill-waste.png", 0.1
-        )}
-    ]);
-
-    setupGroupLayerToggle(map, "toggleGPW", [
-    { id: "gpw", load: (map) => loadSymbolLayer(
-        map,
-        "gpw",
-        "GPW",
-        "https://gist.githubusercontent.com/bilalpervaiz/e2c93d2017fc1ed90f9a6d5259701a5e/raw/4dd19fe557d29b9268f11e233169948e95c24803/GPW.geojson",
-        "./src/assets/plus_gpw.png", 0.1)}
-    ]);
-
+    
     // const layerPromise = fetchAndAddPollutionLayer(map);
     // setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
 

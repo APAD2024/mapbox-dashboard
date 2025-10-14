@@ -6,8 +6,8 @@
 --gray:  hsla(0, 0%, 75.3%, 1);
 --dark-gray: hsla(0, 0%, 44.3%, 1);
 
---dark-yellow: hsla(53, 91.4%, 50%, 1);
---yellow:  hsla(53, 91.5%, 77.1%, 1);
+--dark-yellow: hsla(53, 91%, 50%, 1);
+--yellow:  hsla(53, 91%, 77%, 1);
 
 --dark-orange: hsla(26, 91%, 50%, 1);
 --orange: hsla(26, 91%, 65%, 1);
@@ -19,13 +19,16 @@
 --pink: hsla(356, 100%, 80%, 1);
 --pink-t: hsla(356, 100%, 80%, 0.5);
 
---vivid-green: hsla(115, 50%, 50%, 1);
---vivid-light-green:  hsla(115, 50%, 75%, 1);
---vivid-green-t: hsla(115, 50%, 50%, 0.5);
+--vivid-green: hsla(162, 50%, 45%, 1); /* #39AD8A */
+--vivid-light-green:  hsla(162, 50%, 65%, 1); /* #79D3B8 */
+--vivid-green-t: hsla(162, 50%, 50%, 0.5);
 
 --blue: hsla(205, 50%, 50%, 1);
 --blue-t: hsla(205, 50%, 50%, 0.5);
 --light-blue:  hsla(205, 50%, 70%, 1);
+
+--purple: hsla(324, 50%, 50%, 1); /* #BF408C */
+--light-purple: hsla(324, 50%, 75%, 1); /* #DF9FC5 */
 
 
 /* Text-size styles */

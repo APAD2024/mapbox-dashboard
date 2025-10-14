@@ -57,170 +57,84 @@ function convertPollutionDataToGeoJSON(data) {
   };
 }
 
-// // layers.js
-// export function fetchAndAddPollutionLayer(map) {
-//   return new Promise(async (resolve, reject) => {
-//     try {
-//       const response = await fetch(
-//         "https://api.apad.world/api/get_all_submissions?is_verified=true",
-//         {
-//           method: "POST",
-//           headers: {
-//             Accept: "application/json",
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({}),
-//         }
-//       );
-
-//       if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-//       const data = await response.json();
-//       const geojson = convertPollutionDataToGeoJSON(data);
-
-//       // Load custom marker image if not yet loaded
-//       if (!map.hasImage("custom-marker")) {
-//         await new Promise((resolveImage, rejectImage) => {
-//           map.loadImage(
-//              "/src/assets/star_open-waste-burning.png",
-//             (error, image) => {
-//               if (error) rejectImage(error);
-//               else {
-//                 map.addImage("custom-marker", image);
-//                 resolveImage();
-//               }
-//             }
-//           );
-//         });
-//       }
-
-//       // Add or update source
-//       if (map.getSource("pollution_reports")) {
-//         map.getSource("pollution_reports").setData(geojson);
-//       } else {
-//         map.addSource("pollution_reports", {
-//           type: "geojson",
-//           data: geojson,
-//         });
-
-//         map.addLayer({
-//           id: "pollution_reports",
-//           type: "symbol",
-//           source: "pollution_reports",
-//           layout: {
-//             "icon-image": "custom-marker",
-//             "icon-size": 0.1,
-//             "icon-anchor": "bottom",
-//             visibility: "visible",
-//           },
-//         });
-
-//         // Optional popup
-//         map.on("click", "pollution_reports", (e) => {
-//           const props = e.features[0].properties;
-//           new mapboxgl.Popup()
-//             .setLngLat(e.lngLat)
-//             .setHTML(`
-//               <div style="text-align: center;">
-//                 <h4>${props.pollution_type}</h4>
-//                 <p><strong>Reported on:</strong> ${new Date(props.timestamp).toLocaleString()}</p>
-//                 <img src="${props.image_url}" alt="${props.pollution_type}" width="150px" style="border-radius: 5px;"/>
-//               </div>
-//             `)
-//             .addTo(map);
-//         });
-
-//         map.on("mouseenter", "pollution_reports", () => {
-//           map.getCanvas().style.cursor = "pointer";
-//         });
-//         map.on("mouseleave", "pollution_reports", () => {
-//           map.getCanvas().style.cursor = "";
-//         });
-//       }
-
-//       resolve(); // layer added successfully
-//     } catch (err) {
-//       console.error("Error fetching or adding pollution data:", err);
-//       reject(err);
-//     }
-//   });
-// }
-
 // UNIFIED: Async loader function for pollution reports
-export async function loadPollutionReportsLayer(map) {
+export function loadPollutionReportsLayer(map) {
   const layerId = "pollution_reports";
 
-  // If already loaded, just resolve
-  if (map.getLayer(layerId)) return;
+  // If already loaded, just return early
+  if (map.getSource(layerId)) return;
 
-  try {
-    const response = await fetch(
-      "https://api.apad.world/api/get_all_submissions?is_verified=true",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-      }
-    );
+  showLoadingSpinner();
 
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+  fetch("https://api.apad.world/api/get_all_submissions?is_verified=true", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  })
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+      const data = await response.json();
+      const geojson = convertPollutionDataToGeoJSON(data);
 
-    const data = await response.json();
-    const geojson = convertPollutionDataToGeoJSON(data);
-
-    // Load custom marker image if not yet loaded
-    if (!map.hasImage("custom-marker")) {
-      const image = await new Promise((resolve, reject) => {
-        map.loadImage("/src/assets/star_open-waste-burning.png", (error, img) => {
-          if (error) reject(error);
-          else resolve(img);
+      // Ensure the custom marker image is loaded before adding the layer
+      if (!map.hasImage("custom-marker")) {
+        const image = await new Promise((resolve, reject) => {
+          map.loadImage("/src/assets/star_open-waste-burning.png", (error, img) => {
+            if (error) reject(error);
+            else resolve(img);
+          });
         });
+        map.addImage("custom-marker", image);
+      }
+
+      // Add the source
+      map.addSource(layerId, {
+        type: "geojson",
+        data: geojson,
       });
-      map.addImage("custom-marker", image);
-    }
 
-    // Add GeoJSON source
-    map.addSource(layerId, { type: "geojson", data: geojson });
+      // Add the layer
+      map.addLayer({
+        id: layerId,
+        type: "symbol",
+        source: layerId,
+        layout: {
+          "icon-image": "custom-marker",
+          "icon-size": 0.25,
+          "icon-anchor": "bottom",
+          visibility: "visible",
+        },
+      });
 
-    // Add symbol layer
-    map.addLayer({
-      id: layerId,
-      type: "symbol",
-      source: layerId,
-      layout: {
-        "icon-image": "custom-marker",
-        "icon-size": 0.25,
-        "icon-anchor": "bottom",
-        visibility: "visible",
-      },
+      // Add popup on click
+      map.on("click", layerId, (e) => {
+        const props = e.features[0].properties;
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(`
+            <div style="text-align: center;">
+              <h4>${props.pollution_type}</h4>
+              <p><strong>Reported on:</strong> ${new Date(
+                props.timestamp
+              ).toLocaleString()}</p>
+              <img src="${props.image_url}" alt="${props.pollution_type}" width="150px" style="border-radius: 5px;"/>
+            </div>
+          `)
+          .addTo(map);
+      });
+
+      map.on("mouseenter", layerId, () => (map.getCanvas().style.cursor = "pointer"));
+      map.on("mouseleave", layerId, () => (map.getCanvas().style.cursor = ""));
+
+      hideLoadingSpinner();
+    })
+    .catch((err) => {
+      console.error("Error loading pollution reports layer:", err);
+      hideLoadingSpinner();
     });
-
-    // Add popup interaction
-    map.on("click", layerId, (e) => {
-      const props = e.features[0].properties;
-      new mapboxgl.Popup()
-        .setLngLat(e.lngLat)
-        .setHTML(`
-          <div style="text-align: center;">
-            <h4>${props.pollution_type}</h4>
-            <p><strong>Reported on:</strong> ${new Date(
-              props.timestamp
-            ).toLocaleString()}</p>
-            <img src="${props.image_url}" alt="${props.pollution_type}" width="150px" style="border-radius: 5px;"/>
-          </div>
-        `)
-        .addTo(map);
-    });
-
-    map.on("mouseenter", layerId, () => (map.getCanvas().style.cursor = "pointer"));
-    map.on("mouseleave", layerId, () => (map.getCanvas().style.cursor = ""));
-
-  } catch (err) {
-    console.error("Error loading pollution reports layer:", err);
-  }
 }
 
 
@@ -470,58 +384,75 @@ export function loadOpenAQLayer(map) {
   }
 }
 
-export function loadGroupLayers(
+export async function loadGroupLayers(
   map,
   layerId,
   sourceId,
   url,
   circleColor = "#000",
-  circleRadius = 5,
+  baseRadius = 5,
   strokeWidth = 2,
   strokeColor = "#fff"
 ) {
   showLoadingSpinner();
 
-  return fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      // Add or update the source
-      if (!map.getSource(sourceId)) {
-        map.addSource(sourceId, { type: "geojson", data });
-      } else {
-        map.getSource(sourceId).setData(data); // update data if already exists
-      }
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
 
-      // Add the circle layer only if it doesn't exist
-      if (!map.getLayer(layerId)) {
-        map.addLayer({
-          id: layerId,
-          type: "circle",
-          source: sourceId,
-          paint: {
-            "circle-color": circleColor,
-            "circle-radius": circleRadius,
-            "circle-stroke-width": strokeWidth,
-            "circle-stroke-color": strokeColor
-                    },
-          layout: { visibility: "visible" },
-        });
-      }
+    // 1️⃣ Find max PM2.5 value for this asset type
+    const pm25Values = data.features
+      .map(f => parseFloat(f.properties["pm25"]))
+      .filter(v => !isNaN(v));
 
-    // popup
-    if (!isAggregateToolEnabled()) {
-    map.on("click", layerId, (e) => {
-    showPopup(map, e.lngLat, e.features[0].properties);
+    const maxPM25 = pm25Values.length > 0 ? Math.max(...pm25Values) : 1;
+
+    // 2️⃣ Normalize and add scaled radius property
+    data.features.forEach(f => {
+      const pm25 = parseFloat(f.properties["pm25"]);
+      const normalized = !isNaN(pm25) ? pm25 / maxPM25 : 0.2; // fallback if missing
+      // Scale to a reasonable visual range (5–20 px)
+      f.properties.scaled_radius = 5 + normalized * 15;
     });
+
+    // 3️⃣ Add or update source
+    if (!map.getSource(sourceId)) {
+      map.addSource(sourceId, { type: "geojson", data });
+    } else {
+      map.getSource(sourceId).setData(data);
     }
 
-      hideLoadingSpinner();
-    })
-    .catch(err => {
-      console.error(`Error loading layer ${layerId}:`, err);
-      hideLoadingSpinner();
-    });
+    // 4️⃣ Add circle layer if not existing
+    if (!map.getLayer(layerId)) {
+      map.addLayer({
+        id: layerId,
+        type: "circle",
+        source: sourceId,
+        paint: {
+          "circle-color": circleColor,
+          // Use the computed property for radius
+          "circle-radius": ["get", "scaled_radius"],
+          "circle-stroke-width": strokeWidth,
+          "circle-stroke-color": strokeColor,
+        },
+        layout: { visibility: "visible" },
+      });
+    }
+
+    // 5️⃣ Add popup if aggregate tool is not active
+    if (!isAggregateToolEnabled()) {
+      map.on("click", layerId, (e) => {
+        showPopup(map, e.lngLat, e.features[0].properties);
+      });
+    }
+
+    hideLoadingSpinner();
+  } catch (err) {
+    console.error(`Error loading layer ${layerId}:`, err);
+    hideLoadingSpinner();
+  }
 }
+
 
 export async function loadSymbolLayer(
   map,
