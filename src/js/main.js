@@ -1,9 +1,9 @@
-import { loadGroupLayers, loadSymbolLayer  } from './layers.js';
+import { loadGroupLayers  } from './layers.js';
 import { initializeGeocoder } from './geocoder.js';
 import { initializeBasemapMenu } from './basemapMenu.js';
 import { initializeAreaChange } from './areaChange.js';
 import { initAggregateTool } from './aggregateTool.js';
-import { initLayerVisibility } from './layerVisibility.js';
+import { initLayerVisibility, loadAllBoundaries } from './layerVisibility.js';
 
 import { initializeLayerVisibilityControls } from './layerVisibility.js';
 import { initializeLegend } from './legend.js';
@@ -34,8 +34,8 @@ map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 // ---------------------------------------------------------------LAYER LOADING -------------------------------------------------------------
 // Ensure map is initialized
 map.on('load', () => {
+    loadAllBoundaries(map); 
     loadGroupLayers(map);
-    loadSymbolLayer(map);
     initAggregateTool(map);
     initializeGeocoder(map);
     initLayerVisibility(map); 

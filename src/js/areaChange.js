@@ -27,9 +27,6 @@ export function initializeAreaChange(map) {
             areaChangeButton.innerHTML = '<i class="fas fa-globe-asia"></i>';
             areaChangeButton.setAttribute('title', 'Move to Africa');
 
-            // Show IGP Region legend and hide Africa Region legend
-            document.querySelector('.collapsible-content.igp').style.display = 'block';
-            document.querySelector('.collapsible-content.africa').style.display = 'none';
         } else {
             // If the map is in Asia (IGP Region), shift to Africa
             map.flyTo({
@@ -42,24 +39,7 @@ export function initializeAreaChange(map) {
             areaChangeButton.innerHTML = '<i class="fas fa-globe-africa"></i>';
             areaChangeButton.setAttribute('title', 'Move to Asia');
 
-            // Show Africa Region legend and hide IGP Region legend
-            document.querySelector('.collapsible-content.africa').style.display = 'block';
-            document.querySelector('.collapsible-content.igp').style.display = 'none';
         }
     });
 
-    // Initialize the correct legend visibility on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const currentCenter = map.getCenter();
-
-        if (Math.abs(currentCenter.lng - africaCenter[0]) < 5 && Math.abs(currentCenter.lat - africaCenter[1]) < 5) {
-            // Map starts in Africa
-            document.querySelector('.collapsible-content.africa').style.display = 'block';
-            document.querySelector('.collapsible-content.igp').style.display = 'none';
-        } else {
-            // Map starts in Asia (IGP Region)
-            document.querySelector('.collapsible-content.igp').style.display = 'block';
-            document.querySelector('.collapsible-content.africa').style.display = 'none';
-        }
-    });
 }

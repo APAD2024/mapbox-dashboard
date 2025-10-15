@@ -13,11 +13,26 @@ import {
 //     loadADM3BrickKilnsPakistan
 // } from './brickKilnadm3.js';
 
-import { loadGroupLayers, loadSymbolLayer, loadOpenAQLayer, loadPollutionReportsLayer } from './layers.js';
+import { loadGroupLayers, loadOpenAQLayer, loadPollutionReportsLayer, loadCountryBoundary } from './layers.js';
 
 
 // const layerPromise = fetchAndAddPollutionLayer(map);
 // setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
+export function loadAllBoundaries(map) {
+  const boundaries = [
+    { code: "IND", url: "https://gist.githubusercontent.com/khizerzakir/a57134b1784de99b512cdcade67936c2/raw/d457183d9aa4f2e128440ebfd69da3143f933ae2/IGP_boundary.geojson" },
+    { code: "UGA", url: "https://gist.githubusercontent.com/Mseher/542c13b528a18c3d13d43eb390efe47f/raw/7f60e28ef3b7e9df2a1f3a4f745856debff9832e/UGA_adm_0.geojson" },
+    { code: "GHA", url: "https://gist.githubusercontent.com/Mseher/7fb33392e9c0adb358ad2a553f5eba5a/raw/3cbbe1c37ae215b6281f69f890e6641e0d73527e/GHA_adm_0.geojson" },
+    { code: "NGA", url: "https://gist.githubusercontent.com/Mseher/359c899443ff3d0e31ea1eb3610227b6/raw/3f33451383fc0d5967e680fc1038b85d60bf1a76/NGA_adm_0.geojson"},
+    { code: "DRC", url: "https://gist.githubusercontent.com/Mseher/731408a10cc9e5ed36c5fb5a1982dc1c/raw/7779b1c68faa84685e3a3eef631afa675d78f209/COD_adm_0.geojson"},
+    { code: "KEN", url: "https://gist.githubusercontent.com/khizerzakir/e7a28f5a6a27a58e68d22699981489d3/raw/60aaa8a8710c395e030ddeeecfcf6c818e9136af/Ken_adm_0.geojson"}
+  ];
+
+  boundaries.forEach(({ code, url, color }) => {
+    loadCountryBoundary(map, code, url, color);
+  });
+}
+
 // Store visibility states
 let layerVisibility = {};
 
@@ -140,7 +155,7 @@ export function setupGroupLayerToggle(map, checkboxId, layers) {
                     map.getCanvas().style.cursor = 'pointer';
                 });
                 map.on('mouseleave', layer.id, () => {
-                    map.getCanvas().style.cursor = aggregateToolEnabled ? 'crosshair' : '';
+                        map.getCanvas().style.cursor = '';
                 });
             });
         } else {
@@ -234,16 +249,6 @@ export function initializeLayerVisibilityControls(map) {
         )}
     ]);
 
-    setupGroupLayerToggle(map, "toggleFurnaceOil", [
-        { id: "furnace_oil_IGP", load: (map) => loadSymbolLayer(
-            map,
-            "furnace_oil_IGP",
-            "furnaceoilIGP",
-            "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_main.geojson",
-               "./src/assets/cross_furnace-oil.png", 0.1
-        )}
-    ]);
-
     //Group 3: Tertiary or waste management (green hues)
 
     setupGroupLayerToggle(map, "toggleLandFillWaste", [
@@ -332,53 +337,8 @@ export function initializeLayerVisibilityControls(map) {
     )}
     ]);
 
-    
-    // const layerPromise = fetchAndAddPollutionLayer(map);
-    // setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
-
-    //   setupGroupLayerToggle(map, "toggleOilGas", [
-    //     { id: "oil_gas_IGP", load: (map) => loadGroupLayers(
-    //       map,
-    //       "oil_gas_IGP",
-    //       "oilgasIGP",
-    //       "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/oil_gas_refining_main.geojson",
-    //       "rgba(63, 138, 192, 0,25)", 10, 1, "rgba(63, 138, 192, 1)"
-    //     )}
-    //   ]);
-      
-
       // Setup other groups or single layers similarly...
 }
-
-// export function buttonLayerVisibility(map, layerId, isVisible) {
-//   if (!map.getLayer(layerId)) return;
-//   map.setLayoutProperty(layerId, 'visibility', isVisible ? 'visible' : 'none');
-// }
-
-// export function initLayerVisibility(map) {
-//   const aqButton = document.getElementById('buttonOpenAQData');
-//   const tooltipAQ = document.getElementById('tooltipAQ');
-
-//   if (aqButton) {
-//     aqButton.addEventListener('click', async () => {
-//       const layerId = 'openaq_latest';
-
-//       // If not loaded, load first
-//       if (!map.getLayer(layerId)) {
-//         await loadOpenAQLayer(map);
-//       }
-
-
-//       const currentVisibility = map.getLayoutProperty(layerId, 'visibility');
-//       const isVisible = currentVisibility === 'visible';
-
-//       buttonLayerVisibility(map, layerId, !isVisible);
-//       aqButton.classList.toggle('active', !isVisible);
-//       tooltipAQ.style.display = !isVisible ? 'block' : 'none';
-//     });
-//   }
-// }
-
 
 export function buttonLayerVisibility(map, layerId, isVisible) {
   if (!map.getLayer(layerId)) return;

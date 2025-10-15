@@ -31,7 +31,7 @@ export const layerIds = [
   "pollution_reports",
   "openaq_latest",
 ];
-let boundaryLayer, populationLayer, gpwLayer;
+// let boundaryLayer, populationLayer, gpwLayer;
 // -------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
 
 // -----------------------------------------------------------LAYERS LOADING-----------------------------------------------------------
@@ -211,27 +211,50 @@ async function fetchOpenAQLatestAsGeoJSON() {
   };
 }
 
-export function generatePopupHTML(properties) {
+export function generatePopupHTML(properties, coordinates, layerName = "") {
   if (!properties) return "";
 
-  const type = properties.type ?? "";
-  const name = properties.name ?? "Unknown";
-  const country = properties.country ?? "Unknown";
-  const region = properties.region ?? "";
-  const capacity = properties.capacity ?? "---";
-  const pm10 = properties.pm10 ?? "---";
-  const pm25 = properties.pm25 ?? "---";
-  const so2 = properties.so2 ?? "---";
-  const nox = properties.nox ?? "---";
+  // Name: fallback to multiple possible fields
+  const name = properties.name 
+             || properties["Name of Enterprise"] 
+             || properties.plant_name
+             || "Unknown";
 
-  // Show region + country, but if region is empty, only show country
-  const locationText = region ? `${region}, ${country}` : country;
+  // Type: use layer name if passed, else fallback to properties.type
+  const type = layerName || properties.type || "";
+
+  // Location: Address of the Industry takes priority
+  let locationText = "";
+  if (properties["Address of the Industry"]) {
+    locationText = properties["Address of the Industry"];
+  } else {
+    const region = properties.region ?? "";
+    const country = properties.country ?? "Unknown";
+    locationText = region ? `${region}, ${country}` : country;
+  }
+
+  // Latitude & Longitude from coordinates parameter
+  const [lng, lat] = coordinates ?? [null, null];
+  const latLngText = (lat !== null && lng !== null) ? `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}` : "";
+
+  // Capacity
+  const capacity = properties.capacity 
+                 || properties.cap_mw
+                 || properties["Capacity"] 
+                 || "---";
+
+  // Pollutants
+  const pm10 = properties.pm10 ?? properties["PM10"] ?? "---";
+  const pm25 = properties.pm25 ?? properties["PM2.5"] ?? properties["PM25"] ?? "---";
+  const so2  = properties.so2  ?? properties["SO2"]  ?? "---";
+  const nox  = properties.nox  ?? properties["NOx"]  ?? "---";
 
   return `
     <div class="popup-table">
       ${type ? `<div class="type">${type}</div>` : ""}
       <h3>${name}</h3>
       <div>${locationText}</div>
+      ${latLngText ? `<div>${latLngText}</div>` : ""}
       <div>Capacity: ${capacity}</div>
       <table>
         <tr><td>PM10</td><td>${pm10}</td></tr>
@@ -242,17 +265,19 @@ export function generatePopupHTML(properties) {
     </div>
   `;
 }
+
 // Keep track of the currently open popup
 let currentPopup = null;
 
-// Reusable function to show a single popup at a time
-export function showPopup(map, lngLat, properties) {
+// Show popup, passing coordinates for Lat/Lng and layer name
+export function showPopup(map, lngLat, properties, layerName = "") {
   if (currentPopup) {
     currentPopup.remove();
     currentPopup = null;
   }
 
-  const html = generatePopupHTML(properties);
+  // Pass coordinates as [lng, lat] to generatePopupHTML
+  const html = generatePopupHTML(properties, [lngLat.lng, lngLat.lat], layerName);
 
   currentPopup = new mapboxgl.Popup()
     .setLngLat(lngLat)
@@ -261,42 +286,57 @@ export function showPopup(map, lngLat, properties) {
 }
 
 
+
 export function loadOpenAQLayer(map) {
   showLoadingSpinner();
 
   // Lazy load OpenAQ Air Quality layer
   if (!map.getSource("openaq_latest")) {
-    showLoadingSpinner(); // Show the spinner while loading
-
     fetchOpenAQLatestAsGeoJSON()
       .then((data) => {
-        // Add the GeoJSON as a new source
+
+        // --- 1️⃣ Compute normalization for PM2.5 ---
+        const pm25Values = data.features
+          .map(f => parseFloat(f.properties["pm25"]))
+          .filter(v => !isNaN(v));
+
+        const maxPM25 = pm25Values.length > 0 ? Math.max(...pm25Values) : 1;
+
+        // --- 2️⃣ Add PM2.5-scaled size property to each feature ---
+        data.features.forEach(f => {
+          const pm25 = parseFloat(f.properties["pm25"]);
+          // normalize between 0.2 and 1
+          const normalized = !isNaN(pm25) ? pm25 / maxPM25 : 0.2;
+          // scale to pixel radius range (e.g. 3px – 12px)
+          f.properties.circle_size = 3 + normalized * 9;
+        });
+
+        // --- 3️⃣ Add GeoJSON source ---
         map.addSource("openaq_latest", {
           type: "geojson",
           data: data,
         });
 
-        // Add a circle layer for air quality stations
+        // --- 4️⃣ Add a circle layer for air quality stations ---
         map.addLayer({
           id: "openaq_latest",
           type: "circle",
           source: "openaq_latest",
           paint: {
-            "circle-radius": 3,
-            "circle-color":  "#C3D1CE",
+            "circle-radius": ["get", "circle_size"], // 👈 dynamic by PM2.5
+            "circle-color": "hsla(324, 50%, 75%, 0.5)",
             "circle-stroke-width": 0.6,
-            "circle-stroke-color": "#112F30",
+            "circle-stroke-color": "hsla(324, 50%, 75%, 1)",
           },
           layout: {
-            visibility: 'visible',
+            visibility: "visible",
           },
         });
 
-        // Add popups for air quality stations
+        // --- 5️⃣ Add popups for air quality stations ---
         map.on("click", "openaq_latest", (e) => {
           const properties = e.features[0].properties;
 
-          // Dynamically generate rows for available pollutants
           const excludeKeys = [
             "id",
             "name",
@@ -309,65 +349,51 @@ export function loadOpenAQLayer(map) {
             "status",
             "capacity",
             "last_update",
+            "circle_size", // exclude the added size property
           ];
+
           let tableRows = "";
+          const toSubTag = str => str.replace(/(\d+)/g, "<sub>$1</sub>");
 
-          // Function to convert numbers in string to subscript using <sub> tags
-          function toSubTag(str) {
-            return str.replace(/(\d+)/g, "<sub>$1</sub>");
-          }
-
-          // Inside your popup generation loop
           for (const [key, value] of Object.entries(properties)) {
             if (!excludeKeys.includes(key) && value != null) {
-              // Format the label
               let label = key.replace(/([a-z])([A-Z])/g, "$1 $2").toUpperCase();
-
-              // Special case for PM25 -> PM2.5
               if (label === "PM25") label = "PM2.5";
-
-              // Wrap any numbers in <sub>
               label = toSubTag(label);
-
               const roundedValue = Number(value).toFixed(2);
-
               tableRows += `
-            <tr>
-                <td><strong>${label}</strong></td>
-                <td>${roundedValue}</td>
-            </tr>
-        `;
+                <tr>
+                    <td><strong>${label}</strong></td>
+                    <td>${roundedValue}</td>
+                </tr>`;
             }
           }
 
-          // Add last_update row if exists
           if (properties.last_update) {
             tableRows += `
-                        <tr>
-                            <td><strong>Last Update<strong></td>
-                            <td>${properties.last_update}</td>
-                        </tr>
-                    `;
+              <tr>
+                  <td><strong>Last Update<strong></td>
+                  <td>${properties.last_update}</td>
+              </tr>`;
           }
 
           const popupContent = `
-                    <div class="popup-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Pollutant</th>
-                                    <th>Value (µg/m³)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${
-                                  tableRows ||
-                                  '<tr><td colspan="2">No recent measurements</td></tr>'
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                `;
+            <div class="popup-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pollutant</th>
+                            <th>Value (µg/m³)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${
+                          tableRows ||
+                          '<tr><td colspan="2">No recent measurements</td></tr>'
+                        }
+                    </tbody>
+                </table>
+            </div>`;
 
           new mapboxgl.Popup()
             .setLngLat(e.lngLat)
@@ -375,11 +401,11 @@ export function loadOpenAQLayer(map) {
             .addTo(map);
         });
 
-        hideLoadingSpinner(); // Hide the spinner after loading
+        hideLoadingSpinner();
       })
       .catch((error) => {
         console.error("Error loading OpenAQ data:", error);
-        hideLoadingSpinner(); // Hide spinner even if there is an error
+        hideLoadingSpinner();
       });
   }
 }
@@ -400,29 +426,28 @@ export async function loadGroupLayers(
     const res = await fetch(url);
     const data = await res.json();
 
-    // 1️⃣ Find max PM2.5 value for this asset type
+    // Find max PM2.5 value for this asset type
     const pm25Values = data.features
       .map(f => parseFloat(f.properties["pm25"]))
       .filter(v => !isNaN(v));
 
     const maxPM25 = pm25Values.length > 0 ? Math.max(...pm25Values) : 1;
 
-    // 2️⃣ Normalize and add scaled radius property
+    // Normalize and add scaled radius property
     data.features.forEach(f => {
       const pm25 = parseFloat(f.properties["pm25"]);
-      const normalized = !isNaN(pm25) ? pm25 / maxPM25 : 0.2; // fallback if missing
-      // Scale to a reasonable visual range (5–20 px)
+      const normalized = !isNaN(pm25) ? pm25 / maxPM25 : 0.2;
       f.properties.scaled_radius = 5 + normalized * 15;
     });
 
-    // 3️⃣ Add or update source
+    // Add or update source
     if (!map.getSource(sourceId)) {
       map.addSource(sourceId, { type: "geojson", data });
     } else {
       map.getSource(sourceId).setData(data);
     }
 
-    // 4️⃣ Add circle layer if not existing
+    // Add circle layer if not existing
     if (!map.getLayer(layerId)) {
       map.addLayer({
         id: layerId,
@@ -430,7 +455,6 @@ export async function loadGroupLayers(
         source: sourceId,
         paint: {
           "circle-color": circleColor,
-          // Use the computed property for radius
           "circle-radius": ["get", "scaled_radius"],
           "circle-stroke-width": strokeWidth,
           "circle-stroke-color": strokeColor,
@@ -439,7 +463,7 @@ export async function loadGroupLayers(
       });
     }
 
-    // 5️⃣ Add popup if aggregate tool is not active
+    // Add popup if aggregate tool is not active
     if (!isAggregateToolEnabled()) {
       map.on("click", layerId, (e) => {
         showPopup(map, e.lngLat, e.features[0].properties);
@@ -453,72 +477,112 @@ export async function loadGroupLayers(
   }
 }
 
+export function loadCountryBoundary(map, countryCode, url) {
+  const sourceId = `${countryCode}_boundary_source`;
+  const layerId = `${countryCode}_boundary_layer`;
 
-export async function loadSymbolLayer(
-  map,
-  layerId,
-  sourceId,
-  url,
-  imageSrc,     // local path to your image
-  iconSize = 1
-) {
-  showLoadingSpinner();
+  // Avoid re-adding the same layer
+  if (map.getSource(sourceId)) return;
 
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
+  map.addSource(sourceId, {
+    type: "geojson",
+    data: url
+  });
 
-    if (!map.getSource(sourceId)) {
-      map.addSource(sourceId, { type: "geojson", data });
-    } else {
-      map.getSource(sourceId).setData(data);
+  // Fill layer (optional, light color)
+  map.addLayer({
+    id: `${layerId}_fill`,
+    type: "fill",
+    source: sourceId,
+    paint: {
+      "fill-color": "hsla(167, 13.2%, 79.2%, 0)",
+      "fill-opacity": 0.05
     }
+  });
+
+  // Outline layer
+  map.addLayer({
+    id: `${layerId}_outline`,
+    type: "line",
+    source: sourceId,
+    paint: {
+      "line-color": "hsla(167, 13.2%, 79.2%, 1)",
+      "line-width": 0.5
+        }
+  });
+
+  console.log(`Boundary loaded for ${countryCode}`);
+}
+
+
+
+
+
+// export async function loadSymbolLayer(
+//   map,
+//   layerId,
+//   sourceId,
+//   url,
+//   imageSrc,     // local path to your image
+//   iconSize = 1
+// ) {
+//   showLoadingSpinner();
+
+//   try {
+//     const res = await fetch(url);
+//     const data = await res.json();
+
+//     if (!map.getSource(sourceId)) {
+//       map.addSource(sourceId, { type: "geojson", data });
+//     } else {
+//       map.getSource(sourceId).setData(data);
+//     }
     
 
-    // Unique image name (can prefix with layerId)
-    const imageName = `${layerId}-icon`;
+//     // Unique image name (can prefix with layerId)
+//     const imageName = `${layerId}-icon`;
 
-    // Only add the image if it doesn't already exist
-    if (!map.hasImage(imageName)) {
-      await new Promise((resolve, reject) => {
-        map.loadImage(imageSrc, (err, image) => {
-          if (err) return reject(err);
-          try {
-            map.addImage(imageName, image);
-            resolve();
-          } catch (e) {
-            // Ignore if image already exists (race condition)
-            resolve();
-          }
-        });
-      });
-    }
+//     // Only add the image if it doesn't already exist
+//     if (!map.hasImage(imageName)) {
+//       await new Promise((resolve, reject) => {
+//         map.loadImage(imageSrc, (err, image) => {
+//           if (err) return reject(err);
+//           try {
+//             map.addImage(imageName, image);
+//             resolve();
+//           } catch (e) {
+//             // Ignore if image already exists (race condition)
+//             resolve();
+//           }
+//         });
+//       });
+//     }
 
-    // Then use that imageName in the layer
-    map.addLayer({
-      id: layerId,
-      type: "symbol",
-      source: sourceId,
-      layout: {
-        "icon-image": imageName,
-        "icon-size": iconSize,
-        visibility: "visible",
-      },
-    });
+//     // Then use that imageName in the layer
+//     map.addLayer({
+//       id: layerId,
+//       type: "symbol",
+//       source: sourceId,
+//       layout: {
+//         "icon-image": imageName,
+//         "icon-size": iconSize,
+//         visibility: "visible",
+//       },
+//     });
 
-    // popup
-    if (!isAggregateToolEnabled()) {
-    map.on("click", layerId, (e) => {
-    showPopup(map, e.lngLat, e.features[0].properties);
-    });
-    }
+//     // popup
+//     if (!isAggregateToolEnabled()) {
+//     map.on("click", layerId, (e) => {
+//     showPopup(map, e.lngLat, e.features[0].properties);
+//     });
+//     }
 
-  } catch (err) {
-    console.error(`Error loading symbol layer ${layerId}:`, err);
-  } finally {
-    hideLoadingSpinner();
-  }
-}
+//   } catch (err) {
+//     console.error(`Error loading symbol layer ${layerId}:`, err);
+//   } finally {
+//     hideLoadingSpinner();
+//   }
+// }
 
 
 //NEWWWWWW
