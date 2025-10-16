@@ -1,0 +1,1355 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevent any scrollbars from appearing */
+    font-size: 62.5%; /* 1rem = 10px */
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+.dashboard {
+  height: 100vh;
+  padding: 1.6rem;
+  box-sizing: border-box;
+  position: relative;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    /* Adjust height to subtract the height of the top bar */
+}
+
+/* #region Top bar styling */
+
+#topBar {
+    position: relative;
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    overflow: visible;
+    box-sizing: border-box;
+    gap: 1.2rem;
+    justify-content: space-between;
+    padding: 0.4rem;
+}
+
+/* Left and Right Section */
+.left-section, .right-section {
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-radius: 5rem;
+    gap: 2.4rem;
+    background-color: var(--light-green);
+    font-family: var(--body01);
+    color: var(--dark-green);
+    box-shadow: var(--shadow);
+    height: -webkit-fill-available;
+    padding: 0.8rem 1.6rem;
+} 
+
+/* Left Section */
+.left-section {
+  justify-content: flex-start;  
+}   
+
+/* Right section: takes up all remaining space */
+.right-section {
+  flex: 1; /* fills remaining width */
+flex-wrap: wrap;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-btn .icon {
+    width: 2rem; /* adjust size */
+    height: 2rem;
+}
+
+/* Right section: Geocoder */
+.geocoder-section {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    z-index: 1009;
+    width: 100%;
+    border-radius: 5rem;
+    max-width: 80rem;
+}
+
+#geocoder {
+    width: 100% ;
+}
+
+.mapboxgl-ctrl-geocoder {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 5rem !important;
+    background-color: var(--light-green) !important;
+    border: 0.12rem solid var(--dark-green) !important;
+    transition: width 0.3s ease;    
+    box-shadow: none !important;
+}
+
+
+.mapboxgl-ctrl-geocoder--input {
+width: 100%;
+  width: 100% !important;
+  height: 2.4rem !important;
+  padding: 0.6rem 1.2rem 0.6rem 3rem !important;
+  font-size: 1.4rem;
+  font-size: var(--heading05) !important;
+  color: var(--dark-green) !important;
+  background: transparent !important;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat' !important;
+}
+
+.mapboxgl-ctrl-geocoder--input::placeholder {
+    color: var(--dark-green) !important;
+    opacity: 0.7; 
+}
+
+.mapboxgl-ctrl-geocoder--icon {
+    fill: var(--dark-green) !important;
+    left: 1rem !important; /* position inside input */
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
+/* When screen shrinks below 1024px:
+   → stack right-section below left-section */
+@media (max-width: 1024px) {
+  #topBar {
+    flex-wrap: wrap;
+    padding: 0 2rem;
+    align-items: flex-start;
+  }
+
+  .right-section {
+    width: 100%;
+    height: fit-content;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    border-radius: 1.6rem;
+  }
+
+.left-section {
+    border-radius: 1.6rem;
+    font-family: var(--body01);
+    height: auto;
+  }
+
+  .geocoder-section {
+    width: 100%;
+    margin: 0;
+  }
+
+  .filter-section {
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .filter.container {
+    width: -webkit-fill-available;
+  }
+
+}
+/* When screen shrinks below 640px:
+   → move filter-section under search bar */
+@media (max-width: 640px) {
+
+   #topBar {
+    flex-wrap: wrap;
+    padding: 0 2rem; 
+    align-items: flex-start;
+  }
+
+  .right-section {
+    gap: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    height: fit-content;
+    border-radius: 1.6rem;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .left-section {
+    gap: 0.8rem;
+    border-radius: 1.6rem;
+    font-family: var(--body01);
+    height: auto;
+  }
+
+  .geocoder-section {
+    width: 100%;
+    order: 1;
+  }
+
+  .filter-section {
+    width: 100%;
+    order: 2;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .filter.container {
+    width: -webkit-fill-available;
+  }
+
+}
+
+
+
+/* Right section: Filters */
+.filter-section {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-shrink: 0; /* never shrink */
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 5rem;
+    padding: 0.4rem 1.2rem;
+    border: 0.12rem solid var(--dark-green);
+    color: var(--dark-green);
+}
+
+.filter-label {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    white-space: nowrap;
+    color: var(--dark-green);
+
+}
+
+.filter-select {
+    border: none;
+    background-color: transparent;
+    font-size: 1.2rem;
+    width: 100%;
+    outline: none;
+    cursor: pointer;
+    text-align: right;
+    color: var(--dark-green);
+    padding-bottom: none;
+}
+
+.menu-list {
+  position: absolute;
+  top: 110%; /* right below the button */
+  left: 3rem;
+  margin: 0;
+  padding: 1rem;
+  list-style: none;
+  background-color: var(--light-green);
+  border-radius: 0.8rem;
+  box-shadow: var(--shadow);
+  min-width: 150px;
+  z-index: 100;
+  width: max-content;
+}
+
+.menu-list li a {
+    text-decoration: none;
+    color: var(--dark-green);
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: var(--heading05);
+}
+
+.menu-list li a:hover {
+    background-color: var(--dark-green);
+    color: var(--light-green);
+    border-radius: 0.5rem;
+}
+
+.hidden {
+  display: none;
+}
+
+/* #endregion */
+
+
+/* #region FAB */
+.FAB {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    position: absolute;
+    background: var(--light-green);
+    padding: 0.8rem;
+    border-radius: 0.8rem;
+    border: 0.12rem solid var(--dark-green);
+    z-index: 1;
+    cursor: pointer;
+    box-shadow: var(--shadow-short);
+    height: 2.4rem;
+    width: fit-content;
+    min-width: 2.4rem;
+}
+
+.FAB i {
+    color: var(--dark-green);
+}
+
+.FAB:hover {
+    background: var(--dark-green);
+    color: var(--light-green);
+
+}
+.FAB:hover i {
+    color: var(--light-green);
+}
+
+.FAB:active,
+.FAB.active {
+  background: var(--dark-green);
+  color: var(--light-green);
+  border: 0.12rem solid var(--light-green);
+  transform: translateY(0);
+}
+
+.FAB:active i,
+.FAB.active i {
+  color: var(--light-green);
+  transition: color 0.18s ease, transform 0.12s ease;
+}
+
+.FAB:active {
+  transform: translateY(1px);
+}
+
+
+/* #endregion */
+
+/* #region Buttons right top corner */
+/* Map controls */
+.mapboxgl-ctrl-top-right {
+    top:  9.6rem !important;
+    /* Adjust the distance from the top */
+    right: 1rem!important;
+    /* Keep the distance from the right */
+}
+
+.mapboxgl-ctrl-group {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.mapboxgl-ctrl-zoom-in,
+.mapboxgl-ctrl-zoom-out,
+.mapboxgl-ctrl-compass {
+    background-color: var(--light-green)!important;
+    color: var(--dark-green)!important;
+    border: 0.12rem solid var(--dark-green)!important;
+    border-radius: 0.5rem!important;
+    font-size: 18px!important;
+    box-shadow: var(--shadow);
+}
+
+/* Basemap Menu Button */
+#basemapMenuButton {
+    top: 22rem;
+    right: 1.6rem;
+}
+
+#basemapMenuButton i {
+    font-size: 20px;
+}
+
+#areaChange {
+    top: 26.5rem;
+    right: 1.6rem;
+}
+
+#areaChange i {
+    font-size: 20px;
+    transition: font-size 0.3s ease;
+}
+
+/* #endregion */
+
+/* #region Buttons left bottom corner */
+
+/*Aggregate tool Buttons */
+
+#aggregateToolContainer {
+    position: absolute;
+    bottom: 3rem;
+    left: 10rem;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: self-start;
+    gap: 0.8rem; /* spacing between button and dropdown */
+    z-index: 10; /* keep above map */
+}
+
+#aggregateToolButton {
+    position: static;
+}
+
+#bufferSizeSelector {
+    background: var(--dark-green);
+    border-radius: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-size: 1.4rem;
+    color: var(--light-green);
+    border: none;
+    padding-right: 2.4rem !important; /* space for the arrow */
+    height: -webkit-fill-available;
+    border: 0.12rem solid var(--light-green);
+}
+
+.bufferSizeSelector-hidden{
+    display: none;
+}
+
+.bufferSizeSelector-visible{
+    display: block;
+}
+
+/* Button for AQ Data */
+#buttonOpenAQData {
+    bottom: 3rem;
+    left: 14.5rem;
+}
+
+/* Button for Report Pollution */
+#buttonPollutionReports {
+    bottom: 3rem;
+    left: 19rem;
+}
+
+/* Tooltip Styling */
+.tooltip {
+    position: fixed; 
+    top: 10rem;
+    left: 50%;          
+    transform: translateX(-50%);
+    height: fit-content;
+    background-color: var(--dark-green);
+    padding: 0.8rem 1.6rem;
+    border-radius: 5rem;
+    z-index: 1000;
+    display: none;           
+    color: var(--light-green);
+    white-space: nowrap;     
+    font-size: 1.6rem;
+    opacity: 0.8;
+    border: 0.12rem solid var(--light-green);
+
+}
+
+
+#menu {
+    position: absolute;
+    top: 170px;
+    right: 55px;
+    background: white;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    z-index: 1;
+    display: none;
+    color: #2c3e50;
+}
+
+/* #endregion */
+
+/* Agregate Results Box */
+#aggregateResults {
+position: absolute;
+  bottom: 1.6rem;
+  right: 1.6rem;
+  z-index: 999;
+  background: var(--light-green);
+  padding: 12px;
+  border-radius: 8px;
+  overflow-y: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  height: fit-content !important;  
+  width: 30rem;
+  display: none;
+
+}
+
+#aggregateResults.popup-table {
+    font-family: var(--body01);
+    font-size: 1.2rem;
+    line-height: 1.4;
+    color: var(--dark-green);
+    padding: 1.2rem 0;
+}
+
+#emissionsChart {
+    height: 19rem !important;
+    margin-top: 1.2rem;
+    font-size: 8px !important;
+}   
+
+/* Heatmap Control Box */
+#heatmapBox {
+    position: absolute;
+    bottom: 60px;
+    right: 10px;
+    background: #ffffff;
+    border-radius: 10px;
+    /* Rounded corners */
+    padding: 10px;
+    /* Padding inside the box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Subtle shadow for depth */
+    width: 200px;
+    /* Auto width based on content */
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* Light border */
+    transition: bottom 0.3s ease, left 0.3s ease;
+    /* Smooth transition */
+    display: none;
+}
+
+/* Heatmap Label */
+#heatmapBox label {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* Checkbox styling */
+#heatmapBox input[type="checkbox"] {
+    margin-left: 8px;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+/* Gradient Bar */
+#heatmapBox .gradient-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 5px;
+}
+
+/* Gradient Line */
+#heatmapBox .gradient-bar div {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #7F0400 0%, #FA0F00 10.10%, #FA8C00 30.41%, #FDFF00 49.98%, #83CE34 69.10%, #1A9E3A 100%);
+    margin-bottom: 3px; /* Reduced spacing */
+}
+
+/* Poor & Excellent Labels */
+#heatmapBox .gradient-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    background: none;
+    border: none;
+    font-size: var(--heading02);
+    cursor: pointer;
+    color: var(--dark-green);
+}
+
+/* Loading spinner styles */
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000; /* Ensure it appears above the map */
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8); /* Light transparent background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #4b6151; /* Color of the spinner */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner p {
+    margin-top: 10px;
+    font-family: 'Open Sans', sans-serif;
+    color: #4b6151;
+}
+
+
+
+#filterPanel {
+    position: absolute;
+    top: 110px;
+    left: 50px;
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+    z-index: 1;
+    display: none;
+}
+
+#country,
+#coal_country,
+#resetButton,
+#filterButton {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.map-overlay {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: #ffffff;
+    overflow: hidden;
+    border-radius: 8px;
+    padding: 10px 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    max-width: 220px;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: bottom 0.3s ease, right 0.3s ease;
+}
+
+/* Hide chart initially */
+#pollutantChart {
+    display: none;
+}
+
+/* Title styling */
+.map-overlay h2 {
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+}
+
+.map-overlay h3 {
+    font-size: 13px;
+    font-weight: bold;
+    color: #4b6151;
+}
+
+/* Text styling */
+.map-overlay p {
+    font-size: 11px;
+    color: #666;
+    margin: 0;
+}
+
+.map-overlay p:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+/* Buttons */
+.collapse-btn, .expand-btn {
+    background-color: #4b6151;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    float: right;
+}
+
+.collapse-btn:hover, .expand-btn:hover {
+    background-color: #3a4e42;
+}
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .map-overlay {
+        bottom: 20px;
+        /* Move the overlay slightly up */
+        right: 10px;
+        /* Keep it aligned to the right */
+        max-width: 90%;
+        /* Reduce max-width on smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .map-overlay {
+        bottom: 15px;
+        /* Further move the overlay up on smaller screens */
+        right: 5px;
+        /* Align closer to the right edge */
+        left: 10px;
+        max-width: 30%;
+        /* Take up full width on very small screens */
+        padding: 8px;
+        /* Adjust padding for small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .map-overlay {
+        bottom: 10px;
+        /* Even further up on mobile */
+        right: 5px;
+        /* Align closer to the right edge */
+        left: 10px;
+        max-width: 50%;
+        /* Take up full width on very small screens */
+        padding: 10px;
+        /* Adjust padding for small screens */
+    }
+
+    .map-overlay h2 {
+        font-size: 16px;
+        /* Smaller title size on mobile */
+    }
+
+    .map-overlay p {
+        font-size: 12px;
+        /* Smaller description size on mobile */
+    }
+}
+
+#filtersearch {
+    position: absolute;
+    top: 110px;
+    left: 10px;
+    background: white;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    z-index: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* #region Legend  */
+
+#legendButton {
+    position: absolute;
+    bottom: 3.2rem;
+    cursor: pointer;
+    font-size: var(--heading05);
+    font-weight: var(--heading-bold-weight);
+}
+
+#legendButton.active {
+  background-color: var(--dark-green);
+  color: var(--light-green);
+  border: 0.12rem solid var(--light-green);
+}
+
+#legend {
+    position: absolute;
+    bottom: 8rem;
+    background: var(--light-green);
+    color: var(--dark-green);
+    font-size: var(--body01);
+    padding: 1.6rem 1.6rem 0.4rem 1.6rem;
+    border-radius: 1.6rem;
+    box-shadow: var(--shadow);
+    z-index: 1;
+    width: 25rem;
+    display: block;
+    max-height: 45rem; 
+    overflow-y: auto;
+}
+
+.legend-group {
+    padding-bottom: 0.8rem;
+}
+
+.legend-group-title {
+    font-size: var(--heading06);
+    font-weight: var(--heading-bold-weight);
+    margin-bottom: 0.8rem;
+}
+
+.legend-section {
+    gap: 1.6rem;
+    display: flex;
+    align-items: center;
+}
+
+.legend-name {
+     display: flex;
+     gap: 1.2rem;
+    align-items: center;
+    height: 3rem;
+}
+
+.legend-key {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.legend-key-img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+}
+
+
+/* #region Checkbox  */
+/* hide default checkbox */
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* outer circle */
+.custom-checkbox .checkmark {
+  display: inline-block;
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 0.2rem solid var(--dark-green);
+  border-radius: 50%;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+/* inner circle (hidden by default) */
+.custom-checkbox .checkmark::after {
+  content: "";
+  position: absolute;
+  top: 10%;   /* margin from top */
+  left: 10%;  /* margin from left */
+  width: 1.4rem; /* smaller size */
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--dark-green); /* inner fill color */
+  display: none;
+}
+
+/* show inner circle when checked */
+.custom-checkbox input:checked + .checkmark::after {
+  display: block;
+}
+
+/* optional: change border color on checked */
+.custom-checkbox input:checked + .checkmark {
+  border-color: var(--dark-green);
+}
+
+/* #endregion  */
+
+.collapsible-header {
+    cursor: pointer;
+    padding: 5px 0;
+    color: #4b6151;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.collapsible-header:hover {
+    text-decoration: underline;
+}
+
+.collapsible-content {
+    display: none;
+    padding-left: 10px;
+    /* Adjust spacing if needed */
+    transition: max-height 0.3s ease-out;
+}
+
+
+
+.hidden {
+    display: none;
+}
+
+.expand-toggle {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 3px;
+    background-color: #eee;
+    margin-left: 0px;
+}
+
+.expand-toggle:hover {
+    background-color: #ddd;
+}
+
+
+.legend-key.adm3-polygon-icon {
+    width: 15px;
+    height: 15px;
+    background-color: #888; /* gray fill */
+    border: 1px solid #444; /* outline like polygon edges */
+    border-radius: 2px; /* slight rounding like tiles */
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* #endregion */
+
+/* Hexagonal Grid Legend Colors */
+.kiln-colors {
+    margin-bottom: 0px;
+    background: linear-gradient(to right,
+    rgba(255,255,178,0),
+    rgb(254,229,132),
+    rgb(254,204,92),
+    rgb(253,174,64),
+    rgb(253,141,60),
+    rgb(252,78,42),
+    rgb(240,59,32),
+    rgb(220,30,30),
+    rgb(189,0,38),
+    rgb(140,0,30),
+    rgb(100,0,20));
+    opacity: 0.8;
+}
+
+/* Hexagonal Grid Legend Labels */
+.kiln-labels .label {
+    width: 18%;
+    display: inline-block;
+    text-align: center;
+    font-size: 8px;
+    color: #4b6151;
+}
+
+#brickKilnCountriesGrid,
+#brickKilnCountries {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.legend-subunit {
+    font-size: 12px;
+    text-align: left;
+    /* Ensure the text aligns to the left */
+    color: #4b6151;
+    padding-left: 25px;
+    padding-bottom: 5px;
+    font-weight: lighter;
+}
+
+.graduated-circles {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* Align the circles and labels to the left */
+    gap: 8px;
+    /* Add consistent spacing between the circles */
+}
+
+.graduated-circles div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.circle {
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.circle-label {
+    font-size: 12px;
+    text-align: left;
+    /* Ensure the text aligns to the left */
+    color: #4b6151;
+}
+
+
+/* Dynamically translate the circles horizontally based on their size */
+.circle[style*="width: 50px"] {
+    transform: translateX(0);
+    /* Largest circle, no shift */
+}
+
+.circle[style*="width: 40px"] {
+    transform: translateX(5px);
+    /* Translate smaller circles right */
+}
+
+.circle[style*="width: 30px"] {
+    transform: translateX(10px);
+    /* Translate smaller circles right */
+}
+
+.circle[style*="width: 20px"] {
+    transform: translateX(15px);
+    /* Translate smaller circles right */
+}
+
+.circle[style*="width: 15px"] {
+    transform: translateX(17.5px);
+    /* Translate smaller circles right */
+}
+
+.circle[style*="width: 7px"] {
+    transform: translateX(21.5px);
+    /* Translate smallest circle right */
+}
+
+/* Labels and Population Count for Grid */
+label {
+    font-size: var(--heading06);
+    color: var(--dark-green);
+    display: block;
+}
+
+.row,
+.rowdecay {
+    height: 12px;
+    width: 100%;
+    border-radius: 4px;
+    /* Rounded corners for gradient bars */
+}
+
+/* For Population Grid */
+.colors {
+    margin-bottom: 5px;
+    background: linear-gradient(to right, #3DA1D1, #ABCEAB, #F1FB7B, #F8A047, #F0261C, #F0261C);
+}
+
+
+/* For Pollutant Decay */
+.colorsdecay {
+    margin-bottom: 5px;
+    background: linear-gradient(to right, #FFFFB2, #FECC5C, #FD8D3C, #F03B20, #BD0026);
+}
+
+/* Labels for min and max values */
+.label,
+.labeldecay {
+    width: 18%;
+    display: inline-block;
+    text-align: center;
+    font-size: 12px;
+    color: #4b6151;
+}
+
+/* Add spacing between elements */
+.session,
+.sessiondecay {
+    margin-bottom: 20px;
+}
+
+
+/* ADM3 Filter Panel */
+.adm3-filter-panel {
+    display: none;
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    width: 250px;
+}
+
+.adm3-filter-panel label {
+    display: block;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.adm3-select {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.adm3-filter-title {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+}
+
+
+/* #region Pop up styling */
+
+/* Container */
+.popup-table {
+  font-family: var(--body01);
+  font-size: 1.2rem;
+  line-height: 1.4;
+  color: var(--dark-green);
+  max-width: 24rem;
+  min-width: 16rem;
+  padding: 1.2rem 0;
+}
+
+/* Type (small text on top) */
+.popup-table .type {
+  font-size: var(--heading06);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  margin: 0 1.2rem 0 0;
+}
+
+/* Name (bold) */
+.popup-table h3 {
+  font-size: var(--heading05);
+  font-weight: var(--heading-bold-weight);
+  margin: 0 1.2rem 0 0;
+}
+
+/* Country, region, capacity */
+.popup-table div {
+  margin: 0.4rem 0;
+  font-size: var(--heading06);
+}
+
+/* Table styling for pollutants */
+.popup-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.4rem;
+}
+
+.popup-table table td {
+  padding: 0.2rem 0.4rem;
+  vertical-align: top;
+}
+
+.popup-table table td:first-child {
+  font-weight: bold;
+  width: 40%;
+  text-transform: uppercase;
+  color: var(--dark-green);
+}
+
+.popup-table table td:last-child {
+  text-align: right;
+  color: var(--dark-green);
+}
+
+/* Optional: popup box styling */
+.mapboxgl-popup-content {
+  border-radius: 2rem !important;
+  padding: 0.8rem 1.2rem !important;
+  background-color: var(--light-green) !important;
+  box-shadow: var(--shadow-short) !important;
+}
+
+.mapboxgl-popup-close-button {
+  top: 0.8rem !important;           
+  right: 0.8rem !important;        
+  color: var(--dark-green) !important;        
+  width: 20px !important;
+  height: 20px !important;
+  font-size: 14px !important;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.mapboxgl-popup-tip {
+  border-top-color: var(--light-green) !important; 
+}
+
+/* #endregion  */
+
+
+/* Navigation Buttons */
+#navBarButtons {
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.nav-btn {
+    background-color: rgba(75, 97, 81, 0.9);
+    /* green */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* Light border */
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #e0e0e0;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+.nav-btn:hover {
+    background-color: rgba(49, 64, 38, 0.9);
+    /* Slightly darker shade on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.nav-btn:focus {
+    outline: none;
+}
+
+#pollutant-legend {
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    z-index: 1;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    color: #4b6151;
+}
+
+#pollutant-legend .legend-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+#pollutant-legend .graduated-circles {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Add consistent spacing between the circles */
+}
+
+#pollutant-legend .legend-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+#pollutant-legend .circle {
+    border-radius: 50%;
+    display: inline-block;
+}
+
+#pollutant-legend .circle-label {
+    font-size: 12px;
+    text-align: left;
+    justify-content: flex-end;
+    color: #4b6151;
+    margin-left: 10px; /* Space between the circle and its label */
+}
+
+/* Dynamically translate the circles horizontally based on their size */
+#pollutant-legend .circle[style*="width: 50px"] {
+    transform: translateX(0); /* Largest circle, no shift */
+}
+
+#pollutant-legend .circle[style*="width: 40px"] {
+    transform: translateX(5px); /* Translate smaller circles right */
+}
+
+#pollutant-legend .circle[style*="width: 30px"] {
+    transform: translateX(10px); /* Translate smaller circles right */
+}
+
+#pollutant-legend .circle[style*="width: 20px"] {
+    transform: translateX(15px); /* Translate smaller circles right */
+}
+
+#pollutant-legend .circle[style*="width: 15px"] {
+    transform: translateX(17.5px); /* Translate smaller circles right */
+}
+
+#pollutant-legend .circle[style*="width: 7px"] {
+    transform: translateX(21.5px); /* Translate smallest circle right */
+}
+
+/* Optional glowing effect with CSS animation — requires class use, not Mapbox paint */
+@keyframes pulse-border {
+    0% {
+        stroke: #ffcc00;
+        stroke-width: 2;
+        opacity: 0.8;
+    }
+    50% {
+        stroke: #ffff00;
+        stroke-width: 5;
+        opacity: 1;
+    }
+    100% {
+        stroke: #ffcc00;
+        stroke-width: 2;
+        opacity: 0.8;
+    }
+}
+
