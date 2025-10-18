@@ -13,7 +13,6 @@ export let brickKilnINDLoaded = false;
 export let brickKilnBANLoaded = false;
 
 
-        showLoadingSpinner(); // Show the spinner while loading
 function reportPoint(brickid, lng, lat) {
     const reportURL = 'https://forms.gle/cr2TzX3Fjt8bXVRv8';
     const params = `BrickID: ${brickid}, Longitude: ${lng}, Latitude: ${lat}`;
