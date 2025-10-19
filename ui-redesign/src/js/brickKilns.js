@@ -13,325 +13,6 @@ export let brickKilnINDLoaded = false;
 export let brickKilnBANLoaded = false;
 
 
-export function loadBrickKilnLayerPKhex(map) {
-    if (!map.getSource('brickKilnsPKHex')) {
-        showLoadingSpinner(); // Show the spinner while loading
-
-        // Fetch the brick kilns GeoJSON data and create a hexagonal grid
-        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_PAK_coal.geojson')
-            .then(response => response.json())
-            .then(data => {
-                // Get the bounding box of the points
-                const bbox = turf.bbox(data);
-
-                // Generate the hexagonal grid
-                const hexGrid = turf.hexGrid(bbox, 15, { units: 'kilometers' }); // 10 km hexagon size
-
-                // Count points within each hexagon
-                hexGrid.features.forEach(hex => {
-                    const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
-                    hex.properties.pointCount = pointsWithinHex.features.length;
-                });
-
-                // Add the hex grid as a source
-                map.addSource('brickKilnsPKHex', {
-                    type: 'geojson',
-                    data: hexGrid
-                });
-
-                // Add the hexagonal grid as a fill layer
-                map.addLayer({
-                    'id': 'brick_kilns_PK_hex',
-                    'type': 'fill',
-                    'source': 'brickKilnsPKHex',
-                    'maxzoom': 12,
-                    layout: {
-                        visibility: 'visible'  // Make the grid visible immediately
-                    },
-                    'paint': {
-                        'fill-color': [
-                            'interpolate',
-                            ['linear'],
-                            ['get', 'pointCount'],
-                            0, 'rgba(255,255,178,0)',
-                            10, 'rgba(255,255,178,0.3)',
-                            20, 'rgb(254,229,132)',
-                            30, 'rgb(254,204,92)',
-                            50, 'rgb(253,174,64)',
-                            100, 'rgb(253,141,60)',
-                            150, 'rgb(252,78,42)',
-                            200, 'rgb(240,59,32)',
-                            250, 'rgb(220,30,30)',
-                            300, 'rgb(189,0,38)',
-                            350, 'rgb(140,0,30)',
-                            400, 'rgb(100,0,20)'
-                            ],
-                        'fill-opacity': 0.7,
-
-                    },
-                });
-
-                // Wait for the map to become idle, meaning all sources and tiles have been loaded
-                map.on('idle', function () {
-                    if (map.getLayer('brickKilnsPKHex') && map.getSource('brickKilnsPKHex')) {
-                        hideLoadingSpinner();  // Hide the spinner once the grid is fully loaded
-                    }
-                });
-
-                if (!isAggregateToolEnabled()) {
-                    // Add a click event to display a popup with brick kiln density details
-                    map.on('click', 'brick_kilns_PK_hex', (e) => {
-                        if (!isAggregateToolEnabled()) {
-                            const properties = e.features[0].properties;
-
-                            // Prepare the popup content displaying only the density/count
-                            const popupContent = `
-                    <div class="popup-table">
-                        <h3>Brick Kiln Density / 15km</h3>
-                        <table>
-                            <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
-                        </table>
-                    </div>`;
-
-                            // Display the popup
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(popupContent)
-                                .addTo(map);
-                        }
-
-                    });
-
-                    // Change the cursor to pointer when hovering over the grid
-                    map.on('mouseenter', 'brick_kilns_PK_hex', () => {
-                        map.getCanvas().style.cursor = 'pointer';
-                    });
-
-                    // Reset the cursor when leaving the grid
-                    map.on('mouseleave', 'brick_kilns_PK_hex', () => {
-                        map.getCanvas().style.cursor = '';
-                    });
-                }
-
-            })
-            .catch(error => {
-                console.error('Error loading Brick Kiln Hex data for Pakistan:', error);
-                hideLoadingSpinner(); // Hide the spinner if there is an error
-            });
-
-    } else {
-        map.setLayoutProperty('brick_kilns_PK_hex', 'visibility', 'visible');
-    }
-}
-
-
-export function loadBrickKilnLayerINDhex(map) {
-    if (!map.getSource('brickKilnsINDHex')) {
-        showLoadingSpinner();
-
-        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_IND_coal.geojson')
-            .then(response => response.json())
-            .then(data => {
-                const bbox = turf.bbox(data);
-
-                const hexGrid = turf.hexGrid(bbox, 15, { units: 'kilometers' });
-
-                hexGrid.features.forEach(hex => {
-                    const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
-                    hex.properties.pointCount = pointsWithinHex.features.length;
-                });
-
-                map.addSource('brickKilnsINDHex', {
-                    type: 'geojson',
-                    data: hexGrid
-                });
-
-                map.addLayer({
-                    'id': 'brick_kilns_IND_hex',
-                    'type': 'fill',
-                    'source': 'brickKilnsINDHex',
-                    'maxzoom': 12,
-                    layout: {
-                        visibility: 'visible' // Fix typo: should be 'visible'
-                    },
-                    'paint': {
-                        'fill-color': [
-                            'interpolate',
-                            ['linear'],
-                            ['get', 'pointCount'],
-                            0, 'rgba(255,255,178,0)',
-                            10, 'rgba(255,255,178,0.3)',
-                            20, 'rgb(254,229,132)',
-                            30, 'rgb(254,204,92)',
-                            50, 'rgb(253,174,64)',
-                            100, 'rgb(253,141,60)',
-                            150, 'rgb(252,78,42)',
-                            200, 'rgb(240,59,32)',
-                            250, 'rgb(220,30,30)',
-                            300, 'rgb(189,0,38)',
-                            350, 'rgb(140,0,30)',
-                            400, 'rgb(100,0,20)'
-                            ],
-                        'fill-opacity': 0.7,
-
-                    },
-                    layout: {
-                        visibility: 'visible'
-                    }
-                });
-
-                // Wait for the map to become idle, meaning all sources and tiles have been loaded
-                map.on('idle', function () {
-                    if (map.getLayer('brick_kilns_IND_hex') && map.getSource('brickKilnsINDHex')) {
-                        hideLoadingSpinner();  // Hide the spinner once the grid is fully loaded
-                    }
-                });
-
-                if (!isAggregateToolEnabled()) {
-                    // Add popup click event
-                    map.on('click', 'brick_kilns_IND_hex', (e) => {
-                        if (!isAggregateToolEnabled()) {
-                            const properties = e.features[0].properties;
-                            const popupContent = `
-                            <div class="popup-table">
-                                <h3>Brick Kiln Density / 15km</h3>
-                                <table>
-                                    <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
-                                </table>
-                            </div>`;
-
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(popupContent)
-                                .addTo(map);
-                        }
-
-                    });
-
-                    // Change cursor to pointer when hovering over the grid
-                    map.on('mouseenter', 'brick_kilns_IND_hex', () => {
-                        map.getCanvas().style.cursor = 'pointer';
-                    });
-
-                    map.on('mouseleave', 'brick_kilns_IND_hex', () => {
-                        map.getCanvas().style.cursor = '';
-                    });
-                }
-
-
-
-            }).catch(error => {
-                console.error('Error loading Brick Kiln Hex data for India:', error);
-                hideLoadingSpinner();
-            });
-    } else {
-        map.setLayoutProperty('brick_kilns_IND_hex', 'visibility', 'visible');
-    }
-}
-
-export function loadBrickKilnLayerBANhex(map) {
-    if (!map.getSource('brickKilnsBANHex')) {
-        showLoadingSpinner();
-
-        fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson')
-            .then(response => response.json())
-            .then(data => {
-                const bbox = turf.bbox(data);
-
-                const hexGrid = turf.hexGrid(bbox, 15, { units: 'kilometers' });
-
-                hexGrid.features.forEach(hex => {
-                    const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
-                    hex.properties.pointCount = pointsWithinHex.features.length;
-                });
-
-                map.addSource('brickKilnsBANHex', {
-                    type: 'geojson',
-                    data: hexGrid
-                });
-
-                map.addLayer({
-                    'id': 'brick_kilns_BAN_hex',
-                    'type': 'fill',
-                    'source': 'brickKilnsBANHex',
-                    'maxzoom': 12,
-                    layout: {
-                        visibility: 'visible' // Fix typo: should be 'visible'
-                    },
-                    'paint': {
-                        'fill-color': [
-                            'interpolate',
-                            ['linear'],
-                            ['get', 'pointCount'],
-                            0, 'rgba(255,255,178,0)',
-                            10, 'rgba(255,255,178,0.3)',
-                            20, 'rgb(254,229,132)',
-                            30, 'rgb(254,204,92)',
-                            50, 'rgb(253,174,64)',
-                            100, 'rgb(253,141,60)',
-                            150, 'rgb(252,78,42)',
-                            200, 'rgb(240,59,32)',
-                            250, 'rgb(220,30,30)',
-                            300, 'rgb(189,0,38)',
-                            350, 'rgb(140,0,30)',
-                            400, 'rgb(100,0,20)'
-                            ],
-                        'fill-opacity': 0.9,
-
-                    },
-                    layout: {
-                        visibility: 'visible'
-                    }
-                });
-                // Wait for the map to become idle, meaning all sources and tiles have been loaded
-                map.on('idle', function () {
-                    if (map.getLayer('brick_kilns_BAN_hex') && map.getSource('brickKilnsBANHex')) {
-                        hideLoadingSpinner();  // Hide the spinner once the grid is fully loaded
-                    }
-                });
-
-                if (!isAggregateToolEnabled()) {
-                    // Add popup click event
-                    map.on('click', 'brick_kilns_BAN_hex', (e) => {
-                        if (!isAggregateToolEnabled()) {
-                            const properties = e.features[0].properties;
-                            const popupContent = `
-                        <div class="popup-table">
-                            <h3>Brick Kiln Density / 15km</h3>
-                            <table>
-                                <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
-                            </table>
-                        </div>`;
-
-                            new mapboxgl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(popupContent)
-                                .addTo(map);
-                        }
-
-                    });
-
-                    map.on('mouseenter', 'brick_kilns_BAN_hex', () => {
-                        map.getCanvas().style.cursor = 'pointer';
-                    });
-
-                    map.on('mouseleave', 'brick_kilns_BAN_hex', () => {
-                        map.getCanvas().style.cursor = '';
-                    });
-                }
-
-
-
-            }).catch(error => {
-                console.error('Error loading Brick Kiln Hex data for Bangladesh:', error);
-                hideLoadingSpinner();
-            });
-    } else {
-        map.setLayoutProperty('brick_kilns_BAN_hex', 'visibility', 'visible');
-    }
-}
-
-
 function reportPoint(brickid, lng, lat) {
     const reportURL = 'https://forms.gle/cr2TzX3Fjt8bXVRv8';
     const params = `BrickID: ${brickid}, Longitude: ${lng}, Latitude: ${lat}`;
@@ -350,10 +31,20 @@ function reportPoint(brickid, lng, lat) {
 const layerStyles = {
   brickKiln: { 
     'circle-color': "rgba(255, 51, 64, 0.5)", 
-    'circle-radius': 1, 
-    'circle-opacity': 1, 
+    'circle-opacity': 1,
     'circle-stroke-color': "rgba(255, 51, 64, 1)",
-    'circle-stroke-width': 0
+    'circle-stroke-width': 0,
+    // Zoom-based radius
+    'circle-radius': [
+      "interpolate",
+      ["linear"],
+      ["zoom"],
+      2, 0.5,     // zoom 2 → radius 0.5
+      6, 1,     // zoom 6 → radius 2
+      10, 2,    // zoom 10 → radius 4
+      14, 4,    // zoom 14 → radius 8
+      18, 8    // zoom 18 → radius 16
+    ]
   }
 };
 
@@ -400,10 +91,10 @@ export function loadBrickKilnLayerPK(map) {
                                     <h3>${properties.id}</h3>
                                     <table>
                                         <tr><th>Pollutant</th><td> tons/season</td></tr>
-                                        <tr><th>PM<sub>10</sub></th><td>${properties['pm10']}</td></tr>
-                                        <tr><th>PM<sub>2.5</sub></th><td>${properties['pm25']}</td></tr>
-                                        <tr><th>NO<sub>2</sub></th><td>${properties['nox']}</td></tr>
-                                        <tr><th>SO<sub>2</sub></th><td>${properties['so2']}</td></tr>
+                                        <tr><td>PM<sub>10</sub></td><td>${properties['pm10']}</td></tr>
+                                        <tr><td>PM<sub>2.5</sub></td><td>${properties['pm25']}</td></tr>
+                                        <tr><td>NO<sub>2</sub></td><td>${properties['nox']}</td></tr>
+                                        <tr><td>SO<sub>2</sub></td><td>${properties['so2']}</td></tr>
                                     </table>
                                     <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
@@ -468,11 +159,11 @@ export function loadBrickKilnLayerIND(map) {
                                 <div class="popup-table">
                                     <h3>${props.id}</h3>
                                     <table>
-                                        <tr><th>Pollutant</th><td> tons/season</td></tr>
-                                        <tr><th>PM<sub>10</sub></th><td>${props['pm10']}</td></tr>
-                                        <tr><th>PM<sub>2.5</sub></th><td>${props['pm25']}</td></tr>
-                                        <tr><th>NO<sub>2</sub></th><td>${props['nox']}</td></tr>
-                                        <tr><th>SO<sub>2</sub></th><td>${props['so2']}</td></tr>
+                                        <tr><td>Pollutant</td><td> tons/season</td></tr>
+                                        <tr><td>PM<sub>10</sub></td><td>${props['pm10']}</td></tr>
+                                        <tr><td>PM<sub>2.5</sub></td><td>${props['pm25']}</td></tr>
+                                        <tr><td>NO<sub>2</sub></td><td>${props['nox']}</td></tr>
+                                        <tr><td>SO<sub>2</sub></td><td>${props['so2']}</td></tr>
                                     </table>
                                     <button id="reportButton" onclick="reportPoint('${props.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
@@ -511,14 +202,14 @@ export function loadBrickKilnLayerBAN(map) {
                     if (!map.getSource('brickKilnsBAN')) {
                         map.addSource('brickKilnsBAN', { type: 'geojson', data });
                     } else {
-                        map.getSource('brickKillnsBAN').setData(data);
+                        map.getSource('brickKilnsBAN').setData(data);
                     }
 
                     if (!map.getLayer('brick_kilns_BAN')) {
                         map.addLayer({
                             id: 'brick_kilns_BAN',
                             type: 'circle',
-                            source: 'brickKillnsBAN',
+                            source: 'brickKilnsBAN',
                             paint: { ...layerStyles.brickKiln },
                             layout: { visibility: 'visible' }
                         });
@@ -533,11 +224,11 @@ export function loadBrickKilnLayerBAN(map) {
                                 <div class="popup-table">
                                     <h3>${props.id}</h3>
                                     <table>
-                                        <tr><th>Pollutant</th><td> tons/season</td></tr>
-                                        <tr><th>PM<sub>10</sub></th><td>${props['pm10']}</td></tr>
-                                        <tr><th>PM<sub>2.5</sub></th><td>${props['pm25']}</td></tr>
-                                        <tr><th>NO<sub>2</sub></th><td>${props['nox']}</td></tr>
-                                        <tr><th>SO<sub>2</sub></th><td>${props['so2']}</td></tr>
+                                        <tr><td>Pollutant</td><td> tons/season</td></tr>
+                                        <tr><td>PM<sub>10</sub></td><td>${props['pm10']}</td></tr>
+                                        <tr><td>PM<sub>2.5</sub></td><td>${props['pm25']}</td></tr>
+                                        <tr><td>NO<sub>2</sub></td><td>${props['nox']}</td></tr>
+                                        <tr><td>SO<sub>2</sub></td><td>${props['so2']}</td></tr>
                                     </table>
                                     <button id="reportButton" onclick="reportPoint('${props.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
@@ -592,7 +283,7 @@ export function loadBrickKilnLayerDRC(map) {
                                 <div class="popup-table">
                                     <h3>${props.name}</h3>
                                     <table>
-                                        <tr><th>Description</th></tr>
+                                        <tr><td>Description</td></tr>
                                         <tr><td>${props.query}</td></tr>
                                     </table>
                                     <button id="reportButton" onclick="reportPoint('${e.lngLat.lon}', '${e.lngLat.lat}')">Report This Point</button>
@@ -780,3 +471,320 @@ export function loadBrickKilnLayerUGA(map) {
     });
 }
 
+// export function loadBrickKilnLayerPKhex(map) {
+//     if (!map.getSource('brickKilnsPKHex')) {
+//         showLoadingSpinner(); // Show the spinner while loading
+
+//         // Fetch the brick kilns GeoJSON data and create a hexagonal grid
+//         fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_PAK_coal.geojson')
+//             .then(response => response.json())
+//             .then(data => {
+//                 // Get the bounding box of the points
+//                 const bbox = turf.bbox(data);
+
+//                 // Generate the hexagonal grid
+//                 const hexGrid = turf.hexGrid(bbox, 15, { units: 'kilometers' }); // 10 km hexagon size
+
+//                 // Count points within each hexagon
+//                 hexGrid.features.forEach(hex => {
+//                     const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
+//                     hex.properties.pointCount = pointsWithinHex.features.length;
+//                 });
+
+//                 // Add the hex grid as a source
+//                 map.addSource('brickKilnsPKHex', {
+//                     type: 'geojson',
+//                     data: hexGrid
+//                 });
+
+//                 // Add the hexagonal grid as a fill layer
+//                 map.addLayer({
+//                     'id': 'brick_kilns_PK_hex',
+//                     'type': 'fill',
+//                     'source': 'brickKilnsPKHex',
+//                     'maxzoom': 12,
+//                     layout: {
+//                         visibility: 'visible'  // Make the grid visible immediately
+//                     },
+//                     'paint': {
+//                         'fill-color': [
+//                             'interpolate',
+//                             ['linear'],
+//                             ['get', 'pointCount'],
+//                             0, 'rgba(255,255,178,0)',
+//                             10, 'rgba(255,255,178,0.3)',
+//                             20, 'rgb(254,229,132)',
+//                             30, 'rgb(254,204,92)',
+//                             50, 'rgb(253,174,64)',
+//                             100, 'rgb(253,141,60)',
+//                             150, 'rgb(252,78,42)',
+//                             200, 'rgb(240,59,32)',
+//                             250, 'rgb(220,30,30)',
+//                             300, 'rgb(189,0,38)',
+//                             350, 'rgb(140,0,30)',
+//                             400, 'rgb(100,0,20)'
+//                             ],
+//                         'fill-opacity': 0.7,
+
+//                     },
+//                 });
+
+//                 // Wait for the map to become idle, meaning all sources and tiles have been loaded
+//                 map.on('idle', function () {
+//                     if (map.getLayer('brickKilnsPKHex') && map.getSource('brickKilnsPKHex')) {
+//                         hideLoadingSpinner();  // Hide the spinner once the grid is fully loaded
+//                     }
+//                 });
+
+//                 if (!isAggregateToolEnabled()) {
+//                     // Add a click event to display a popup with brick kiln density details
+//                     map.on('click', 'brick_kilns_PK_hex', (e) => {
+//                         if (!isAggregateToolEnabled()) {
+//                             const properties = e.features[0].properties;
+
+//                             // Prepare the popup content displaying only the density/count
+//                             const popupContent = `
+//                     <div class="popup-table">
+//                         <h3>Brick Kiln Density / 15km</h3>
+//                         <table>
+//                             <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
+//                         </table>
+//                     </div>`;
+
+//                             // Display the popup
+//                             new mapboxgl.Popup()
+//                                 .setLngLat(e.lngLat)
+//                                 .setHTML(popupContent)
+//                                 .addTo(map);
+//                         }
+
+//                     });
+
+//                     // Change the cursor to pointer when hovering over the grid
+//                     map.on('mouseenter', 'brick_kilns_PK_hex', () => {
+//                         map.getCanvas().style.cursor = 'pointer';
+//                     });
+
+//                     // Reset the cursor when leaving the grid
+//                     map.on('mouseleave', 'brick_kilns_PK_hex', () => {
+//                         map.getCanvas().style.cursor = '';
+//                     });
+//                 }
+
+//             })
+//             .catch(error => {
+//                 console.error('Error loading Brick Kiln Hex data for Pakistan:', error);
+//                 hideLoadingSpinner(); // Hide the spinner if there is an error
+//             });
+
+//     } else {
+//         map.setLayoutProperty('brick_kilns_PK_hex', 'visibility', 'visible');
+//     }
+// }
+
+
+// export function loadBrickKilnLayerINDhex(map) {
+//     if (!map.getSource('brickKilnsINDHex')) {
+//         showLoadingSpinner();
+
+//         fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_IND_coal.geojson')
+//             .then(response => response.json())
+//             .then(data => {
+//                 const bbox = turf.bbox(data);
+
+//                 const hexGrid = turf.hexGrid(bbox, 15, { units: 'kilometers' });
+
+//                 hexGrid.features.forEach(hex => {
+//                     const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
+//                     hex.properties.pointCount = pointsWithinHex.features.length;
+//                 });
+
+//                 map.addSource('brickKilnsINDHex', {
+//                     type: 'geojson',
+//                     data: hexGrid
+//                 });
+
+//                 map.addLayer({
+//                     'id': 'brick_kilns_IND_hex',
+//                     'type': 'fill',
+//                     'source': 'brickKilnsINDHex',
+//                     'maxzoom': 12,
+//                     layout: {
+//                         visibility: 'visible' // Fix typo: should be 'visible'
+//                     },
+//                     'paint': {
+//                         'fill-color': [
+//                             'interpolate',
+//                             ['linear'],
+//                             ['get', 'pointCount'],
+//                             0, 'rgba(255,255,178,0)',
+//                             10, 'rgba(255,255,178,0.3)',
+//                             20, 'rgb(254,229,132)',
+//                             30, 'rgb(254,204,92)',
+//                             50, 'rgb(253,174,64)',
+//                             100, 'rgb(253,141,60)',
+//                             150, 'rgb(252,78,42)',
+//                             200, 'rgb(240,59,32)',
+//                             250, 'rgb(220,30,30)',
+//                             300, 'rgb(189,0,38)',
+//                             350, 'rgb(140,0,30)',
+//                             400, 'rgb(100,0,20)'
+//                             ],
+//                         'fill-opacity': 0.7,
+
+//                     },
+//                     layout: {
+//                         visibility: 'visible'
+//                     }
+//                 });
+
+//                 // Wait for the map to become idle, meaning all sources and tiles have been loaded
+//                 map.on('idle', function () {
+//                     if (map.getLayer('brick_kilns_IND_hex') && map.getSource('brickKilnsINDHex')) {
+//                         hideLoadingSpinner();  // Hide the spinner once the grid is fully loaded
+//                     }
+//                 });
+
+//                 if (!isAggregateToolEnabled()) {
+//                     // Add popup click event
+//                     map.on('click', 'brick_kilns_IND_hex', (e) => {
+//                         if (!isAggregateToolEnabled()) {
+//                             const properties = e.features[0].properties;
+//                             const popupContent = `
+//                             <div class="popup-table">
+//                                 <h3>Brick Kiln Density / 15km</h3>
+//                                 <table>
+//                                     <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
+//                                 </table>
+//                             </div>`;
+
+//                             new mapboxgl.Popup()
+//                                 .setLngLat(e.lngLat)
+//                                 .setHTML(popupContent)
+//                                 .addTo(map);
+//                         }
+
+//                     });
+
+//                     // Change cursor to pointer when hovering over the grid
+//                     map.on('mouseenter', 'brick_kilns_IND_hex', () => {
+//                         map.getCanvas().style.cursor = 'pointer';
+//                     });
+
+//                     map.on('mouseleave', 'brick_kilns_IND_hex', () => {
+//                         map.getCanvas().style.cursor = '';
+//                     });
+//                 }
+
+
+
+//             }).catch(error => {
+//                 console.error('Error loading Brick Kiln Hex data for India:', error);
+//                 hideLoadingSpinner();
+//             });
+//     } else {
+//         map.setLayoutProperty('brick_kilns_IND_hex', 'visibility', 'visible');
+//     }
+// }
+
+// export function loadBrickKilnLayerBANhex(map) {
+//     if (!map.getSource('brickKilnsBANHex')) {
+//         showLoadingSpinner();
+
+//         fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson')
+//             .then(response => response.json())
+//             .then(data => {
+//                 const bbox = turf.bbox(data);
+
+//                 const hexGrid = turf.hexGrid(bbox, 15, { units: 'kilometers' });
+
+//                 hexGrid.features.forEach(hex => {
+//                     const pointsWithinHex = turf.pointsWithinPolygon(data, hex);
+//                     hex.properties.pointCount = pointsWithinHex.features.length;
+//                 });
+
+//                 map.addSource('brickKilnsBANHex', {
+//                     type: 'geojson',
+//                     data: hexGrid
+//                 });
+
+//                 map.addLayer({
+//                     'id': 'brick_kilns_BAN_hex',
+//                     'type': 'fill',
+//                     'source': 'brickKilnsBANHex',
+//                     'maxzoom': 12,
+//                     layout: {
+//                         visibility: 'visible' // Fix typo: should be 'visible'
+//                     },
+//                     'paint': {
+//                         'fill-color': [
+//                             'interpolate',
+//                             ['linear'],
+//                             ['get', 'pointCount'],
+//                             0, 'rgba(255,255,178,0)',
+//                             10, 'rgba(255,255,178,0.3)',
+//                             20, 'rgb(254,229,132)',
+//                             30, 'rgb(254,204,92)',
+//                             50, 'rgb(253,174,64)',
+//                             100, 'rgb(253,141,60)',
+//                             150, 'rgb(252,78,42)',
+//                             200, 'rgb(240,59,32)',
+//                             250, 'rgb(220,30,30)',
+//                             300, 'rgb(189,0,38)',
+//                             350, 'rgb(140,0,30)',
+//                             400, 'rgb(100,0,20)'
+//                             ],
+//                         'fill-opacity': 0.9,
+
+//                     },
+//                     layout: {
+//                         visibility: 'visible'
+//                     }
+//                 });
+//                 // Wait for the map to become idle, meaning all sources and tiles have been loaded
+//                 map.on('idle', function () {
+//                     if (map.getLayer('brick_kilns_BAN_hex') && map.getSource('brickKilnsBANHex')) {
+//                         hideLoadingSpinner();  // Hide the spinner once the grid is fully loaded
+//                     }
+//                 });
+
+//                 if (!isAggregateToolEnabled()) {
+//                     // Add popup click event
+//                     map.on('click', 'brick_kilns_BAN_hex', (e) => {
+//                         if (!isAggregateToolEnabled()) {
+//                             const properties = e.features[0].properties;
+//                             const popupContent = `
+//                         <div class="popup-table">
+//                             <h3>Brick Kiln Density / 15km</h3>
+//                             <table>
+//                                 <tr><th>Total Kilns: </th><td>${properties.pointCount}</td></tr>
+//                             </table>
+//                         </div>`;
+
+//                             new mapboxgl.Popup()
+//                                 .setLngLat(e.lngLat)
+//                                 .setHTML(popupContent)
+//                                 .addTo(map);
+//                         }
+
+//                     });
+
+//                     map.on('mouseenter', 'brick_kilns_BAN_hex', () => {
+//                         map.getCanvas().style.cursor = 'pointer';
+//                     });
+
+//                     map.on('mouseleave', 'brick_kilns_BAN_hex', () => {
+//                         map.getCanvas().style.cursor = '';
+//                     });
+//                 }
+
+
+
+//             }).catch(error => {
+//                 console.error('Error loading Brick Kiln Hex data for Bangladesh:', error);
+//                 hideLoadingSpinner();
+//             });
+//     } else {
+//         map.setLayoutProperty('brick_kilns_BAN_hex', 'visibility', 'visible');
+//     }
+// }

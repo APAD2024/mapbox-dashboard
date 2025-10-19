@@ -5,7 +5,7 @@ import {
     loadBrickKilnLayerIND,
     loadBrickKilnLayerNGA,
     loadBrickKilnLayerPK,
-    loadBrickKilnLayerUGA
+    loadBrickKilnLayerUGA,
 } from './brickKilns.js';
 
 // import {
@@ -38,12 +38,19 @@ let layerVisibility = {};
 
 // Default list of layers (modify as needed)
 const defaultLayerIds = [
-    'coal', 'population', 'fossil_fuel', 'gpw',
-    'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'cement_igp',
-    'furnace_oil_IGP', 'paper_pulp_igp', 'steel_igp',
-    'solid_waste_igp', 'coal_africa', 'cement_africa', 'paper_pulp_africa',
-    'steel_africa', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA',
-    'brick_kilns_NGA', 'adm3_PAK', 'adm3_IND', 'adm3_BAN','boilers','pollution_reports','openaq_latest'
+    'coal', 'coal_africa','fossil_fuel', 'furnace_oil_IGP',
+
+    'cement_igp','cement_africa','paper_pulp_igp', 'paper_pulp_africa','steel_igp','steel_africa','boilers',
+
+    'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 
+    'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA',
+    'brick_kilns_NGA',
+
+    'gpw','solid_waste_igp',   
+    
+    'pollution_reports','openaq_latest',
+
+    //  'adm3_PAK', 'adm3_IND', 'adm3_BAN','population',
 ];
 
 // Function to save layer visibility
@@ -199,14 +206,14 @@ const layerStyles = {
     
     cement:{ circleColor: hslaVar('--dark-orange', 0.25), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--dark-orange') }, 
 
-    brickKiln:{ circleColor: hslaVar('--red', 0.25), circleRadius: 1, strokeWidth: 0, strokeColor: hslaVar('--red')},
+    // brickKiln:{ circleColor: hslaVar('--red', 0.25), circleRadius: 4, strokeWidth: 0, strokeColor: hslaVar('--red')},
     
-    boilers:{ circleColor: hslaVar('--red', 0.25), circleRadius: 20, strokeWidth: 1, strokeColor: hslaVar('--red') },  
+    boilers:{ circleColor: hslaVar('--red', 0.25), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--red') },  
 
     //Group 3: tertiary
-    landFillWaste :{ circleColor: hslaVar('--yellow', 0), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--yellow') },
+    landFillWaste :{ circleColor: hslaVar('--yellow', 0), circleRadius: 5, strokeWidth: 1, strokeColor: hslaVar('--yellow') },
 
-    gpw: { circleColor: hslaVar('--blue', 0), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--blue') },
+    gpw: { circleColor: hslaVar('--blue', 0), circleRadius: 5, strokeWidth: 1, strokeColor: hslaVar('--blue') },
 };
 
 //Initialize all legend layer toggles

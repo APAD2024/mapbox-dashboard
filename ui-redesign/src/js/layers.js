@@ -268,24 +268,40 @@ export function generatePopupHTML(properties, coordinates, layerName = "") {
 
 // Keep track of the currently open popup
 let currentPopup = null;
-
+let removeCurrentDot = null;
 // Show popup, passing coordinates for Lat/Lng and layer name
 export function showPopup(map, lngLat, properties, layerName = "") {
+  // Close existing popup and pulsing dot
   if (currentPopup) {
     currentPopup.remove();
     currentPopup = null;
   }
+  if (removeCurrentDot) {
+    removeCurrentDot();
+    removeCurrentDot = null;
+  }
 
-  // Pass coordinates as [lng, lat] to generatePopupHTML
+  // Generate HTML
   const html = generatePopupHTML(properties, [lngLat.lng, lngLat.lat], layerName);
 
+  // Create new popup
   currentPopup = new mapboxgl.Popup()
     .setLngLat(lngLat)
     .setHTML(html)
     .addTo(map);
+
+  // Add pulsing dot at the popup location
+  removeCurrentDot = addPulsingDot(map, [lngLat.lng, lngLat.lat]);
+
+  // When the popup closes, remove the pulsing dot
+  currentPopup.on("close", () => {
+    if (removeCurrentDot) removeCurrentDot();
+    removeCurrentDot = null;
+    currentPopup = null;
+  });
+
+  return currentPopup;
 }
-
-
 
 export function loadOpenAQLayer(map) {
   showLoadingSpinner();
@@ -410,13 +426,103 @@ export function loadOpenAQLayer(map) {
   }
 }
 
+// --- PULSING DOT HELPER ---
+export function addPulsingDot(map, coordinates) {
+  const size = 200;
+
+  const pulsingDot = {
+    width: size,
+    height: size,
+    data: new Uint8Array(size * size * 4),
+    onAdd: function () {
+      const canvas = document.createElement("canvas");
+      canvas.width = this.width;
+      canvas.height = this.height;
+      this.context = canvas.getContext("2d");
+    },
+    render: function () {
+      const duration = 1000;
+      const t = (performance.now() % duration) / duration;
+      const radius = size / 2 * 0.3;
+      const outerRadius = (size / 2) * 0.7 * t + radius;
+      const context = this.context;
+
+      context.clearRect(0, 0, this.width, this.height);
+
+      // Outer circle
+      context.beginPath();
+      context.arc(this.width / 2, this.height / 2, outerRadius, 0, Math.PI * 2);
+      context.fillStyle = `rgba(255, 200, 200, ${1 - t})`;
+      context.fill();
+
+      // Inner circle
+      context.beginPath();
+      context.arc(this.width / 2, this.height / 2, radius, 0, Math.PI * 2);
+      context.fillStyle = " hsla(167, 13.2%, 79.2%, 0.5)";
+      context.strokeStyle = "white";
+      context.lineWidth = 2 + 4 * (1 - t);
+      context.fill();
+      context.stroke();
+
+      this.data = context.getImageData(0, 0, this.width, this.height).data;
+      map.triggerRepaint();
+      return true;
+    },
+  };
+
+  // Add image once
+  if (!map.hasImage("pulsing-dot")) {
+    map.addImage("pulsing-dot", pulsingDot, { pixelRatio: 2 });
+  }
+
+  // Add source and layer once
+  if (!map.getSource("pulsing-dot-source")) {
+    map.addSource("pulsing-dot-source", {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: [] },
+    });
+  }
+  if (!map.getLayer("pulsing-dot-layer")) {
+    map.addLayer({
+      id: "pulsing-dot-layer",
+      type: "symbol",
+      source: "pulsing-dot-source",
+      layout: {
+        "icon-image": "pulsing-dot",
+        "icon-size": 0.5,
+        "icon-allow-overlap": true,
+      },
+    });
+  }
+
+  // Set the pulsing dot position
+  map.getSource("pulsing-dot-source").setData({
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: { type: "Point", coordinates },
+      },
+    ],
+  });
+
+  // Return a function to remove the pulsing dot
+  return function removePulsingDot() {
+    map.getSource("pulsing-dot-source").setData({
+      type: "FeatureCollection",
+      features: [],
+    });
+  };
+}
+
+
 export async function loadGroupLayers(
   map,
   layerId,
   sourceId,
   url,
   circleColor = "#000",
-  baseRadius = 5,
+  baseRadius = 3,
   strokeWidth = 2,
   strokeColor = "#fff"
 ) {
@@ -437,7 +543,7 @@ export async function loadGroupLayers(
     data.features.forEach(f => {
       const pm25 = parseFloat(f.properties["pm25"]);
       const normalized = !isNaN(pm25) ? pm25 / maxPM25 : 0.2;
-      f.properties.scaled_radius = 5 + normalized * 15;
+      f.properties.scaled_radius = baseRadius + normalized * 15;
     });
 
     // Add or update source
@@ -463,10 +569,27 @@ export async function loadGroupLayers(
       });
     }
 
-    // Add popup if aggregate tool is not active
+    // --- Click handler with popup and pulsing dot ---
     if (!isAggregateToolEnabled()) {
+      let removeCurrentDot = null;
+
       map.on("click", layerId, (e) => {
-        showPopup(map, e.lngLat, e.features[0].properties);
+        const feature = e.features[0];
+
+        // Show existing popup
+        const popup = showPopup(map, e.lngLat, feature.properties);
+
+        // Remove previous pulsing dot if exists
+        if (removeCurrentDot) removeCurrentDot();
+
+        // Add new pulsing dot at clicked point
+        removeCurrentDot = addPulsingDot(map, feature.geometry.coordinates);
+
+        // Stop pulsing when popup closes
+        popup.on("close", () => {
+          if (removeCurrentDot) removeCurrentDot();
+          removeCurrentDot = null;
+        });
       });
     }
 
@@ -476,6 +599,7 @@ export async function loadGroupLayers(
     hideLoadingSpinner();
   }
 }
+
 
 export function loadCountryBoundary(map, countryCode, url) {
   const sourceId = `${countryCode}_boundary_source`;
