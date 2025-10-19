@@ -1,3 +1,4 @@
+
 // Function to show the loading spinner
 export function showLoadingSpinner() {
     document.getElementById('loadingSpinner').style.display = 'block';
@@ -14,3 +15,9 @@ export function closePopups() {
         popups[i].remove();
     }
 }
+
+
+// utils.js
+
+
+
