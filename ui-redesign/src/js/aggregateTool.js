@@ -1,6 +1,7 @@
 import { closePopups  } from './utils.js';
-// -----------------------------------------------------------AGGREGATE TOOL-----------------------------------------------------------
+import { layerStyles } from './layerVisibility.js';
 
+// -----------------------------------------------------------AGGREGATE TOOL-----------------------------------------------------------
 
 // Aggregate Tool State
 let aggregateToolEnabled = false;
@@ -8,7 +9,7 @@ let emissionsChart;
 let countsChart;
 
 // Brick kiln layers (add all variants here)
-const BRICK_KILN_LAYERS = [
+export const BRICK_KILN_LAYERS = [
   "brick_kilns_PK",
   "brick_kilns_IND",
   "brick_kilns_BAN",
@@ -18,58 +19,72 @@ const BRICK_KILN_LAYERS = [
   "brick_kilns_NGA"
 ];
 
-// All other emission-related layers
-const COUNTABLE_LAYERS = [
-  'coal',
-  'coal_africa',
-  'fossil',
-  'furnace_oil_IGP',
-  'steel_IGP',
-  'steel_africa',
-  'paper_pulp_IGP',
-  'paper_pulp_africa',
-  'cement_IGP',
-  'cement_africa',
-  'boilers',
-  'solid_waste_IGP',
-  'gpw'
-];
-
-const layerNames = {
-    'coal': 'Coal Plants',
-    'coal_africa': 'Coal Plants',
-    'fossil': 'Fossil Fuel',
-    'furnace_oil_IGP': 'Furnace Oil',
-    'steel_IGP': 'Steel IGP',
-    'steel_africa': 'Steel Africa',
-    'paper_pulp_IGP': 'Paper Pulp',
-    'paper_pulp_africa': 'Paper Pulp',
-    'cement_IGP': 'Cement',
-    'cement_africa': 'Cement',
-    'boilers': 'Boilers',
-    'solid_waste_IGP': 'Solid Waste',
-    'gpw': 'GPW',
+// Single source of truth
+export const COUNTABLE_LAYERS_INFO = {
+  coal: 'Coal Plants',
+  coal_africa: 'Coal Plants',
+  fossil_fuel: 'Fossil Fuel',
+  furnace_oil_IGP: 'Furnace Oil',
+  steel_IGP: 'Steel IGP',
+  steel_africa: 'Steel Africa',
+  paper_pulp_IGP: 'Paper Pulp',
+  paper_pulp_africa: 'Paper Pulp',
+  cement_IGP: 'Cement',
+  cement_africa: 'Cement',
+  boilers: 'Boilers',
+  solid_waste_IGP: 'Solid Waste',
+  gpw: 'GPW'
 };
+
+// Map map layer IDs → layerStyles keys
+export const layerIdToStyleKey = {
+    coal: 'coal',
+    coal_africa: 'coal',
+    fossil_fuel: 'fossilFuel',
+    furnace_oil_IGP: 'furnaceOil',
+    steel_IGP: 'steel',
+    steel_africa: 'steel',
+    paper_pulp_IGP: 'paperPulp',
+    paper_pulp_africa: 'paperPulp',
+    cement_IGP: 'cement',
+    cement_africa: 'cement',
+    boilers: 'boilers',
+    solid_waste_IGP: 'landFillWaste',
+    gpw: 'gpw'
+};
+
+// Derived lists
+const COUNTABLE_LAYERS = Object.keys(COUNTABLE_LAYERS_INFO);
+const layerNames = { ...COUNTABLE_LAYERS_INFO };
 
 function getCSSColor(varName) {
     return getComputedStyle(document.documentElement).getPropertyValue(varName);
 }
 
-const layerColors = {
-    'coal': getCSSColor('--red'),
-    'coal_africa': getCSSColor('--red'),
-    'fossil': getCSSColor('--orange'),
-    'furnace_oil_IGP': getCSSColor('--blue'),
-    'steel_IGP': getCSSColor('--blue-t'),
-    'steel_africa': getCSSColor('--blue-t'),
-    'paper_pulp_IGP': getCSSColor('--pink-t'),
-    'paper_pulp_africa': getCSSColor('--pink-t'),
-    'cement_IGP': getCSSColor('--vivid-green-t'),
-    'cement_africa': getCSSColor('--vivid-green-t'),
-    'boilers': getCSSColor('--red-t'),
-    'solid_waste_IGP': getCSSColor('--orange'),
-    'gpw': getCSSColor('--light-blue')
-};
+
+export const layerColors = {};
+
+// Map each layer ID to the circle color
+for (const [layerId, style] of Object.entries(layerStyles)) {
+    layerColors[layerId] = style.circleColor;
+}
+
+
+// const layerColors = {
+//     'coal': getCSSColor('--red'),
+//     'coal_africa': getCSSColor('--red'),
+//     'fossil': getCSSColor('--orange'),
+//     'furnace_oil_IGP': getCSSColor('--blue'),
+//     'steel_IGP': getCSSColor('--blue-t'),
+//     'steel_africa': getCSSColor('--blue-t'),
+//     'paper_pulp_IGP': getCSSColor('--pink-t'),
+//     'paper_pulp_africa': getCSSColor('--pink-t'),
+//     'cement_IGP': getCSSColor('--vivid-green-t'),
+//     'cement_africa': getCSSColor('--vivid-green-t'),
+//     'boilers': getCSSColor('--red-t'),
+//     'solid_waste_IGP': getCSSColor('--orange'),
+//     'gpw': getCSSColor('--light-blue')
+// };
 
 const chartFont = getComputedStyle(document.documentElement).getPropertyValue('--body01').trim();
 
@@ -147,7 +162,7 @@ function handleAggregation(map, lngLat) {
         id: 'bufferLayer',
         type: 'fill',
         source: 'bufferSource',
-        paint: { 'fill-color': 'rgba(128,128,128,0.5)', 'fill-outline-color': 'black' }
+        paint: { 'fill-color': 'hsla(167, 13.2%, 79.2%, 0.5)', 'fill-outline-color': 'hsla(182, 47.7%, 12.7%, 1)' }
     });
 
     // Show results container
@@ -204,69 +219,69 @@ function generateCountsChart(map, buffer) {
     map.getStyle().layers.forEach(layer => {
         const id = layer.id;
 
-        // skip layers not in either list
+        // Skip layers not in either list
         if (!BRICK_KILN_LAYERS.includes(id) && !COUNTABLE_LAYERS.includes(id)) return;
 
         if (map.getLayer(id) && map.getLayoutProperty(id, 'visibility') === 'visible') {
             const features = map.queryRenderedFeatures({ layers: [id] });
 
-            let count = 0;
-            features.forEach(feature => {
-                if (
-                    feature.geometry.type === 'Point' &&
-                    turf.booleanPointInPolygon(turf.point(feature.geometry.coordinates), buffer)
-                ) {
-                    count++;
-                }
-            });
+            let count = features.filter(f => f.geometry.type === 'Point' &&
+                turf.booleanPointInPolygon(turf.point(f.geometry.coordinates), buffer)
+            ).length;
 
             if (count > 0) {
                 if (BRICK_KILN_LAYERS.includes(id)) {
-                    brickKilnsCount += count; // count but don’t add to chart
-                } else if (COUNTABLE_LAYERS.includes(id)) {
+                    brickKilnsCount += count;
+                } else {
                     layerCounts[id] = count;
                 }
             }
         }
     });
 
-    // Update “Brick Kilns” text
+    
+
+    // Update Brick Kilns text
     const resultBox = document.getElementById('aggregateResults');
     const brickKilnsParagraph = resultBox.querySelector('p');
     brickKilnsParagraph.textContent = `Brick Kilns: ${brickKilnsCount.toLocaleString()}`;
 
-    // Create bar chart for the other layers
-    const labels = Object.keys(layerCounts).map(id => layerNames[id] || id);
-    const values = Object.values(layerCounts);
-    const colors = Object.keys(layerCounts).map(id => layerColors[id] || 'gray');
-
+    // Prepare chart data
+    const chartLabels = Object.keys(layerCounts).map(id => COUNTABLE_LAYERS_INFO[id]);
+    const chartValues = Object.values(layerCounts);
+    
+    const chartColors = Object.keys(layerCounts).map(id => {
+    const styleKey = layerIdToStyleKey[id];           // map layerId → layerStyles key
+    const style = layerStyles[styleKey];
+    return {
+        fill: style?.circleColor || 'gray',           // fallback gray if missing
+        stroke: style?.strokeColor || 'black'        // fallback black if missing
+    };
+});
     const ctx = document.getElementById('countsChart').getContext('2d');
     if (countsChart) countsChart.destroy();
 
     countsChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Number of Points',
-                data: values,
-                backgroundColor: colors,
-                borderColor: colors.map(c => c.replace('0.6', '1')),
-                borderWidth: 1,
-            }]
+    type: 'bar',
+    data: {
+        labels: Object.keys(layerCounts).map(id => layerNames[id] || id),
+        datasets: [{
+            data: Object.values(layerCounts),
+            backgroundColor: chartColors.map(c => c.fill),
+            borderColor: chartColors.map(c => c.stroke),
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: 'Point Counts per Layer' },
+            legend: { display: false }
         },
-        options: {
-            responsive: true,
-            plugins: {
-                title: { display: true, text: 'Point Counts per Layer' },
-                legend: { display: false }
-            },
-            scales: { y: { beginAtZero: true } }
-        }
-    });
+        scales: { y: { beginAtZero: true } }
+    }
+});
 }
-
-
 
 
 function generateEmissionsChart(emissionsData) {
@@ -312,6 +327,8 @@ function generateEmissionsChart(emissionsData) {
         }
     });
 }
+
+
 
 // Usage example
 // generateEmissionsChart(totalCoalEmissions);

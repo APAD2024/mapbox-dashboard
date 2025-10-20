@@ -191,7 +191,7 @@ function hslaVar(varName, alpha = 1) {
   return hsla.replace(/hsla\((\d+),\s*([\d.]+)%,\s*([\d.]+)%,\s*[\d.]+\)/, `hsla($1, $2%, $3%, ${alpha})`);
 }
 
-const layerStyles = {
+export const layerStyles = {
     //Group 1: Extraction or primary energy generation (Cross symbol)
     coal: { circleColor: hslaVar('--vivid-green', 0.2), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--vivid-green') },
 
@@ -202,7 +202,7 @@ const layerStyles = {
     //Group 2: Manufacturing or secondary energy generation (Red hues)
     steel: { circleColor: hslaVar('--yellow', 0.5), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--yellow') },
     
-    paperPulp: { circleColor: hslaVar('--pink', 0.5), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--pink') },
+    paperPulp: { circleColor: hslaVar('--pink', 0.2), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--pink') },
     
     cement:{ circleColor: hslaVar('--dark-orange', 0.25), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--dark-orange') }, 
 

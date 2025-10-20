@@ -121,57 +121,61 @@
 
       <!--------------------------- FLOATING BUTTONS TOP RIGHT  --------------------------->
       
-      <!-- Basemap Menu -->
-      <div class= "FAB" id="basemapMenuButton"><i class="fas fa-globe"></i></div>
-      <div id="menu">
-        <button class="closeButton">&times;</button>
+        <!-- Basemap Menu -->
+        <div class= "FAB" id="basemapMenuButton"><i class="fas fa-globe"></i></div>
+        <div id="menu">
+          <button class="closeButton">&times;</button>
 
-        <input id="streets-v12" type="radio" name="rtoggle" value="streets-v12" />
-        <label for="streets-v12">Streets</label><br />
+          <input id="streets-v12" type="radio" name="rtoggle" value="streets-v12" />
+          <label for="streets-v12">Streets</label><br />
 
-        <input
-          id="satellite-streets-v12"
-          type="radio"
-          name="rtoggle"
-          value="satellite-streets-v12"
-        />
-        <label for="satellite-streets-v12">Satellite</label><br />
+          <input
+            id="satellite-streets-v12"
+            type="radio"
+            name="rtoggle"
+            value="satellite-streets-v12"
+          />
+          <label for="satellite-streets-v12">Satellite</label><br />
 
-        <input
-          id="outdoors-v12"
-          type="radio"
-          name="rtoggle"
-          value="outdoors-v12"
-        />
-        <label for="outdoors-v12">Outdoors</label><br />
+          <input
+            id="outdoors-v12"
+            type="radio"
+            name="rtoggle"
+            value="outdoors-v12"
+          />
+          <label for="outdoors-v12">Outdoors</label><br />
 
-        <input
-          id="light-v11"
-          type="radio"
-          name="rtoggle"
-          value="light-v11"
-        />
-        <label for="light-v11">Light</label><br />
+          <input
+            id="light-v11"
+            type="radio"
+            name="rtoggle"
+            value="light-v11"
+          />
+          <label for="light-v11">Light</label><br />
 
-        <input 
-          id="dark-v11" 
-          type="radio" 
-          name="rtoggle" 
-          value="dark-v11" 
-          checked="checked"
-        />
-        <label for="dark-v11">Dark</label><br />
+          <input 
+            id="dark-v11" 
+            type="radio" 
+            name="rtoggle" 
+            value="dark-v11" 
+            checked="checked"
+          />
+          <label for="dark-v11">Dark</label><br />
 
-        <input
-          id="google-air-quality"
-          type="radio"
-          name="rtoggle"
-          value="google-air-quality"
-        />
-        <label for="google-air-quality">Google Air Quality</label><br />
-      </div>
+          <input
+            id="google-air-quality"
+            type="radio"
+            name="rtoggle"
+            value="google-air-quality"
+          />
+          <label for="google-air-quality">Google Air Quality</label><br />
+        </div>
 
-      <!-- Heatmap Control Box -->
+        <!-- Continent Switch Button -->
+        <div class= "FAB" id="areaChange" title="Move to Africa">
+          <i class="fas fa-globe-africa"></i>
+        </div>
+      <!-- Heatmap Control Box
       <div
         id="heatmapBox"
         style="
@@ -211,13 +215,9 @@
           ></div>
           <span style="font-size: 12px">Excellent</span>
         </div>
-      </div>
+      </div> -->
 
-      <!-- Continent Switch Button -->
-      <div class= "FAB" id="areaChange" title="Move to Africa">
-        <i class="fas fa-globe-africa"></i>
-      </div>
-
+      
       <!--------------------------- FLOATING BUTTONS BOTTOM LEFT --------------------------->
 
       <!-- Air Quality Button -->
@@ -259,7 +259,6 @@
       <!-- Loading spinner (add this inside the <body> of your HTML) -->
       <div id="loadingSpinner" class="loading-spinner" style="display: none">
         <div class="spinner"></div>
-        <p>Loading layers...</p>
       </div>
 
       <!---------------------------LEGEND LAYERS --------------------------->

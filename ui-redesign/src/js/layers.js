@@ -1,5 +1,7 @@
-import { isAggregateToolEnabled } from "./aggregateTool.js";
+import { isAggregateToolEnabled, COUNTABLE_LAYERS_INFO, layerIdToStyleKey, layerColors } from "./aggregateTool.js";
 import { hideLoadingSpinner, showLoadingSpinner } from "./utils.js";
+import { layerStyles } from './layerVisibility.js';
+
 
 export const layerIds = [
   "indian",
@@ -211,19 +213,25 @@ async function fetchOpenAQLatestAsGeoJSON() {
   };
 }
 
-export function generatePopupHTML(properties, coordinates, layerName = "") {
+
+export function generatePopupHTML(properties, coordinates, layerId = "") {
   if (!properties) return "";
 
-  // Name: fallback to multiple possible fields
+  // Determine name
   const name = properties.name 
              || properties["Name of Enterprise"] 
              || properties.plant_name
              || "Unknown";
 
-  // Type: use layer name if passed, else fallback to properties.type
-  const type = layerName || properties.type || "";
+  // Determine type display name
+  const displayType = COUNTABLE_LAYERS_INFO[layerId] || layerId || "Unknown";
 
-  // Location: Address of the Industry takes priority
+  // Determine background color
+  const styleKey = layerIdToStyleKey[layerId] || layerId;
+  const backgroundColor = layerColors[styleKey] || "hsla(182, 47.7%, 12.7%, 1)"; 
+  const strokeColor = layerStyles[styleKey]?.strokeColor || "#000";  
+
+  // Location
   let locationText = "";
   if (properties["Address of the Industry"]) {
     locationText = properties["Address of the Industry"];
@@ -233,7 +241,7 @@ export function generatePopupHTML(properties, coordinates, layerName = "") {
     locationText = region ? `${region}, ${country}` : country;
   }
 
-  // Latitude & Longitude from coordinates parameter
+  // Coordinates
   const [lng, lat] = coordinates ?? [null, null];
   const latLngText = (lat !== null && lng !== null) ? `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}` : "";
 
@@ -249,9 +257,10 @@ export function generatePopupHTML(properties, coordinates, layerName = "") {
   const so2  = properties.so2  ?? properties["SO2"]  ?? "---";
   const nox  = properties.nox  ?? properties["NOx"]  ?? "---";
 
+  // Build HTML
   return `
     <div class="popup-table">
-      ${type ? `<div class="type">${type}</div>` : ""}
+      ${displayType ? `<div class="type" style="background-color: ${backgroundColor}; padding: 2px 4px; margin-bottom: 0.5rem; border-radius: 4px; border: 2px solid ${strokeColor}; font-weight: bold; color: ${strokeColor}; display: inline-block;">${displayType}</div>` : ""}
       <h3>${name}</h3>
       <div>${locationText}</div>
       ${latLngText ? `<div>${latLngText}</div>` : ""}
@@ -266,11 +275,12 @@ export function generatePopupHTML(properties, coordinates, layerName = "") {
   `;
 }
 
+
 // Keep track of the currently open popup
 let currentPopup = null;
 let removeCurrentDot = null;
 // Show popup, passing coordinates for Lat/Lng and layer name
-export function showPopup(map, lngLat, properties, layerName = "") {
+export function showPopup(map, lngLat, properties, layerId = "") {
   // Close existing popup and pulsing dot
   if (currentPopup) {
     currentPopup.remove();
@@ -282,7 +292,7 @@ export function showPopup(map, lngLat, properties, layerName = "") {
   }
 
   // Generate HTML
-  const html = generatePopupHTML(properties, [lngLat.lng, lngLat.lat], layerName);
+  const html = generatePopupHTML(properties, [lngLat.lng, lngLat.lat], layerId);
 
   // Create new popup
   currentPopup = new mapboxgl.Popup()
@@ -311,14 +321,14 @@ export function loadOpenAQLayer(map) {
     fetchOpenAQLatestAsGeoJSON()
       .then((data) => {
 
-        // --- 1️⃣ Compute normalization for PM2.5 ---
+        // --- Compute normalization for PM2.5 ---
         const pm25Values = data.features
           .map(f => parseFloat(f.properties["pm25"]))
           .filter(v => !isNaN(v));
 
         const maxPM25 = pm25Values.length > 0 ? Math.max(...pm25Values) : 1;
 
-        // --- 2️⃣ Add PM2.5-scaled size property to each feature ---
+        // --- Add PM2.5-scaled size property to each feature ---
         data.features.forEach(f => {
           const pm25 = parseFloat(f.properties["pm25"]);
           // normalize between 0.2 and 1
@@ -327,13 +337,13 @@ export function loadOpenAQLayer(map) {
           f.properties.circle_size = 3 + normalized * 9;
         });
 
-        // --- 3️⃣ Add GeoJSON source ---
+        // --- Add GeoJSON source ---
         map.addSource("openaq_latest", {
           type: "geojson",
           data: data,
         });
 
-        // --- 4️⃣ Add a circle layer for air quality stations ---
+        // --- Add a circle layer for air quality stations ---
         map.addLayer({
           id: "openaq_latest",
           type: "circle",
@@ -349,7 +359,7 @@ export function loadOpenAQLayer(map) {
           },
         });
 
-        // --- 5️⃣ Add popups for air quality stations ---
+        // --- Add popups for air quality stations ---
         map.on("click", "openaq_latest", (e) => {
           const properties = e.features[0].properties;
 
@@ -577,7 +587,7 @@ export async function loadGroupLayers(
         const feature = e.features[0];
 
         // Show existing popup
-        const popup = showPopup(map, e.lngLat, feature.properties);
+        const popup = showPopup(map, e.lngLat, feature.properties, layerId);
 
         // Remove previous pulsing dot if exists
         if (removeCurrentDot) removeCurrentDot();

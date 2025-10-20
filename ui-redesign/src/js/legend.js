@@ -8,11 +8,11 @@ export function initializeLegend(map) {
 
 
     // MARK LEGEND BUTTON AS ACTIVE IF LEGEND IS VISIBLE ON LOAD
-    const legend = document.getElementById('legend');
-    const legendButton = document.getElementById('legendButton');
-    if (legend && legendButton && legend.style.display !== 'none') {
-        legendButton.classList.add('active');
-    }
+    // const legend = document.getElementById('legend');
+    // const legendButton = document.getElementById('legendButton');
+    // if (legend && legendButton && legend.style.display !== 'none') {
+    //     legendButton.classList.add('active');
+    // }
 
     // Define group mappings
     const layerGroups = {
