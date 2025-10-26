@@ -532,15 +532,26 @@ width: 100%;
 
 #menu {
     position: absolute;
-    top: 170px;
-    right: 55px;
-    background: white;
-    padding: 10px;
-    font-family: 'Open Sans', sans-serif;
+    top: 17rem;
+    right: 6rem;
+    background: var(--dark-green);
+    padding: 1rem;
+    font-family: 'Montserrat';
     border-radius: 3px;
     z-index: 1;
     display: none;
-    color: #2c3e50;
+    color: white;
+    border: 0.12rem solid var(--light-green);
+    border-radius: 0.8rem;
+}
+
+#menu label {
+    color: var(--light-green);
+    font-size: var(--heading06);
+}
+
+#menu .closeButton{
+    color: var(--light-green);
 }
 
 /* #endregion */
@@ -1120,12 +1131,6 @@ position: absolute;
     /* Translate smallest circle right */
 }
 
-/* Labels and Population Count for Grid */
-label {
-    font-size: var(--heading06);
-    color: var(--dark-green);
-    display: block;
-}
 
 .row,
 .rowdecay {
