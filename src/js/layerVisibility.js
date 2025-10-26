@@ -8,16 +8,10 @@ import {
     loadBrickKilnLayerUGA,
 } from './brickKilns.js';
 
-// import {
-//     loadADM3BrickKilnsIndia,
-//     loadADM3BrickKilnsPakistan
-// } from './brickKilnadm3.js';
 
 import { loadGroupLayers, loadOpenAQLayer, loadPollutionReportsLayer, loadCountryBoundary } from './layers.js';
 
 
-// const layerPromise = fetchAndAddPollutionLayer(map);
-// setupLayerToggle(map, 'toggleReportedPollution', layerPromise, 'pollution_reports');
 export function loadAllBoundaries(map) {
   const boundaries = [
     { code: "IND", url: "https://gist.githubusercontent.com/khizerzakir/a57134b1784de99b512cdcade67936c2/raw/d457183d9aa4f2e128440ebfd69da3143f933ae2/IGP_boundary.geojson" },
@@ -403,62 +397,3 @@ export function initLayerVisibility(map) {
     });
   });
 }
-
-
-
-
-
-    // Standard Industry Layer Toggles
-    //setupLayerToggle(map, 'toggleCoal', 'coal');
-    // setupLayerToggle(map, 'toggleFossil', 'fossil');
-    // setupLayerToggle(map, 'toggleCementIGP', 'cement_IGP');
-    // setupLayerToggle(map, 'toggleOilGasIGP', 'oil_gas_IGP');
-    // setupLayerToggle(map, 'toggleSteelIGP', 'steel_IGP');
-    // setupLayerToggle(map, 'toggleSolidWasteIGP', 'solid_waste_IGP');
-    // setupLayerToggle(map, 'toggleGPW', 'gpw');
-    // setupLayerToggle(map, 'togglepop', 'population');
-    // setupLayerToggle(map, 'toggledecay', 'pollutant');
-    // setupLayerToggle(map, 'toggleBoilers', 'boilers');
-    // setupLayerToggle(map,'toggleReportedPollution','pollution_reports');
-    // setupLayerToggle(map,'toggleOpenAQData','openaq_latest');
-    // setupGroupLayerToggle(map, 'toggleBrickKilnAll', brickKilnLayers);
-    // setupGroupLayerToggle(map, 'toggleBrickKilnGrid', brickKilnGridLayers);
-    
-    // setupGroupLayerToggle(map, "toggleCoal", [
-    //     { id: "coal", load: (map) => loadGroupLayers(
-    //     map,
-    //     "coal",
-    //     "coal_IGP",
-    //     "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Coal+Plants/coal_plants_main.geojson",
-    //     "rgba(206, 112, 112, 1)"
-    //     )
-    //     }, 
-    //     { id: "coal_africa", load: (map) => loadGroupLayers(
-    //     map,
-    //     "coal_africa",
-    //     "coal_Afc",
-    //     "https://gist.githubusercontent.com/Mseher/b3f5e885ddae2b90be7048f87896ef48/raw/57db894dc8237b9d09a8f3ed1a5e114400cfc49f/Africa_Coal.geojson",
-    //     "rgba(206, 112, 112, 1)"
-    //     )
-    //     }
-    //     ]);
-    //  setupGroupLayerToggle(map, "toggleCementAll", [   
-    //     { id: "cement_IGP", load: (map) => loadGroupLayers(
-    //     map,
-    //     "cement_IGP",
-    //     "cementIGP",
-    //     "https://gist.githubusercontent.com/Mseher/cement_plants_main/raw/0751824b8af6cb919a8ec2aab869367987345545/Paper_pulp_Africa.geojson",
-    //     "rgba(221, 0, 251, 1)"
-    //     )
-    //     },
-    //     { id: "cement_africa", load: (map) => loadGroupLayers(
-    //     map,
-    //     "paper_pulp_IGP",
-    //     "cement_Afc",
-    //     "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Pulp+and+Paper+Plants/paper_pulp_main.geojson",
-    //     "rgba(221, 0, 251, 1)"
-    //     )
-    //     },
-    //     ]);
-
-

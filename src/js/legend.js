@@ -7,19 +7,11 @@ export function initializeLegend(map) {
     initializeLayerVisibilityControls(map); // Set up individual layer/brick kiln toggles
 
 
-    // MARK LEGEND BUTTON AS ACTIVE IF LEGEND IS VISIBLE ON LOAD
-    // const legend = document.getElementById('legend');
-    // const legendButton = document.getElementById('legendButton');
-    // if (legend && legendButton && legend.style.display !== 'none') {
-    //     legendButton.classList.add('active');
-    // }
-
     // Define group mappings
     const layerGroups = {
         'legend-brickKiln': ['BK_PK', 'BK_IND', 'BK_BAN'],
         'legend-brickKilnGrid': ['brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN'],
         'legend-brickKilnAfc': ['brick_kilns_DRC', 'brick_kilns_NGA', 'brick_kilns_UGA', 'brick_kilns_GHA'],
-        // 'legend-brickKilnAdm3': ['adm3_PAK', 'adm3_IND', 'adm3_BAN'] // ✅ ADM3 layers
     };
 
     // Enable drag-and-drop

@@ -17,7 +17,4 @@ export function closePopups() {
 }
 
 
-// utils.js
-
-
 

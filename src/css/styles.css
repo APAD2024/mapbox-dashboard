@@ -1417,3 +1417,11 @@ label {
     }
 }
 
+.popup-charts canvas {
+  background: #f7f7f7;
+  border-radius: 4px;
+  padding: 2px;
+}
+.popup-table h3 {
+  margin: 4px 0;
+}
