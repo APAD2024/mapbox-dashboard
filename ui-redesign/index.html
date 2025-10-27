@@ -32,7 +32,7 @@
       type="text/css"
     />
 
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
@@ -126,9 +126,7 @@
         <div id="menu">
           <button class="closeButton">&times;</button>
 
-          <input id="streets-v12" type="radio" name="rtoggle" value="streets-v12" />
-          <label for="streets-v12">Streets</label><br />
-
+    
           <input
             id="satellite-streets-v12"
             type="radio"
@@ -136,14 +134,6 @@
             value="satellite-streets-v12"
           />
           <label for="satellite-streets-v12">Satellite</label><br />
-
-          <input
-            id="outdoors-v12"
-            type="radio"
-            name="rtoggle"
-            value="outdoors-v12"
-          />
-          <label for="outdoors-v12">Outdoors</label><br />
 
           <input
             id="light-v11"
@@ -168,55 +158,15 @@
             name="rtoggle"
             value="google-air-quality"
           />
-          <label for="google-air-quality">Google Air Quality</label><br />
+          <label for="google-air-quality">Google Air Quality</label><br />       
+              
         </div>
 
         <!-- Continent Switch Button -->
         <div class= "FAB" id="areaChange" title="Move to Africa">
           <i class="fas fa-globe-africa"></i>
         </div>
-      <!-- Heatmap Control Box
-      <div
-        id="heatmapBox"
-        style="
-          display: none;
-          position: absolute;
-          bottom: 100px;
-          right: 20px;
-          z-index: 100;
-          background: white;
-          padding: 15px;
-          border-radius: 8px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        "
-      >
-        <button class="closeButton">&times;</button>
-        <label for="heatmapToggle">
-          <strong>Heatmap</strong>
-          <input type="checkbox" id="heatmapToggle" checked />
-        </label>
-        <div style="margin-top: 5px; display: flex; align-items: center">
-          <span style="font-size: 12px">Poor</span>
-          <div
-            style="
-              flex-grow: 1;
-              height: 10px;
-              background: linear-gradient(
-                90deg,
-                #7f0400 0%,
-                #fa0f00 10.1%,
-                #fa8c00 30.41%,
-                #fdff00 49.98%,
-                #83ce34 69.1%,
-                #1a9e3a 100%
-              );
-              margin: 0 10px;
-            "
-          ></div>
-          <span style="font-size: 12px">Excellent</span>
-        </div>
-      </div> -->
-
+     
       
       <!--------------------------- FLOATING BUTTONS BOTTOM LEFT --------------------------->
 
@@ -408,52 +358,6 @@
               </div>
           </div>
 
-    
-            <!-- Population Grid
-            <div class="legend-section" id="legend-population" draggable="true">
-              <input
-                id="togglepop"
-                type="checkbox"
-                data-layer="population"
-                checked
-              />
-              <span>Population Grid</span> <br />
-              <span class="legend-subunit">Count / 800 m<sup>2</sup></span>
-
-              <div class="row colors"></div>
-              <div class="row labels">
-                <div class="label">0</div>
-                <div class="label"></div>
-                <div class="label"></div>
-                <div class="label"></div>
-                <div class="label">17192</div>
-              </div>
-            </div> -->
-
-            <!-- Pollutant Decay
-            <div
-              class="legend-section"
-              id="legend-populationDecay"
-              draggable="true"
-            >
-              <input
-                id="toggledecay"
-                type="checkbox"
-                data-layer="population-decay"
-              />
-              <span>Pollutant Decay</span><br />
-              <div class="rowdecay colorsdecay"></div>
-              <div class="rowdecay labelsdecay">
-                <div class="labeldecay">Min</div>
-                <div class="labeldecay"></div>
-                <div class="labeldecay"></div>
-                <div class="labeldecay"></div>
-                <div class="labeldecay">Max</div>
-              </div>
-            </div>  -->
-
-
-            
       
         </div>
       </div>
@@ -478,42 +382,6 @@
           <!-- Circle elements will be added here dynamically -->
         </div>
       </div>
-
-      <!-------------------------------------------------------------- Hover Charts Display ---------------------------------------------------------->
-      <!-- <div class="map-overlay" id="features">
-        <h2>
-          <i class="fas fa-chart-bar"></i>
-          <span id="pollutantSourceTitle">Pollutants</span>
-          <button id="collapseBtn" class="collapse-btn">-</button>
-        </h2> -->
-
-        <!-- Dropdown for selecting Per Year / Per Day -->
-        <!-- <div id="dataFrequency">
-          <select id="frequencySelect">
-            <option value="year">Per Year</option>
-            <option value="day">Per Day</option>
-          </select>
-        </div> -->
-
-        <!-- <div id="chartContent"> -->
-          <!-- Plant Name and Country Info -->
-          <!-- <div id="plantInfo"></div> -->
-
-          <!-- Canvas for the two charts -->
-          <!-- <canvas id="pollutantChart1" width="400"></canvas>
-          <canvas id="pollutantChart2" width="400"></canvas> -->
-
-          <!-- Hover text -->
-          <!-- <p id="hoverText">
-            Hover over a Data and Check Details about Pollutants
-          </p>
-        </div> -->
-
-        <!-- Expand Button (Initially hidden) -->
-        <!-- <button id="expandBtn" class="expand-btn" style="display: none">
-          Expand
-        </button>
-      </div>  -->
     
     </div>
 

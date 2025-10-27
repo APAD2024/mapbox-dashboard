@@ -16,27 +16,6 @@ export function loadADM3BrickKilnsIndia(map) {
                 map.once('idle', () => {
                     map.addSource(id, { type: 'geojson', data });
 
-                    // map.addLayer({
-                    //     id,
-                    //     type: 'fill',
-                    //     source: id,
-                    //     paint: {
-                    //         'fill-color': [
-                    //             'interpolate', ['linear'], ['get', 'Kiln_count'],
-                    //             0, 'rgba(255,255,255,0)',
-                    //             1, '#ffffb2',
-                    //             10, '#fecc5c',
-                    //             30, '#fd8d3c',
-                    //             60, '#f03b20',
-                    //             100, '#bd0026'
-                    //         ],
-                    //         'fill-opacity': 0.4
-                    //     },
-                    //     layout: {
-                    //         visibility: 'visible'  // ✅ THIS LINE IS IMPORTANT
-                    //       },
-                    // });
-
                     map.addLayer({
                         id,
                         type: 'fill',
@@ -46,7 +25,7 @@ export function loadADM3BrickKilnsIndia(map) {
                             'fill-opacity': 0.4
                         },
                         layout: {
-                            visibility: 'visible'  // ✅ THIS LINE IS IMPORTANT
+                            visibility: 'visible'  
                           },
                     });
 
@@ -63,7 +42,7 @@ export function loadADM3BrickKilnsIndia(map) {
                         }
                     });
     
-                    // ✅ Click Popup Handler
+                    // Click Popup Handler
                     map.on('click', id, (e) => {
                         const props = e.features[0].properties;
                         new mapboxgl.Popup()
@@ -82,7 +61,7 @@ export function loadADM3BrickKilnsIndia(map) {
                     map.on('mouseenter', id, () => map.getCanvas().style.cursor = 'pointer');
                     map.on('mouseleave', id, () => map.getCanvas().style.cursor = '');
     
-                    // ✅ Just wait until layers are rendered to hide spinner
+                    // Just wait until layers are rendered to hide spinner
                     map.once('idle', () => hideLoadingSpinner());
                 });
             })
@@ -121,27 +100,6 @@ export function loadADM3BrickKilnsPakistan(map) {
                         visibility: 'visible'
                     }
                 });
-
-                // map.addLayer({
-                    //     id,
-                    //     type: 'fill',
-                    //     source: id,
-                    //     paint: {
-                    //         'fill-color': [
-                    //             'interpolate', ['linear'], ['get', 'Kiln_Count'],
-                    //             0, 'rgba(255,255,255,0)',
-                    //             1, '#ffffb2',
-                    //             10, '#fecc5c',
-                    //             30, '#fd8d3c',
-                    //             60, '#f03b20',
-                    //             100, '#bd0026'
-                    //         ],
-                    //         'fill-opacity': 0.4
-                    //     },
-                    //     layout: {
-                    //         visibility: 'visible'  // ✅ THIS LINE IS IMPORTANT
-                    //       },
-                    // });
 
                 map.addLayer({
                     id: `${id}-outline`,

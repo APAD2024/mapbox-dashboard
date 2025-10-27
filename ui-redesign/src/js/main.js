@@ -9,12 +9,9 @@ import { initializeLayerVisibilityControls } from './layerVisibility.js';
 import { initializeLegend } from './legend.js';
 
 
-// import { initializeOverlayCharts } from './mapOverlayCharts.js';
-
 import { initializeFilters } from './filters.js';
 
 
-import { initializeADM3FilterPanel } from './adm3Filters.js';
 
 
 // -----------------------------------------------------------MAP INITIALIZATION-----------------------------------------------------------
@@ -49,8 +46,6 @@ map.on('load', () => {
     initializeBasemapMenu(map);
 });
 
-
-
 // -----------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
 
 map.on('load', () => {
@@ -62,11 +57,6 @@ map.on('load', () => {
 map.on('load', () => {
     initializeLegend(map);
 });
-
-
-// map.on('load', () => {
-//     initializeADM3FilterPanel(map);
-// });
 
 // -----------------------------------------------------------AREA CHANGE-----------------------------------------------------------
 initializeAreaChange(map);
