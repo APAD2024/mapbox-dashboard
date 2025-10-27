@@ -82,7 +82,7 @@ export function loadPollutionReportsLayer(map) {
       // Ensure the custom marker image is loaded before adding the layer
       if (!map.hasImage("custom-marker")) {
         const image = await new Promise((resolve, reject) => {
-          map.loadImage("/src/assets/star_open-waste-burning.png", (error, img) => {
+          map.loadImage("./src/assets/star_open-waste-burning.png", (error, img) => {
             if (error) reject(error);
             else resolve(img);
           });
