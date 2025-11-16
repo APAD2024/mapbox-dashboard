@@ -334,7 +334,7 @@ function generateEmissionsChart(emissionsData) {
 
 export function generatePopupHTML(properties, coordinates, layerId = "") {
   if (!properties) return "";
-
+  console.log(properties)
   // Determine name
   const name = properties.name 
              || properties["Name of Enterprise"] 
@@ -365,15 +365,16 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
 
   // Capacity
   const capacity = properties.capacity 
+                ||properties.capacity_power
                  || properties.cap_mw
                  || properties["Capacity"] 
                  || "---";
 
   // Pollutants
-  const pm10 = properties.pm10 ?? properties["PM10"] ?? "---";
-  const pm25 = properties.pm25 ?? properties["PM2.5"] ?? properties["PM25"] ?? "---";
-  const so2  = properties.so2  ?? properties["SO2"]  ?? "---";
-  const nox  = properties.nox  ?? properties["NOx"]  ?? "---";
+  // const pm10 = properties.pm10 ?? properties["PM10"] ?? properties["pm10_t_yr"] ?? properties.pm10_t_yr ?? "---";
+  // const pm25 = properties.pm25 ?? properties["PM2.5"] ?? properties["PM25"] ?? properties["pm25_t_yr"] ?? properties.pm25_t_yr ?? "---";
+  // const so2  = properties.so2  ?? properties["SO2"]  ?? properties["SO2"] ?? properties["so2_t_yr"] ?? "---";
+  // const nox  = properties.nox  ?? properties["NOx"]  ?? properties["nox_t_yr"] ?? properties.nox_t_yr ??"---";
 
   // Build HTML
   return `
@@ -419,10 +420,10 @@ export function showPopup(map, lngLat, properties, layerId = "") {
   // Once popup is added to DOM, draw chart
   setTimeout(() => {
     const emissionsData = {
-      nox: parseFloat(properties.nox || properties["NOx"]) || 0,
-      so2: parseFloat(properties.so2 || properties["SO2"]) || 0,
-      pm10: parseFloat(properties.pm10 || properties["PM10"]) || 0,
-      pm25: parseFloat(properties.pm25 || properties["PM2.5"] || properties["PM25"]) || 0
+      nox: parseFloat(properties.nox || properties["NOx"] || properties["nox_t_yr"] || properties.nox_t_yr) || 0,
+      so2: parseFloat(properties.so2 || properties["SO2"] || properties["so2_t_yr"] || properties.so2_t_yr) || 0,
+      pm10: parseFloat(properties.pm10 || properties["PM10"] || properties["pm10_t_yr"] || properties.pm10_t_yr) || 0,
+      pm25: parseFloat(properties.pm25 || properties["PM2.5"] || properties["PM25"] || properties["pm25_t_yr"] || properties.pm25_t_yr) || 0
     };
     generateEmissionsChart(emissionsData);
   }, 200);
@@ -772,6 +773,7 @@ export function loadCountryBoundary(map, countryCode, url) {
 
   console.log(`Boundary loaded for ${countryCode}`);
 }
+
 
 
 
