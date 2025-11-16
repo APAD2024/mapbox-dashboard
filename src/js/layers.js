@@ -36,6 +36,11 @@ export const layerIds = [
 
 // -----------------------------------------------------------LAYERS LOADING-----------------------------------------------------------
 
+// Use colors
+function getCSSColor(variableName) {
+  return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+} 
+
 // Fetch API for Pollution reports data and convert to GeoJSON
 function convertPollutionDataToGeoJSON(data) {
   return {
@@ -61,7 +66,6 @@ function convertPollutionDataToGeoJSON(data) {
 export function loadPollutionReportsLayer(map) {
   const layerId = "pollution_reports";
 
-  // If already loaded, just return early
   if (map.getSource(layerId)) return;
 
   showLoadingSpinner();
@@ -79,7 +83,7 @@ export function loadPollutionReportsLayer(map) {
       const data = await response.json();
       const geojson = convertPollutionDataToGeoJSON(data);
 
-      // Ensure the custom marker image is loaded before adding the layer
+      // Ensure custom marker image is loaded
       if (!map.hasImage("custom-marker")) {
         const image = await new Promise((resolve, reject) => {
           map.loadImage("/src/assets/star_open-waste-burning.png", (error, img) => {
@@ -90,26 +94,65 @@ export function loadPollutionReportsLayer(map) {
         map.addImage("custom-marker", image);
       }
 
-      // Add the source
+      // Add CLUSTERING source
       map.addSource(layerId, {
         type: "geojson",
         data: geojson,
+        cluster: true,
+        clusterRadius: 50, // pixels
+        clusterMaxZoom: 14,
       });
 
-      // Add the layer
+      // Cluster circles
+      map.addLayer({
+        id: `${layerId}-clusters`,
+        type: "circle",
+        source: layerId,
+        filter: ["has", "point_count"], // Only cluster points
+        paint: {
+          "circle-color": getCSSColor('--red'),
+          "circle-radius": [
+            "step",
+            ["get", "point_count"],
+            15,
+            10, 20,
+            50, 25,
+            100, 30
+          ],
+          "circle-opacity": 0.8
+        }
+      });
+
+      // Cluster count labels
+      map.addLayer({
+        id: `${layerId}-cluster-count`,
+        type: "symbol",
+        source: layerId,
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": "{point_count}",
+          "text-size": 14,
+          "text-font": ['Montserrat Bold']
+        },
+        paint: {
+          "text-color": getCSSColor('--dark-green'),
+        }
+      });
+
+      // Normal single-point PNG markers
       map.addLayer({
         id: layerId,
         type: "symbol",
         source: layerId,
+        filter: ["!", ["has", "point_count"]], // Only non-cluster points
         layout: {
           "icon-image": "custom-marker",
           "icon-size": 0.25,
-          "icon-anchor": "bottom",
-          visibility: "visible",
-        },
+          "icon-anchor": "bottom"
+        }
       });
 
-      // Add popup on click
+      // POPUP for single markers (NOT clusters)
       map.on("click", layerId, (e) => {
         const props = e.features[0].properties;
         new mapboxgl.Popup()
@@ -120,14 +163,24 @@ export function loadPollutionReportsLayer(map) {
               <p><strong>Reported on:</strong> ${new Date(
                 props.timestamp
               ).toLocaleString()}</p>
-              <img src="${props.image_url}" alt="${props.pollution_type}" width="150px" style="border-radius: 5px;"/>
+              <img src="${props.image_url}" width="150px" style="border-radius:5px;"/>
             </div>
           `)
           .addTo(map);
       });
 
-      map.on("mouseenter", layerId, () => (map.getCanvas().style.cursor = "pointer"));
-      map.on("mouseleave", layerId, () => (map.getCanvas().style.cursor = ""));
+      // Optional: Zoom into clusters when clicked
+      map.on("click", `${layerId}-clusters`, (e) => {
+        const clusterId = e.features[0].properties.cluster_id;
+        map.getSource(layerId).getClusterExpansionZoom(clusterId, (err, zoom) => {
+          if (!err) {
+            map.easeTo({
+              center: e.lngLat,
+              zoom
+            });
+          }
+        });
+      });
 
       hideLoadingSpinner();
     })
@@ -210,9 +263,7 @@ async function fetchOpenAQLatestAsGeoJSON() {
   };
 }
 
-function getCSSColor(variableName) {
-  return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
-}
+
 
 const chartFont = 'Montserrat'; // or whatever font you use
 
