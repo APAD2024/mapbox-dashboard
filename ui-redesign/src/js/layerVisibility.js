@@ -9,7 +9,7 @@ import {
 } from './brickKilns.js';
 
 
-import { loadGroupLayers, loadOpenAQLayer, loadPollutionReportsLayer, loadCountryBoundary } from './layers.js';
+import { loadCountryBoundary, loadGroupLayers, loadOpenAQLayer, loadPM25ExposureLayer, loadPollutionReportsLayer } from './layers.js';
 
 
 export function loadAllBoundaries(map) {
@@ -42,7 +42,7 @@ const defaultLayerIds = [
 
     'gpw','solid_waste_igp',   
     
-    'pollution_reports','openaq_latest',
+    'pollution_reports','openaq_latest','pm2.5_exposure'
 
     //  'adm3_PAK', 'adm3_IND', 'adm3_BAN','population',
 ];
@@ -353,6 +353,12 @@ const layerConfigs = [
     tooltipId: 'tooltipAQ',
     layerId: 'openaq_latest',
     loadFn: loadOpenAQLayer,
+  },
+   {
+    buttonId: 'buttonPM2.5Data',
+    tooltipId: 'tooltipAQ',
+    layerId: 'pm2.5_exposure',
+    loadFn: loadPM25ExposureLayer,
   },
   {
     buttonId: 'buttonPollutionReports',

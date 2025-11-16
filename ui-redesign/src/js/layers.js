@@ -1,7 +1,10 @@
-import { isAggregateToolEnabled, COUNTABLE_LAYERS_INFO, layerIdToStyleKey, layerColors } from "./aggregateTool.js";
+import {
+  COUNTABLE_LAYERS_INFO,
+  isAggregateToolEnabled,
+  layerIdToStyleKey,
+} from "./aggregateTool.js";
+import { layerStyles } from "./layerVisibility.js";
 import { hideLoadingSpinner, showLoadingSpinner } from "./utils.js";
-import { layerStyles } from './layerVisibility.js';
-
 
 export const layerIds = [
   "indian",
@@ -75,17 +78,21 @@ export function loadPollutionReportsLayer(map) {
     body: JSON.stringify({}),
   })
     .then(async (response) => {
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+      if (!response.ok)
+        throw new Error(`HTTP error! Status: ${response.status}`);
       const data = await response.json();
       const geojson = convertPollutionDataToGeoJSON(data);
 
       // Ensure the custom marker image is loaded before adding the layer
       if (!map.hasImage("custom-marker")) {
         const image = await new Promise((resolve, reject) => {
-          map.loadImage("./src/assets/star_open-waste-burning.png", (error, img) => {
-            if (error) reject(error);
-            else resolve(img);
-          });
+          map.loadImage(
+            "./src/assets/star_open-waste-burning.png",
+            (error, img) => {
+              if (error) reject(error);
+              else resolve(img);
+            }
+          );
         });
         map.addImage("custom-marker", image);
       }
@@ -114,19 +121,27 @@ export function loadPollutionReportsLayer(map) {
         const props = e.features[0].properties;
         new mapboxgl.Popup()
           .setLngLat(e.lngLat)
-          .setHTML(`
+          .setHTML(
+            `
             <div style="text-align: center;">
               <h4>${props.pollution_type}</h4>
               <p><strong>Reported on:</strong> ${new Date(
                 props.timestamp
               ).toLocaleString()}</p>
-              <img src="${props.image_url}" alt="${props.pollution_type}" width="150px" style="border-radius: 5px;"/>
+              <img src="${props.image_url}" alt="${
+              props.pollution_type
+            }" width="150px" style="border-radius: 5px;"/>
             </div>
-          `)
+          `
+          )
           .addTo(map);
       });
 
-      map.on("mouseenter", layerId, () => (map.getCanvas().style.cursor = "pointer"));
+      map.on(
+        "mouseenter",
+        layerId,
+        () => (map.getCanvas().style.cursor = "pointer")
+      );
       map.on("mouseleave", layerId, () => (map.getCanvas().style.cursor = ""));
 
       hideLoadingSpinner();
@@ -211,61 +226,63 @@ async function fetchOpenAQLatestAsGeoJSON() {
 }
 
 function getCSSColor(variableName) {
-  return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(variableName)
+    .trim();
 }
 
-const chartFont = 'Montserrat'; // or whatever font you use
+const chartFont = "Montserrat"; // or whatever font you use
 
 function generateEmissionsChart(emissionsData) {
-  const emissionProperties = ['nox', 'so2', 'pm10', 'pm25'];
-  const labels = emissionProperties.map(p => p.toUpperCase());
-  const values = emissionProperties.map(p => emissionsData[p] || 0);
+  const emissionProperties = ["nox", "so2", "pm10", "pm25"];
+  const labels = emissionProperties.map((p) => p.toUpperCase());
+  const values = emissionProperties.map((p) => emissionsData[p] || 0);
 
-  const ctx = document.getElementById('emissionsChart').getContext('2d');
+  const ctx = document.getElementById("emissionsChart").getContext("2d");
 
   new Chart(ctx, {
-    type: 'bar',
+    type: "bar",
     data: {
       labels,
-      datasets: [{
-        label: 'Emissions (tn/year)',
-        data: values,
-        backgroundColor: getCSSColor('--light-green'),
-        borderColor: getCSSColor('--dark-green'),
-        borderWidth: 1,
-        barThickness: 15, 
-      }]
+      datasets: [
+        {
+          label: "Emissions (tn/year)",
+          data: values,
+          backgroundColor: getCSSColor("--light-green"),
+          borderColor: getCSSColor("--dark-green"),
+          borderWidth: 1,
+          barThickness: 15,
+        },
+      ],
     },
     options: {
-      indexAxis: 'y',
+      indexAxis: "y",
       responsive: true,
       scales: {
         x: {
           beginAtZero: true,
-          grid: { color: getCSSColor('--dark-green'),
-          },
+          grid: { color: getCSSColor("--dark-green") },
           ticks: {
-            color: getCSSColor('--dark-green'), 
-            font: { family: chartFont, size: 10 }
+            color: getCSSColor("--dark-green"),
+            font: { family: chartFont, size: 10 },
           },
-          border: {color: getCSSColor('--dark-green')
-          }
+          border: { color: getCSSColor("--dark-green") },
         },
         y: {
           grid: {
-            color: getCSSColor('--dark-green'), 
+            color: getCSSColor("--dark-green"),
           },
           ticks: {
-            color: getCSSColor('--dark-green'), 
-            font: { family: chartFont, size: 10 }
+            color: getCSSColor("--dark-green"),
+            font: { family: chartFont, size: 10 },
           },
           border: {
-            color: getCSSColor('--dark-green')
-          }
-        }
+            color: getCSSColor("--dark-green"),
+          },
+        },
       },
-        layout: {
-        padding: { top: 5, bottom: 5 }
+      layout: {
+        padding: { top: 5, bottom: 5 },
       },
       plugins: {
         legend: {
@@ -273,30 +290,30 @@ function generateEmissionsChart(emissionsData) {
         },
         title: {
           display: false,
-          color: getCSSColor('--dark-green') // 🔹 title text color (if enabled)
-        }
-      }
-    }
+          color: getCSSColor("--dark-green"), // 🔹 title text color (if enabled)
+        },
+      },
+    },
   });
 }
-
 
 export function generatePopupHTML(properties, coordinates, layerId = "") {
   if (!properties) return "";
 
   // Determine name
-  const name = properties.name 
-             || properties["Name of Enterprise"] 
-             || properties.plant_name
-             || "Unknown";
+  const name =
+    properties.name ||
+    properties["Name of Enterprise"] ||
+    properties.plant_name ||
+    "Unknown";
 
   // Determine type display name
   const displayType = COUNTABLE_LAYERS_INFO[layerId] || layerId || "Unknown";
 
   // Determine background color
   const styleKey = layerIdToStyleKey[layerId] || layerId;
-  const backgroundColor = layerStyles[styleKey] || "hsla(182, 47.7%, 12.7%, 1)"; 
-  const strokeColor = layerStyles[styleKey]?.strokeColor || "#000";  
+  const backgroundColor = layerStyles[styleKey] || "hsla(182, 47.7%, 12.7%, 1)";
+  const strokeColor = layerStyles[styleKey]?.strokeColor || "#000";
 
   // Location
   let locationText = "";
@@ -310,24 +327,30 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
 
   // Coordinates
   const [lng, lat] = coordinates ?? [null, null];
-  const latLngText = (lat !== null && lng !== null) ? `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}` : "";
+  const latLngText =
+    lat !== null && lng !== null
+      ? `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`
+      : "";
 
   // Capacity
-  const capacity = properties.capacity 
-                 || properties.cap_mw
-                 || properties["Capacity"] 
-                 || "---";
+  const capacity =
+    properties.capacity || properties.cap_mw || properties["Capacity"] || "---";
 
   // Pollutants
   const pm10 = properties.pm10 ?? properties["PM10"] ?? "---";
-  const pm25 = properties.pm25 ?? properties["PM2.5"] ?? properties["PM25"] ?? "---";
-  const so2  = properties.so2  ?? properties["SO2"]  ?? "---";
-  const nox  = properties.nox  ?? properties["NOx"]  ?? "---";
+  const pm25 =
+    properties.pm25 ?? properties["PM2.5"] ?? properties["PM25"] ?? "---";
+  const so2 = properties.so2 ?? properties["SO2"] ?? "---";
+  const nox = properties.nox ?? properties["NOx"] ?? "---";
 
   // Build HTML
   return `
     <div class="popup-table" style="font-family: 'Montserrat', sans-serif;">
-      ${displayType ? `<div class="type" style="background-color: ${backgroundColor}; padding: 2px 4px; margin-bottom: 0.5rem; border-radius: 4px; border: 2px solid ${strokeColor}; font-weight: bold; color: ${strokeColor}; display: inline-block;">${displayType}</div>` : ""}
+      ${
+        displayType
+          ? `<div class="type" style="background-color: ${backgroundColor}; padding: 2px 4px; margin-bottom: 0.5rem; border-radius: 4px; border: 2px solid ${strokeColor}; font-weight: bold; color: ${strokeColor}; display: inline-block;">${displayType}</div>`
+          : ""
+      }
       <h3>${name}</h3>
       <div>${locationText}</div>
       ${latLngText ? `<div style="font-size: 1rem;">${latLngText}</div>` : ""}
@@ -371,8 +394,12 @@ export function showPopup(map, lngLat, properties, layerId = "") {
       nox: parseFloat(properties.nox || properties["NOx"]) || 0,
       so2: parseFloat(properties.so2 || properties["SO2"]) || 0,
       pm10: parseFloat(properties.pm10 || properties["PM10"]) || 0,
-      pm25: parseFloat(properties.pm25 || properties["PM2.5"] || properties["PM25"]) || 0
+      pm25:
+        parseFloat(
+          properties.pm25 || properties["PM2.5"] || properties["PM25"]
+        ) || 0,
     };
+    // properties["pm25(t_day)"] )
     generateEmissionsChart(emissionsData);
   }, 200);
 
@@ -386,7 +413,6 @@ export function showPopup(map, lngLat, properties, layerId = "") {
   return currentPopup;
 }
 
-
 export function loadOpenAQLayer(map) {
   showLoadingSpinner();
 
@@ -394,16 +420,15 @@ export function loadOpenAQLayer(map) {
   if (!map.getSource("openaq_latest")) {
     fetchOpenAQLatestAsGeoJSON()
       .then((data) => {
-
         // --- Compute normalization for PM2.5 ---
         const pm25Values = data.features
-          .map(f => parseFloat(f.properties["pm25"]))
-          .filter(v => !isNaN(v));
+          .map((f) => parseFloat(f.properties["pm25"]))
+          .filter((v) => !isNaN(v));
 
         const maxPM25 = pm25Values.length > 0 ? Math.max(...pm25Values) : 1;
 
         // --- Add PM2.5-scaled size property to each feature ---
-        data.features.forEach(f => {
+        data.features.forEach((f) => {
           const pm25 = parseFloat(f.properties["pm25"]);
           // normalize between 0.2 and 1
           const normalized = !isNaN(pm25) ? pm25 / maxPM25 : 0.2;
@@ -453,7 +478,7 @@ export function loadOpenAQLayer(map) {
           ];
 
           let tableRows = "";
-          const toSubTag = str => str.replace(/(\d+)/g, "<sub>$1</sub>");
+          const toSubTag = (str) => str.replace(/(\d+)/g, "<sub>$1</sub>");
 
           for (const [key, value] of Object.entries(properties)) {
             if (!excludeKeys.includes(key) && value != null) {
@@ -510,6 +535,79 @@ export function loadOpenAQLayer(map) {
   }
 }
 
+export function loadPM25ExposureLayer(map) {
+  // Only load if the 'districts' source is not already added
+  if (!map.getSource("pm2.5_exposure")) {
+    showLoadingSpinner();
+
+    fetch("./data/pm2.5/pak_adm2_pm25.geojson")
+      .then((response) => response.json())
+      .then((data) => {
+        // Add GeoJSON source
+        map.addSource("pm2.5_exposure", {
+          type: "geojson",
+          data: data,
+        });
+
+        // Filled polygon layer (choropleth)
+        map.addLayer({
+          id: "districts-fill",
+          type: "fill",
+          source: "pm2.5_exposure",
+          paint: {
+            "fill-color": [
+              "interpolate",
+              ["linear"],
+              ["get", "normalised_exposure"],
+              0,
+              "#FFA500", // darker orange for low exposure
+              1,
+              "#1A0412", // very dark purple for high exposure
+            ],
+            "fill-opacity": 0.6,
+          },
+          layout: { visibility: "visible" },
+        });
+
+        // Boundaries
+        map.addLayer({
+          id: "districts-outline",
+          type: "line",
+          source: "pm2.5_exposure",
+          paint: {
+            "line-color": "#dcd9d9ff",
+            "line-width": 0.6,
+          },
+        });
+
+        // Popup on click
+        map.on("click", "districts-fill", (e) => {
+          const props = e.features[0].properties;
+          const popupHTML = `
+                    <div style="font-size:14px;">
+                        <strong>${props.NAME_2 || "District"}</strong><br>
+                        Normalized Exposure: ${
+                          props.normalised_exposure !== null
+                            ? props.normalised_exposure.toFixed(4)
+                            : "N/A"
+                        }
+                    </div>
+                `;
+          new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(popupHTML)
+            .addTo(map);
+        });
+
+        hideLoadingSpinner();
+      })
+      .catch((err) => {
+        console.error("Error loading PM2.5 exposure layer:", err);
+        hideLoadingSpinner();
+      });
+  }
+}
+
 // --- PULSING DOT HELPER ---
 export function addPulsingDot(map, coordinates) {
   const size = 200;
@@ -527,7 +625,7 @@ export function addPulsingDot(map, coordinates) {
     render: function () {
       const duration = 1000;
       const t = (performance.now() % duration) / duration;
-      const radius = size / 2 * 0.3;
+      const radius = (size / 2) * 0.3;
       const outerRadius = (size / 2) * 0.7 * t + radius;
       const context = this.context;
 
@@ -599,7 +697,6 @@ export function addPulsingDot(map, coordinates) {
   };
 }
 
-
 export async function loadGroupLayers(
   map,
   layerId,
@@ -618,13 +715,13 @@ export async function loadGroupLayers(
 
     // Find max PM2.5 value for this asset type
     const pm25Values = data.features
-      .map(f => parseFloat(f.properties["pm25"]))
-      .filter(v => !isNaN(v));
+      .map((f) => parseFloat(f.properties["pm25"]))
+      .filter((v) => !isNaN(v));
 
     const maxPM25 = pm25Values.length > 0 ? Math.max(...pm25Values) : 1;
 
     // Normalize and add scaled radius property
-    data.features.forEach(f => {
+    data.features.forEach((f) => {
       const pm25 = parseFloat(f.properties["pm25"]);
       const normalized = !isNaN(pm25) ? pm25 / maxPM25 : 0.2;
       f.properties.scaled_radius = baseRadius + normalized * 15;
@@ -684,7 +781,6 @@ export async function loadGroupLayers(
   }
 }
 
-
 export function loadCountryBoundary(map, countryCode, url) {
   const sourceId = `${countryCode}_boundary_source`;
   const layerId = `${countryCode}_boundary_layer`;
@@ -694,7 +790,7 @@ export function loadCountryBoundary(map, countryCode, url) {
 
   map.addSource(sourceId, {
     type: "geojson",
-    data: url
+    data: url,
   });
 
   // Fill layer (optional, light color)
@@ -704,8 +800,8 @@ export function loadCountryBoundary(map, countryCode, url) {
     source: sourceId,
     paint: {
       "fill-color": "hsla(167, 13.2%, 79.2%, 0)",
-      "fill-opacity": 0.05
-    }
+      "fill-opacity": 0.05,
+    },
   });
 
   // Outline layer
@@ -715,14 +811,9 @@ export function loadCountryBoundary(map, countryCode, url) {
     source: sourceId,
     paint: {
       "line-color": "hsla(167, 13.2%, 79.2%, 1)",
-      "line-width": 0.5
-        }
+      "line-width": 0.5,
+    },
   });
 
   console.log(`Boundary loaded for ${countryCode}`);
 }
-
-
-
-
-
