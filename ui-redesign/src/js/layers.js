@@ -363,12 +363,17 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
   const [lng, lat] = coordinates ?? [null, null];
   const latLngText = (lat !== null && lng !== null) ? `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}` : "";
 
-  // Capacity
-  const capacity = properties.capacity 
-                ||properties.capacity_power
-                 || properties.cap_mw
-                 || properties["Capacity"] 
-                 || "---";
+  // Capacity - handle both string and numeric values
+  const rawCapacity = properties.capacity 
+                || properties.capacity_power
+                || properties.cap_mw
+                || properties.capacity_tonnes
+                || properties["capacity_tonnes"]
+                || properties["Capacity"];
+  
+  const capacity = rawCapacity 
+    ? (typeof rawCapacity === 'string' ? parseFloat(rawCapacity) : rawCapacity)
+    : "---";
 
   // Pollutants
   // const pm10 = properties.pm10 ?? properties["PM10"] ?? properties["pm10_t_yr"] ?? properties.pm10_t_yr ?? "---";
