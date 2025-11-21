@@ -536,20 +536,37 @@ export function loadOpenAQLayer(map) {
 }
 
 export function loadPM25ExposureLayer(map) {
-  // Only load if the 'districts' source is not already added
   if (!map.getSource("pm2.5_exposure")) {
     showLoadingSpinner();
 
-    fetch("./data/pm2.5/pak_adm2_pm25.geojson")
-      .then((response) => response.json())
-      .then((data) => {
-        // Add GeoJSON source
+    // --- All your PM2.5 files here ---
+    const files = [
+      "./data/pm2.5/bng_adm2_pm25.geojson",
+      "./data/pm2.5/cod_adm2_pm25.geojson",
+      "./data/pm2.5/gha_adm2_pm25.geojson",
+      "./data/pm2.5/ken_adm2_pm25.geojson",
+      "./data/pm2.5/nga_adm2_pm25.geojson",
+      "./data/pm2.5/pk_adm2_pm25.geojson",
+      "./data/pm2.5/republic_congo_adm2_pm25.geojson",
+      "./data/pm2.5/ugd_adm2_pm25.geojson",
+    ];
+
+    // Fetch all files in parallel
+    Promise.all(files.map((f) => fetch(f).then((r) => r.json())))
+      .then((geojsons) => {
+        // Merge all features into one big FeatureCollection
+        const merged = {
+          type: "FeatureCollection",
+          features: geojsons.flatMap((g) => g.features),
+        };
+
+        // Add merged source
         map.addSource("pm2.5_exposure", {
           type: "geojson",
-          data: data,
+          data: merged,
         });
 
-        // Filled polygon layer (choropleth)
+        // Fill / choropleth
         map.addLayer({
           id: "districts-fill",
           type: "fill",
@@ -559,40 +576,48 @@ export function loadPM25ExposureLayer(map) {
               "interpolate",
               ["linear"],
               ["get", "normalised_exposure"],
-              0,
-              "#FFA500", // darker orange for low exposure
-              1,
-              "#1A0412", // very dark purple for high exposure
+              0.0,
+              "#ffe55c", // very low
+              0.25,
+              "#ff9e2e", // low
+              0.5,
+              "#ff5f2e", // moderate
+              0.75,
+              "#b02e7c", // high
+              1.0,
+              "#2c003e", // extreme
             ],
-            "fill-opacity": 0.6,
+
+            "fill-opacity": 0.7,
           },
           layout: { visibility: "visible" },
         });
 
-        // Boundaries
+        // Boundary lines
         map.addLayer({
           id: "districts-outline",
           type: "line",
           source: "pm2.5_exposure",
           paint: {
-            "line-color": "#dcd9d9ff",
+            "line-color": "#f2eeeeff",
             "line-width": 0.6,
           },
         });
 
-        // Popup on click
+        // Popup
         map.on("click", "districts-fill", (e) => {
           const props = e.features[0].properties;
+          console.log(props);
           const popupHTML = `
-                    <div style="font-size:14px;">
-                        <strong>${props.NAME_2 || "District"}</strong><br>
-                        Normalized Exposure: ${
-                          props.normalised_exposure !== null
-                            ? props.normalised_exposure.toFixed(4)
-                            : "N/A"
-                        }
-                    </div>
-                `;
+            <div style="font-size:14px;">
+              <strong>${props.NAME_2 ||props.admin2Name_en ||"District"}</strong><br>
+              Normalized Exposure: ${
+                props.normalised_exposure !== null
+                  ? props.normalised_exposure.toFixed(4)
+                  : "N/A"
+              }
+            </div>
+          `;
           new mapboxgl.Popup()
             .setLngLat(e.lngLat)
             .setHTML(popupHTML)
@@ -602,7 +627,7 @@ export function loadPM25ExposureLayer(map) {
         hideLoadingSpinner();
       })
       .catch((err) => {
-        console.error("Error loading PM2.5 exposure layer:", err);
+        console.error("Error loading merged PM2.5 data:", err);
         hideLoadingSpinner();
       });
   }
