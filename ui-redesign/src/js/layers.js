@@ -6,6 +6,7 @@ import {
 import { layerStyles } from "./layerVisibility.js";
 import { hideLoadingSpinner, showLoadingSpinner } from "./utils.js";
 
+
 export const layerIds = [
   "indian",
   "coal",
@@ -39,6 +40,11 @@ export const layerIds = [
 
 // -----------------------------------------------------------LAYERS LOADING-----------------------------------------------------------
 
+// Use colors
+function getCSSColor(variableName) {
+  return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+} 
+
 // Fetch API for Pollution reports data and convert to GeoJSON
 function convertPollutionDataToGeoJSON(data) {
   return {
@@ -64,7 +70,6 @@ function convertPollutionDataToGeoJSON(data) {
 export function loadPollutionReportsLayer(map) {
   const layerId = "pollution_reports";
 
-  // If already loaded, just return early
   if (map.getSource(layerId)) return;
 
   showLoadingSpinner();
@@ -83,7 +88,7 @@ export function loadPollutionReportsLayer(map) {
       const data = await response.json();
       const geojson = convertPollutionDataToGeoJSON(data);
 
-      // Ensure the custom marker image is loaded before adding the layer
+      // Ensure custom marker image is loaded
       if (!map.hasImage("custom-marker")) {
         const image = await new Promise((resolve, reject) => {
           map.loadImage(
@@ -97,26 +102,65 @@ export function loadPollutionReportsLayer(map) {
         map.addImage("custom-marker", image);
       }
 
-      // Add the source
+      // Add CLUSTERING source
       map.addSource(layerId, {
         type: "geojson",
         data: geojson,
+        cluster: true,
+        clusterRadius: 50, // pixels
+        clusterMaxZoom: 14,
       });
 
-      // Add the layer
+      // Cluster circles
+      map.addLayer({
+        id: `${layerId}-clusters`,
+        type: "circle",
+        source: layerId,
+        filter: ["has", "point_count"], // Only cluster points
+        paint: {
+          "circle-color": getCSSColor('--red'),
+          "circle-radius": [
+            "step",
+            ["get", "point_count"],
+            15,
+            10, 20,
+            50, 25,
+            100, 30
+          ],
+          "circle-opacity": 0.8
+        }
+      });
+
+      // Cluster count labels
+      map.addLayer({
+        id: `${layerId}-cluster-count`,
+        type: "symbol",
+        source: layerId,
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": "{point_count}",
+          "text-size": 14,
+          "text-font": ['Montserrat Bold']
+        },
+        paint: {
+          "text-color": getCSSColor('--dark-green'),
+        }
+      });
+
+      // Normal single-point PNG markers
       map.addLayer({
         id: layerId,
         type: "symbol",
         source: layerId,
+        filter: ["!", ["has", "point_count"]], // Only non-cluster points
         layout: {
           "icon-image": "custom-marker",
           "icon-size": 0.25,
-          "icon-anchor": "bottom",
-          visibility: "visible",
-        },
+          "icon-anchor": "bottom"
+        }
       });
 
-      // Add popup on click
+      // POPUP for single markers (NOT clusters)
       map.on("click", layerId, (e) => {
         const props = e.features[0].properties;
         new mapboxgl.Popup()
@@ -128,21 +172,25 @@ export function loadPollutionReportsLayer(map) {
               <p><strong>Reported on:</strong> ${new Date(
                 props.timestamp
               ).toLocaleString()}</p>
-              <img src="${props.image_url}" alt="${
-              props.pollution_type
-            }" width="150px" style="border-radius: 5px;"/>
+              <img src="${props.image_url}" width="150px" style="border-radius:5px;"/>
             </div>
           `
           )
           .addTo(map);
       });
 
-      map.on(
-        "mouseenter",
-        layerId,
-        () => (map.getCanvas().style.cursor = "pointer")
-      );
-      map.on("mouseleave", layerId, () => (map.getCanvas().style.cursor = ""));
+      // Optional: Zoom into clusters when clicked
+      map.on("click", `${layerId}-clusters`, (e) => {
+        const clusterId = e.features[0].properties.cluster_id;
+        map.getSource(layerId).getClusterExpansionZoom(clusterId, (err, zoom) => {
+          if (!err) {
+            map.easeTo({
+              center: e.lngLat,
+              zoom
+            });
+          }
+        });
+      });
 
       hideLoadingSpinner();
     })
@@ -225,11 +273,7 @@ async function fetchOpenAQLatestAsGeoJSON() {
   };
 }
 
-function getCSSColor(variableName) {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(variableName)
-    .trim();
-}
+
 
 const chartFont = "Montserrat"; // or whatever font you use
 
@@ -299,7 +343,7 @@ function generateEmissionsChart(emissionsData) {
 
 export function generatePopupHTML(properties, coordinates, layerId = "") {
   if (!properties) return "";
-
+  console.log(properties)
   // Determine name
   const name =
     properties.name ||
@@ -332,16 +376,23 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
       ? `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`
       : "";
 
-  // Capacity
-  const capacity =
-    properties.capacity || properties.cap_mw || properties["Capacity"] || "---";
+  // Capacity - handle both string and numeric values
+  const rawCapacity = properties.capacity 
+                || properties.capacity_power
+                || properties.cap_mw
+                || properties.capacity_tonnes
+                || properties["capacity_tonnes"]
+                || properties["Capacity"];
+  
+  const capacity = rawCapacity 
+    ? (typeof rawCapacity === 'string' ? parseFloat(rawCapacity) : rawCapacity)
+    : "---";
 
   // Pollutants
-  const pm10 = properties.pm10 ?? properties["PM10"] ?? "---";
-  const pm25 =
-    properties.pm25 ?? properties["PM2.5"] ?? properties["PM25"] ?? "---";
-  const so2 = properties.so2 ?? properties["SO2"] ?? "---";
-  const nox = properties.nox ?? properties["NOx"] ?? "---";
+  // const pm10 = properties.pm10 ?? properties["PM10"] ?? properties["pm10_t_yr"] ?? properties.pm10_t_yr ?? "---";
+  // const pm25 = properties.pm25 ?? properties["PM2.5"] ?? properties["PM25"] ?? properties["pm25_t_yr"] ?? properties.pm25_t_yr ?? "---";
+  // const so2  = properties.so2  ?? properties["SO2"]  ?? properties["SO2"] ?? properties["so2_t_yr"] ?? "---";
+  // const nox  = properties.nox  ?? properties["NOx"]  ?? properties["nox_t_yr"] ?? properties.nox_t_yr ??"---";
 
   // Build HTML
   return `
@@ -391,13 +442,10 @@ export function showPopup(map, lngLat, properties, layerId = "") {
   // Once popup is added to DOM, draw chart
   setTimeout(() => {
     const emissionsData = {
-      nox: parseFloat(properties.nox || properties["NOx"]) || 0,
-      so2: parseFloat(properties.so2 || properties["SO2"]) || 0,
-      pm10: parseFloat(properties.pm10 || properties["PM10"]) || 0,
-      pm25:
-        parseFloat(
-          properties.pm25 || properties["PM2.5"] || properties["PM25"]
-        ) || 0,
+      nox: parseFloat(properties.nox || properties["NOx"] || properties["nox_t_yr"] || properties.nox_t_yr) || 0,
+      so2: parseFloat(properties.so2 || properties["SO2"] || properties["so2_t_yr"] || properties.so2_t_yr) || 0,
+      pm10: parseFloat(properties.pm10 || properties["PM10"] || properties["pm10_t_yr"] || properties.pm10_t_yr) || 0,
+      pm25: parseFloat(properties.pm25 || properties["PM2.5"] || properties["PM25"] || properties["pm25_t_yr"] || properties.pm25_t_yr) || 0
     };
     // properties["pm25(t_day)"] )
     generateEmissionsChart(emissionsData);
