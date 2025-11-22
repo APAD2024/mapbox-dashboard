@@ -438,9 +438,9 @@ export function generatePM25PopupHTML(properties, coordinates) {
 
   // Location fallback (if present)
   const country =
-    properties.country || properties.COUNTRY || properties.admin0Name_en || "";
+    properties.country || properties.COUNTRY || properties.admin0Name_en || properties.ADM0_EN ||"";
 
-  const region = properties.region || properties.admin1Name_en || "";
+  const region = properties.region || properties.admin1Name_en ||properties.ADM1_EN ||"";
 
   const locationText = region ? `${region}, ${country}` : country || "";
 
