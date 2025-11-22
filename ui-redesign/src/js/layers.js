@@ -6,7 +6,6 @@ import {
 import { layerStyles } from "./layerVisibility.js";
 import { hideLoadingSpinner, showLoadingSpinner } from "./utils.js";
 
-
 export const layerIds = [
   "indian",
   "coal",
@@ -35,6 +34,7 @@ export const layerIds = [
   "boilers",
   "pollution_reports",
   "openaq_latest",
+  "pm2.5_exposure"
 ];
 // -------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
 
@@ -42,8 +42,10 @@ export const layerIds = [
 
 // Use colors
 function getCSSColor(variableName) {
-  return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
-} 
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(variableName)
+    .trim();
+}
 
 // Fetch API for Pollution reports data and convert to GeoJSON
 function convertPollutionDataToGeoJSON(data) {
@@ -118,17 +120,20 @@ export function loadPollutionReportsLayer(map) {
         source: layerId,
         filter: ["has", "point_count"], // Only cluster points
         paint: {
-          "circle-color": getCSSColor('--red'),
+          "circle-color": getCSSColor("--red"),
           "circle-radius": [
             "step",
             ["get", "point_count"],
             15,
-            10, 20,
-            50, 25,
-            100, 30
+            10,
+            20,
+            50,
+            25,
+            100,
+            30,
           ],
-          "circle-opacity": 0.8
-        }
+          "circle-opacity": 0.8,
+        },
       });
 
       // Cluster count labels
@@ -140,11 +145,11 @@ export function loadPollutionReportsLayer(map) {
         layout: {
           "text-field": "{point_count}",
           "text-size": 14,
-          "text-font": ['Montserrat Bold']
+          "text-font": ["Montserrat Bold"],
         },
         paint: {
-          "text-color": getCSSColor('--dark-green'),
-        }
+          "text-color": getCSSColor("--dark-green"),
+        },
       });
 
       // Normal single-point PNG markers
@@ -156,8 +161,8 @@ export function loadPollutionReportsLayer(map) {
         layout: {
           "icon-image": "custom-marker",
           "icon-size": 0.25,
-          "icon-anchor": "bottom"
-        }
+          "icon-anchor": "bottom",
+        },
       });
 
       // POPUP for single markers (NOT clusters)
@@ -172,7 +177,9 @@ export function loadPollutionReportsLayer(map) {
               <p><strong>Reported on:</strong> ${new Date(
                 props.timestamp
               ).toLocaleString()}</p>
-              <img src="${props.image_url}" width="150px" style="border-radius:5px;"/>
+              <img src="${
+                props.image_url
+              }" width="150px" style="border-radius:5px;"/>
             </div>
           `
           )
@@ -182,14 +189,16 @@ export function loadPollutionReportsLayer(map) {
       // Optional: Zoom into clusters when clicked
       map.on("click", `${layerId}-clusters`, (e) => {
         const clusterId = e.features[0].properties.cluster_id;
-        map.getSource(layerId).getClusterExpansionZoom(clusterId, (err, zoom) => {
-          if (!err) {
-            map.easeTo({
-              center: e.lngLat,
-              zoom
-            });
-          }
-        });
+        map
+          .getSource(layerId)
+          .getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (!err) {
+              map.easeTo({
+                center: e.lngLat,
+                zoom,
+              });
+            }
+          });
       });
 
       hideLoadingSpinner();
@@ -273,8 +282,6 @@ async function fetchOpenAQLatestAsGeoJSON() {
   };
 }
 
-
-
 const chartFont = "Montserrat"; // or whatever font you use
 
 function generateEmissionsChart(emissionsData) {
@@ -343,7 +350,7 @@ function generateEmissionsChart(emissionsData) {
 
 export function generatePopupHTML(properties, coordinates, layerId = "") {
   if (!properties) return "";
-  console.log(properties)
+  console.log(properties);
   // Determine name
   const name =
     properties.name ||
@@ -373,19 +380,22 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
   const [lng, lat] = coordinates ?? [null, null];
   const latLngText =
     lat !== null && lng !== null
-      ? `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`
+      ? `Lat: ${lat.toFixed(5)}, Long: ${lng.toFixed(5)}`
       : "";
 
   // Capacity - handle both string and numeric values
-  const rawCapacity = properties.capacity 
-                || properties.capacity_power
-                || properties.cap_mw
-                || properties.capacity_tonnes
-                || properties["capacity_tonnes"]
-                || properties["Capacity"];
-  
-  const capacity = rawCapacity 
-    ? (typeof rawCapacity === 'string' ? parseFloat(rawCapacity) : rawCapacity)
+  const rawCapacity =
+    properties.capacity ||
+    properties.capacity_power ||
+    properties.cap_mw ||
+    properties.capacity_tonnes ||
+    properties["capacity_tonnes"] ||
+    properties["Capacity"];
+
+  const capacity = rawCapacity
+    ? typeof rawCapacity === "string"
+      ? parseFloat(rawCapacity)
+      : rawCapacity
     : "---";
 
   // Pollutants
@@ -408,6 +418,90 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
       <div style="font-size: 1rem;">Capacity: ${capacity}</div>
       <canvas id="emissionsChart" width="auto" height="250">
       </canvas>
+    </div>
+  `;
+}
+export function generatePM25PopupHTML(properties, coordinates) {
+  if (!properties) return "";
+
+  const name =
+    properties.NAME_2 ||
+    properties.admin2Name_en ||
+    properties.admin1Name_en ||
+    "Unknown District";
+
+  // TYPE BADGE
+  const displayType = "PM2.5 Exposure";
+  const backgroundColor = "hsla(24, 49%, 40%, 1.00)";
+  const strokeColor = "#000";
+
+  // Location fallback (if present)
+  const country =
+    properties.country || properties.COUNTRY || properties.admin0Name_en || "";
+
+  const region = properties.region || properties.admin1Name_en || "";
+
+  const locationText = region ? `${region}, ${country}` : country || "";
+
+  // Coordinates
+  const [lng, lat] = coordinates;
+  const latLngText = `Lat: ${lat.toFixed(5)}, Long: ${lng.toFixed(5)}`;
+
+  // Values
+  const normalized =
+    properties.normalised_exposure !== null
+      ? properties.normalised_exposure.toFixed(4)
+      : "N/A";
+
+  const pm25 =
+    properties.pm25 ||
+    properties["PM2.5"] ||
+    properties["pm25"] ||
+    properties.pm25_mean ||
+    properties.pm2023 ||
+    "--";
+
+  return `
+    <div class="popup-table" style="font-family: 'Montserrat', sans-serif;">
+
+      <div class="type"
+        style="
+          background-color: ${backgroundColor};
+          padding: 2px 4px;
+          margin-bottom: 0.5rem;
+          border-radius: 4px;
+          border: 2px solid ${strokeColor};
+          font-weight: bold;
+          color: ${strokeColor};
+          display: inline-block;
+        ">
+        ${displayType}
+      </div>
+
+      <h3>${name}</h3>
+      ${locationText ? `<div>${locationText}</div>` : ""}
+
+      <div style="font-size: 1rem; margin-top: 5px;">
+        ${latLngText}
+      </div>
+
+      <div style="font-size: 1rem; margin-top: 8px;">
+        <strong>Normalized Population Weighted Exposure:</strong> ${normalized}
+      </div>
+
+      <div style="font-size: 1rem; margin-top: 4px;">
+        <strong>PM2.5:</strong> ${pm25}
+      </div>
+
+      <div style="font-size: 0.7rem; color: #555; margin-top: 6px; font-style: italic; line-height: 1.2;">
+  Data source: <a href="https://aqli.epic.uchicago.edu/countryPage" target="_blank" style="color:#555; text-decoration: underline;">AQLI (district-based, 2023)</a>.<br>
+  Each normalized value:
+  <span style="display:block; margin-top:2px; font-family: monospace; background: #f5f5f5; padding: 2px 4px; border-radius: 3px;">
+    Normalized Exposure = ((District Population × PM2.5) / Total Population of Country )/Max(Population × PM2.5)
+  </span>
+</div>
+
+
     </div>
   `;
 }
@@ -442,10 +536,35 @@ export function showPopup(map, lngLat, properties, layerId = "") {
   // Once popup is added to DOM, draw chart
   setTimeout(() => {
     const emissionsData = {
-      nox: parseFloat(properties.nox || properties["NOx"] || properties["nox_t_yr"] || properties.nox_t_yr) || 0,
-      so2: parseFloat(properties.so2 || properties["SO2"] || properties["so2_t_yr"] || properties.so2_t_yr) || 0,
-      pm10: parseFloat(properties.pm10 || properties["PM10"] || properties["pm10_t_yr"] || properties.pm10_t_yr) || 0,
-      pm25: parseFloat(properties.pm25 || properties["PM2.5"] || properties["PM25"] || properties["pm25_t_yr"] || properties.pm25_t_yr) || 0
+      nox:
+        parseFloat(
+          properties.nox ||
+            properties["NOx"] ||
+            properties["nox_t_yr"] ||
+            properties.nox_t_yr
+        ) || 0,
+      so2:
+        parseFloat(
+          properties.so2 ||
+            properties["SO2"] ||
+            properties["so2_t_yr"] ||
+            properties.so2_t_yr
+        ) || 0,
+      pm10:
+        parseFloat(
+          properties.pm10 ||
+            properties["PM10"] ||
+            properties["pm10_t_yr"] ||
+            properties.pm10_t_yr
+        ) || 0,
+      pm25:
+        parseFloat(
+          properties.pm25 ||
+            properties["PM2.5"] ||
+            properties["PM25"] ||
+            properties["pm25_t_yr"] ||
+            properties.pm25_t_yr
+        ) || 0,
     };
     // properties["pm25(t_day)"] )
     generateEmissionsChart(emissionsData);
@@ -607,7 +726,10 @@ export function loadPM25ExposureLayer(map) {
           type: "FeatureCollection",
           features: geojsons.flatMap((g) => g.features),
         };
-
+        merged.features.forEach((f) => {
+          f.properties.country =
+            f.properties.country || f.properties.COUNTRY ||f.properties.admin0Name_en|| "Unknown";
+        });
         // Add merged source
         map.addSource("pm2.5_exposure", {
           type: "geojson",
@@ -625,17 +747,16 @@ export function loadPM25ExposureLayer(map) {
               ["linear"],
               ["get", "normalised_exposure"],
               0.0,
-              "#ffe55c", // very low
+              "#ffe55c",
               0.25,
-              "#ff9e2e", // low
+              "#ff9e2e",
               0.5,
-              "#ff5f2e", // moderate
+              "#ff5f2e",
               0.75,
-              "#b02e7c", // high
+              "#b02e7c",
               1.0,
-              "#2c003e", // extreme
+              "#2c003e",
             ],
-
             "fill-opacity": 0.7,
           },
           layout: { visibility: "visible" },
@@ -652,22 +773,33 @@ export function loadPM25ExposureLayer(map) {
           },
         });
 
-        // Popup
+        // -------------------------
+        // NEW STYLED POPUP HERE
+        // -------------------------
+        let currentPopup = null;
+
         map.on("click", "districts-fill", (e) => {
           const props = e.features[0].properties;
-          console.log(props);
-          const popupHTML = `
-            <div style="font-size:14px;">
-              <strong>${props.NAME_2 ||props.admin2Name_en ||"District"}</strong><br>
-              Normalized Exposure: ${
-                props.normalised_exposure !== null
-                  ? props.normalised_exposure.toFixed(4)
-                  : "N/A"
-              }
-            </div>
-          `;
-          new mapboxgl.Popup()
-            .setLngLat(e.lngLat)
+          const lngLat = e.lngLat;
+
+          // Remove the previous popup if it exists
+          if (currentPopup) {
+            currentPopup.remove();
+            currentPopup = null;
+          }
+
+          const popupHTML = generatePM25PopupHTML(props, [
+            lngLat.lng,
+            lngLat.lat,
+          ]);
+
+          currentPopup = new mapboxgl.Popup({
+            closeButton: true,
+            closeOnClick: false,
+            anchor: "bottom", // always above the clicked point
+            offset: [0, -8], // optional slight upward offset
+          })
+            .setLngLat(lngLat)
             .setHTML(popupHTML)
             .addTo(map);
         });

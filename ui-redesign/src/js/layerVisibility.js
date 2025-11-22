@@ -355,8 +355,8 @@ const layerConfigs = [
     loadFn: loadOpenAQLayer,
   },
    {
-    buttonId: 'buttonPM2.5Data',
-    tooltipId: 'tooltipAQ',
+    buttonId: 'buttonPM25Data',
+    tooltipId: 'tooltipPM2.5',
     layerId: 'pm2.5_exposure',
     loadFn: loadPM25ExposureLayer,
   },

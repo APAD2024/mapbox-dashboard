@@ -8,10 +8,9 @@
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
     <!-- Link to external CSS file -->
-  
+
     <link rel="stylesheet" href="src/css/styleguide.css" />
     <link rel="stylesheet" href="src/css/styles.css" />
-
 
     <link
       href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css"
@@ -23,8 +22,11 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
     />
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1-dev/mapbox-gl-geocoder.min.js"></script>
     <link
       rel="stylesheet"
@@ -41,25 +43,34 @@
 
   <body>
     <div class="dashboard">
-
       <!--------------------------- TOP BAR --------------------------->
       <div id="topContainer">
-        
         <div id="topBar">
           <!-- Left Section: Logo and Title -->
           <div class="left-section">
-              <button id="menuButton" class="menu-btn" aria-label="Open menu">
-                <img src="src/assets/menu-button.svg" alt="" class="icon" />
-              </button>
-              <img src="src/assets/logo.svg" alt="Logo" class="logo" />
+            <button id="menuButton" class="menu-btn" aria-label="Open menu">
+              <img src="src/assets/menu-button.svg" alt="" class="icon" />
+            </button>
+            <img src="src/assets/logo.svg" alt="Logo" class="logo" />
 
-              <!-- Dropdown Menu -->
-              <ul id="menuList" class="menu-list hidden">
-                <li><a href="https://apad.world/" target="_blank" rel="noopener">More Information</a></li>
-                <li><a href="https://survey123.arcgis.com/share/491dccba7ed14379ab459551f96722ff" target="_blank" rel="noopener">Survey Form</a></li>
-              </ul>
+            <!-- Dropdown Menu -->
+            <ul id="menuList" class="menu-list hidden">
+              <li>
+                <a href="https://apad.world/" target="_blank" rel="noopener"
+                  >More Information</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://survey123.arcgis.com/share/491dccba7ed14379ab459551f96722ff"
+                  target="_blank"
+                  rel="noopener"
+                  >Survey Form</a
+                >
+              </li>
+            </ul>
           </div>
-          
+
           <!-- Right Section: Geocoder Search Bar + Filters -->
           <div class="right-section">
             <div class="geocoder-section">
@@ -71,7 +82,9 @@
             <!-- Right Section: Filters for Country and Asset -->
             <div class="filter-section">
               <div class="filter-container">
-                <label for="polutantType" class="filter-label">Pollutant Type</label>
+                <label for="polutantType" class="filter-label"
+                  >Pollutant Type</label
+                >
                 <select id="polutantType" class="filter-select">
                   <option value="">All</option>
                   <option value="pm10">PM₂.₅</option>
@@ -97,106 +110,103 @@
             </div>
           </div>
         </div>
-      
-        <div class="tooltipContainer" >
-         
-          <div class="tooltip" id="tooltipAQ">
-        Air Quality Data activated
-          </div>
 
-          <div class="tooltip" id="tooltipPollutionReports" >
+        <div class="tooltipContainer">
+          <div class="tooltip" id="tooltipAQ">Air Quality Data activated</div>
+
+          <div class="tooltip" id="tooltipPollutionReports">
             Report Pollution activated
           </div>
 
-          <div class="tooltip" id="tooltipAggregate" >
-        Click on the map to aggregate data within the selected buffer size.
+          <div class="tooltip" id="tooltipPM2.5">Population Weighted PM2.5 Exposure activated</div>
+
+          <div class="tooltip" id="tooltipAggregate">
+            Click on the map to aggregate data within the selected buffer size.
           </div>
-
         </div>
-      
       </div>
-      
-
-
 
       <!--------------------------- FLOATING BUTTONS TOP RIGHT  --------------------------->
-      
-        <!-- Basemap Menu -->
-        <div class= "FAB" id="basemapMenuButton"><i class="fas fa-globe"></i></div>
-        <div id="menu">
-          <button class="closeButton">&times;</button>
 
-    
-          <input
-            id="satellite-streets-v12"
-            type="radio"
-            name="rtoggle"
-            value="satellite-streets-v12"
-          />
-          <label for="satellite-streets-v12">Satellite</label><br />
+      <!-- Basemap Menu -->
+      <div class="FAB" id="basemapMenuButton"><i class="fas fa-globe"></i></div>
+      <div id="menu">
+        <button class="closeButton">&times;</button>
 
-          <input
-            id="light-v11"
-            type="radio"
-            name="rtoggle"
-            value="light-v11"
-          />
-          <label for="light-v11">Light</label><br />
+        <input
+          id="satellite-streets-v12"
+          type="radio"
+          name="rtoggle"
+          value="satellite-streets-v12"
+        />
+        <label for="satellite-streets-v12">Satellite</label><br />
 
-          <input 
-            id="dark-v11" 
-            type="radio" 
-            name="rtoggle" 
-            value="dark-v11" 
-            checked="checked"
-          />
-          <label for="dark-v11">Dark</label><br />
+        <input id="light-v11" type="radio" name="rtoggle" value="light-v11" />
+        <label for="light-v11">Light</label><br />
 
-          <input
-            id="google-air-quality"
-            type="radio"
-            name="rtoggle"
-            value="google-air-quality"
-          />
-          <label for="google-air-quality">Google Air Quality</label><br />       
-              
-        </div>
+        <input
+          id="dark-v11"
+          type="radio"
+          name="rtoggle"
+          value="dark-v11"
+          checked="checked"
+        />
+        <label for="dark-v11">Dark</label><br />
 
-        <!-- Continent Switch Button -->
-        <div class= "FAB" id="areaChange" title="Move to Africa">
-          <i class="fas fa-globe-africa"></i>
-        </div>
-     
-      
+        <input
+          id="google-air-quality"
+          type="radio"
+          name="rtoggle"
+          value="google-air-quality"
+        />
+        <label for="google-air-quality">Google Air Quality</label><br />
+      </div>
+
+      <!-- Continent Switch Button -->
+      <div class="FAB" id="areaChange" title="Move to Africa">
+        <i class="fas fa-globe-africa"></i>
+      </div>
+
+      <div
+        class="FAB"
+        id="buttonPM25Data"
+        title="Button PM2.5 Population Weighted Exposure"
+      >
+        <i
+          class="fa-solid fa-smog"
+          alt="PM2.5 Population Weighted Exposure"
+        ></i>
+      </div>
+
       <!--------------------------- FLOATING BUTTONS BOTTOM LEFT --------------------------->
 
       <!-- Air Quality Button -->
-      
 
-      <div class= "FAB" id="buttonOpenAQData" title="Button Air Quality Layer">
-        <i class="fa-solid fa-wind" alt="Air quality icon"></i>
-      </div>
-
-      <div class= "FAB" id="buttonPM2.5Data" title="Button Air Quality Layer">
+      <div class="FAB" id="buttonOpenAQData" title="Button Air Quality Layer">
         <i class="fa-solid fa-wind" alt="Air quality icon"></i>
       </div>
 
       <!-- Report Poluttion Button -->
-      <div class= "FAB" id="buttonPollutionReports" title="Button Report Polution Layer">
+      <div
+        class="FAB"
+        id="buttonPollutionReports"
+        title="Button Report Polution Layer"
+      >
         <i class="fa-solid fa-star-of-life" alt="Report"></i>
       </div>
-      
+
       <!--Aggregate Tool -->
 
       <div id="aggregateToolContainer">
-        <div class= "FAB" id="aggregateToolButton" title="Aggregate Data">
+        <div class="FAB" id="aggregateToolButton" title="Aggregate Data">
           <i class="fas fa-calculator"></i>
         </div>
 
         <select
           id="bufferSizeSelector"
           title="Select Buffer Size"
-          class="bufferSizeSelector-hidden">
+          class="bufferSizeSelector-hidden"
+        >
           <option value="5">5 km</option>
           <option value="10">10 km</option>
           <option value="20">20 km</option>
@@ -216,153 +226,241 @@
       </div>
 
       <!---------------------------LEGEND LAYERS --------------------------->
-      
+
       <div class="legend-container">
-        <div class= "FAB" id="legendButton">Layers</div>
-        
+        <div class="FAB" id="legendButton">Layers</div>
+
         <div id="legend">
           <button class="closeButton">&times;</button>
 
           <div class="legend-group">
-            <div class="legend-group-title">Extraction or primary energy generation</div>
+            <div class="legend-group-title">
+              Extraction or primary energy generation
+            </div>
             <!-- Group 1: Extraction or primary energy generation -->
-            
+
             <!-- Coal -->
             <div class="legend-section" id="legend-coal" draggable="true">
-                <label class="custom-checkbox">
-                    <input id="toggleCoal" type="checkbox" checked />
-                    <span class="checkmark"></span>
-                </label>
-                <div class="legend-name">
-                <div class="legend-key" style="width: 2rem; height: 2rem; background-color:  hsla(162, 50%, 45%, 0.5); border: 0.1rem solid hsla(162, 50%, 45%, 1)"></div>
-                  <p>Coal</p>
-                </div>
+              <label class="custom-checkbox">
+                <input id="toggleCoal" type="checkbox" checked />
+                <span class="checkmark"></span>
+              </label>
+              <div class="legend-name">
+                <div
+                  class="legend-key"
+                  style="
+                    width: 2rem;
+                    height: 2rem;
+                    background-color: hsla(162, 50%, 45%, 0.5);
+                    border: 0.1rem solid hsla(162, 50%, 45%, 1);
+                  "
+                ></div>
+                <p>Coal</p>
+              </div>
             </div>
 
-              <!-- Fossil Fuel -->
-              <div class="legend-section" id="legend-fossil-fuel" draggable="true">
-                <label class="custom-checkbox">
-                  <input id="toggleFossilFuel" type="checkbox" checked/>
-                  <span class="checkmark"></span>
-                </label>
-                <div class="legend-name">
-                <div class="legend-key" style="width: 2rem; height: 2rem; background-color:   hsla(205, 50%, 50%, 0.5); border: 0.1rem solid  hsla(205, 50%, 50%, 1)"></div>
-                  <p>Fossil Fuel</p>
-                </div>
+            <!-- Fossil Fuel -->
+            <div
+              class="legend-section"
+              id="legend-fossil-fuel"
+              draggable="true"
+            >
+              <label class="custom-checkbox">
+                <input id="toggleFossilFuel" type="checkbox" checked />
+                <span class="checkmark"></span>
+              </label>
+              <div class="legend-name">
+                <div
+                  class="legend-key"
+                  style="
+                    width: 2rem;
+                    height: 2rem;
+                    background-color: hsla(205, 50%, 50%, 0.5);
+                    border: 0.1rem solid hsla(205, 50%, 50%, 1);
+                  "
+                ></div>
+                <p>Fossil Fuel</p>
               </div>
+            </div>
 
-              <!-- Furnace Oil -->
-              <div class="legend-section" id="legend-furnace-oil" draggable="true">
-                <label class="custom-checkbox">
-                  <input id="toggleFurnaceOil" type="checkbox" checked/>
-                  <span class="checkmark"></span>
-                </label>
-                <div class="legend-name">
-                  <div class="legend-key" style="width: 2rem; height: 2rem; background-color: hsla(324, 50%, 50%, 0.5); border: 0.1rem solid  hsla(324, 50%, 50%, 1)"></div>
-                  <p>Furnace Oil</p>
-                </div>
+            <!-- Furnace Oil -->
+            <div
+              class="legend-section"
+              id="legend-furnace-oil"
+              draggable="true"
+            >
+              <label class="custom-checkbox">
+                <input id="toggleFurnaceOil" type="checkbox" checked />
+                <span class="checkmark"></span>
+              </label>
+              <div class="legend-name">
+                <div
+                  class="legend-key"
+                  style="
+                    width: 2rem;
+                    height: 2rem;
+                    background-color: hsla(324, 50%, 50%, 0.5);
+                    border: 0.1rem solid hsla(324, 50%, 50%, 1);
+                  "
+                ></div>
+                <p>Furnace Oil</p>
               </div>
-              
+            </div>
           </div>
 
           <div class="legend-group">
-            <div class="legend-group-title"> Manufacturing or secondary energy generation</div>
-              <!-- Group 2: Manufacturing or secondary energy generation -->
+            <div class="legend-group-title">
+              Manufacturing or secondary energy generation
+            </div>
+            <!-- Group 2: Manufacturing or secondary energy generation -->
 
-              <!-- Steel  -->
-              <div class="legend-section" id="legend-steel" draggable="true">
-                <label class="custom-checkbox">
-                  <input id="toggleSteel" type="checkbox" checked/>
-                  <span class="checkmark"></span>
-                </label>
-                <div class="legend-name">
-                  <div class="legend-key" style="width: 2rem; height: 2rem; background-color: hsla(53, 91%, 77%, 0.5); border: 0.1rem solid hsla(53, 91%, 77%, 1)"></div>
-                  <p>Steel</p>
-                </div>
+            <!-- Steel  -->
+            <div class="legend-section" id="legend-steel" draggable="true">
+              <label class="custom-checkbox">
+                <input id="toggleSteel" type="checkbox" checked />
+                <span class="checkmark"></span>
+              </label>
+              <div class="legend-name">
+                <div
+                  class="legend-key"
+                  style="
+                    width: 2rem;
+                    height: 2rem;
+                    background-color: hsla(53, 91%, 77%, 0.5);
+                    border: 0.1rem solid hsla(53, 91%, 77%, 1);
+                  "
+                ></div>
+                <p>Steel</p>
               </div>
-              
-              
-              <!-- Paper Pulp -->
-              <div class="legend-section" id="legend-paper-pulp" draggable="true">
-                <label class="custom-checkbox">
-                  <input id="togglePaperPulp" type="checkbox" checked/>
-                  <span class="checkmark"></span>
-                </label>
-                <div class="legend-name">
-                  <div class="legend-key" style="width: 2rem; height: 2rem; background-color: hsla(356, 100%, 80%, 0.5); border: 0.1rem solid hsla(356, 100%, 80%, 1)" ></div>
-                  <p>Paper Pulp</p>
-                </div>
+            </div>
+
+            <!-- Paper Pulp -->
+            <div class="legend-section" id="legend-paper-pulp" draggable="true">
+              <label class="custom-checkbox">
+                <input id="togglePaperPulp" type="checkbox" checked />
+                <span class="checkmark"></span>
+              </label>
+              <div class="legend-name">
+                <div
+                  class="legend-key"
+                  style="
+                    width: 2rem;
+                    height: 2rem;
+                    background-color: hsla(356, 100%, 80%, 0.5);
+                    border: 0.1rem solid hsla(356, 100%, 80%, 1);
+                  "
+                ></div>
+                <p>Paper Pulp</p>
               </div>
+            </div>
 
-              <!-- Cement -->
-                <div class="legend-section" id="legend-cement" draggable="true">
-                  <label class="custom-checkbox"> 
-                    <input id="toggleCement" type="checkbox" checked/>
-                    <span class="checkmark"></span>
-                  </label>  
-                  <div class="legend-name">
-                    <div class="legend-key" style="width: 2rem; height: 2rem; background-color: hsla(26, 91%, 50%, 0.5); border: 0.1rem solid hsla(26, 91%, 50%, 1)" ></div>
-                    <p>Cement</p>
-                  </div>
-                </div>
-
-              <!-- Boilers -->
-              <div class="legend-section" id="legend-boilers" draggable="true">
-                <label class="custom-checkbox"> 
-                  <input id="toggleBoilers" type="checkbox" checked />
-                  <span class="checkmark"></span>
-                </label>  
-                <div class="legend-name">
-                  <div class="legend-key" style="width: 2rem; height: 2rem; background-color: hsla(356, 100%, 60%, 0.5); border: 0.1rem solid hsla(356, 100%, 60%, 1)" ></div>
-                  <p>Boilers</p>
-                </div>
-              </div> 
-
-              <!-- Brick Kilns -->
-              <div class="legend-section" id="legend-brickKiln" draggable="true">
-                <label class="custom-checkbox"> 
-                  <input id="toggleBrickKilns" type="checkbox" />
-                  <span class="checkmark"></span>
-                </label>
-                <div class="legend-name">
-                  <div class="legend-key" style="width: 0.75rem; height: 0.75rem; background-color: hsla(356, 100%, 60%, 1); margin-left: 0.5rem" ></div>
-                  <p>Brick Kilns</p>
-                </div>
+            <!-- Cement -->
+            <div class="legend-section" id="legend-cement" draggable="true">
+              <label class="custom-checkbox">
+                <input id="toggleCement" type="checkbox" checked />
+                <span class="checkmark"></span>
+              </label>
+              <div class="legend-name">
+                <div
+                  class="legend-key"
+                  style="
+                    width: 2rem;
+                    height: 2rem;
+                    background-color: hsla(26, 91%, 50%, 0.5);
+                    border: 0.1rem solid hsla(26, 91%, 50%, 1);
+                  "
+                ></div>
+                <p>Cement</p>
               </div>
+            </div>
 
+            <!-- Boilers -->
+            <div class="legend-section" id="legend-boilers" draggable="true">
+              <label class="custom-checkbox">
+                <input id="toggleBoilers" type="checkbox" checked />
+                <span class="checkmark"></span>
+              </label>
+              <div class="legend-name">
+                <div
+                  class="legend-key"
+                  style="
+                    width: 2rem;
+                    height: 2rem;
+                    background-color: hsla(356, 100%, 60%, 0.5);
+                    border: 0.1rem solid hsla(356, 100%, 60%, 1);
+                  "
+                ></div>
+                <p>Boilers</p>
+              </div>
+            </div>
+
+            <!-- Brick Kilns -->
+            <div class="legend-section" id="legend-brickKiln" draggable="true">
+              <label class="custom-checkbox">
+                <input id="toggleBrickKilns" type="checkbox" />
+                <span class="checkmark"></span>
+              </label>
+              <div class="legend-name">
+                <div
+                  class="legend-key"
+                  style="
+                    width: 0.75rem;
+                    height: 0.75rem;
+                    background-color: hsla(356, 100%, 60%, 1);
+                    margin-left: 0.5rem;
+                  "
+                ></div>
+                <p>Brick Kilns</p>
+              </div>
+            </div>
           </div>
-
 
           <div class="legend-group">
             <div class="legend-group-title">Waste management</div>
-              <!-- Group 3: Tertiary or waste management -->
+            <!-- Group 3: Tertiary or waste management -->
 
-              <!-- Land Fill Waste -->
-              <div class="legend-section" id="legend-land-fill-waste"     draggable= "true">
-                <label class="custom-checkbox"> 
-                  <input id="toggleLandFillWaste" type="checkbox" checked/>
-                  <span class="checkmark"></span>
-                </label>
-                <div class="legend-name">
-                  <div class="legend-key" style="width: 2rem; height: 2rem; border: 0.15rem solid hsla(53, 91%, 50%, 1)" ></div>
-                  <p>Land Fill Waste</p>
-                </div>
+            <!-- Land Fill Waste -->
+            <div
+              class="legend-section"
+              id="legend-land-fill-waste"
+              draggable="true"
+            >
+              <label class="custom-checkbox">
+                <input id="toggleLandFillWaste" type="checkbox" checked />
+                <span class="checkmark"></span>
+              </label>
+              <div class="legend-name">
+                <div
+                  class="legend-key"
+                  style="
+                    width: 2rem;
+                    height: 2rem;
+                    border: 0.15rem solid hsla(53, 91%, 50%, 1);
+                  "
+                ></div>
+                <p>Land Fill Waste</p>
               </div>
-              
-              <!-- GPW -->
-              <div class="legend-section" id="legend-gpw" draggable="true">
-                <label class="custom-checkbox">
-                  <input id="toggleGPW" type="checkbox" checked/>
-                  <span class="checkmark"></span>
-                </label>
-                <div class="legend-name">
-                  <div class="legend-key" style="width: 2rem; height: 2rem; border: 0.15rem solid hsla(205, 50%, 50%, 1)" ></div>
-                  <p>GPW</p>
-                </div>
+            </div>
+
+            <!-- GPW -->
+            <div class="legend-section" id="legend-gpw" draggable="true">
+              <label class="custom-checkbox">
+                <input id="toggleGPW" type="checkbox" checked />
+                <span class="checkmark"></span>
+              </label>
+              <div class="legend-name">
+                <div
+                  class="legend-key"
+                  style="
+                    width: 2rem;
+                    height: 2rem;
+                    border: 0.15rem solid hsla(205, 50%, 50%, 1);
+                  "
+                ></div>
+                <p>GPW</p>
               </div>
+            </div>
           </div>
-
-      
         </div>
       </div>
 
@@ -386,7 +484,6 @@
           <!-- Circle elements will be added here dynamically -->
         </div>
       </div>
-    
     </div>
 
     <!---------------------------------------------------------------- Scrpit JS------------------------------------------------------------------->

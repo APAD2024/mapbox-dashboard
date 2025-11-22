@@ -454,6 +454,12 @@ width: 100%;
     transition: font-size 0.3s ease;
 }
 
+#buttonPM25Data {
+    font-size: 20px;
+    top: 31rem;
+    right: 1.6rem;
+}
+
 /* -------------------------------------------------- */
 /* Responsive: smaller screens */
 @media (max-width: 768px) {
@@ -470,6 +476,10 @@ width: 100%;
 
     #areaChange {
         right: 1rem;
+    }
+
+    #buttonPM25Data{
+       right: 1rem;
     }
 }
 
