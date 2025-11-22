@@ -1,6 +1,6 @@
-import { showLoadingSpinner, hideLoadingSpinner } from './utils.js';
 import { isAggregateToolEnabled } from './aggregateTool.js';
 import { logLayerVisibility } from './layerVisibility.js';
+import { hideLoadingSpinner, showLoadingSpinner } from './utils.js';
 
 const layerIds = [
     'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 'brick_kilns_PK_hex', 'brick_kilns_IND_hex', 'brick_kilns_BAN_hex', 'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA', 'brick_kilns_NGA'
@@ -56,6 +56,7 @@ export function loadBrickKilnLayerPK(map) {
             fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_PAK_coal.geojson')
                 .then(response => response.json())
                 .then(data => {
+                  
                     // Add source if it doesn't exist
                     if (!map.getSource('brickKilnsPK')) {
                         map.addSource('brickKilnsPK', { type: 'geojson', data });
@@ -89,10 +90,11 @@ export function loadBrickKilnLayerPK(map) {
                                     <h3>${properties.id}</h3>
                                     <table>
                                         <tr><th>Pollutant</th><td> tons/season</td></tr>
-                                        <tr><td>PM<sub>10</sub></td><td>${properties['pm10']}</td></tr>
-                                        <tr><td>PM<sub>2.5</sub></td><td>${properties['pm25']}</td></tr>
-                                        <tr><td>NO<sub>2</sub></td><td>${properties['nox']}</td></tr>
-                                        <tr><td>SO<sub>2</sub></td><td>${properties['so2']}</td></tr>
+                                         <tr><td>Capacity</td><td>${properties['capacity_tonnes'] || '---'}</td></tr>
+                                        <tr><td>PM<sub>10</sub></td><td>${properties['pm10_t_yr']}</td></tr>
+                                        <tr><td>PM<sub>2.5</sub></td><td>${properties['pm25_t_yr']}</td></tr>
+                                        <tr><td>NO<sub>2</sub></td><td>${properties['nox_t_yr']}</td></tr>
+                                        <tr><td>SO<sub>2</sub></td><td>${properties['so2_t_yr']}</td></tr>
                                     </table>
                                     <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
@@ -132,6 +134,7 @@ export function loadBrickKilnLayerIND(map) {
             fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_IND_coal.geojson')
                 .then(response => response.json())
                 .then(data => {
+                   
                     if (!map.getSource('brickKillnsIND')) {
                         map.addSource('brickKillnsIND', { type: 'geojson', data });
                     } else {
@@ -158,10 +161,12 @@ export function loadBrickKilnLayerIND(map) {
                                     <h3>${props.id}</h3>
                                     <table>
                                         <tr><td>Pollutant</td><td> tons/season</td></tr>
-                                        <tr><td>PM<sub>10</sub></td><td>${props['pm10']}</td></tr>
-                                        <tr><td>PM<sub>2.5</sub></td><td>${props['pm25']}</td></tr>
-                                        <tr><td>NO<sub>2</sub></td><td>${props['nox']}</td></tr>
-                                        <tr><td>SO<sub>2</sub></td><td>${props['so2']}</td></tr>
+                    
+                                         <tr><td>Capacity</td><td>${props['capacity_tonnes'] || '---'}</td></tr>
+                                        <tr><td>PM<sub>10</sub></td><td>${props['pm10_t_yr']}</td></tr>
+                                        <tr><td>PM<sub>2.5</sub></td><td>${props['pm25_t_yr']}</td></tr>
+                                        <tr><td>NO<sub>2</sub></td><td>${props['nox_t_yr']}</td></tr>
+                                        <tr><td>SO<sub>2</sub></td><td>${props['so2_t_yr']}</td></tr>
                                     </table>
                                     <button id="reportButton" onclick="reportPoint('${props.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
@@ -197,6 +202,7 @@ export function loadBrickKilnLayerBAN(map) {
             fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson')
                 .then(response => response.json())
                 .then(data => {
+                   
                     if (!map.getSource('brickKilnsBAN')) {
                         map.addSource('brickKilnsBAN', { type: 'geojson', data });
                     } else {
@@ -223,10 +229,11 @@ export function loadBrickKilnLayerBAN(map) {
                                     <h3>${props.id}</h3>
                                     <table>
                                         <tr><td>Pollutant</td><td> tons/season</td></tr>
-                                        <tr><td>PM<sub>10</sub></td><td>${props['pm10']}</td></tr>
-                                        <tr><td>PM<sub>2.5</sub></td><td>${props['pm25']}</td></tr>
-                                        <tr><td>NO<sub>2</sub></td><td>${props['nox']}</td></tr>
-                                        <tr><td>SO<sub>2</sub></td><td>${props['so2']}</td></tr>
+                                         <tr><td>Capacity</td><td>${props['capacity_tonnes'] || '---'}</td></tr>
+                                        <tr><td>PM<sub>10</sub></td><td>${props['pm10_t_yr']}</td></tr>
+                                        <tr><td>PM<sub>2.5</sub></td><td>${props['pm25_t_yr']}</td></tr>
+                                        <tr><td>NO<sub>2</sub></td><td>${props['nox_t_yr']}</td></tr>
+                                        <tr><td>SO<sub>2</sub></td><td>${props['so2_t_yr']}</td></tr>
                                     </table>
                                     <button id="reportButton" onclick="reportPoint('${props.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
                                         Report This Point
@@ -317,7 +324,7 @@ export function loadBrickKilnLayerGHA(map) {
                 .then(data => {
                     if (!map.getSource('bk_gha')) map.addSource('bk_gha', { type: 'geojson', data });
                     else map.getSource('bk_gha').setData(data);
-
+                   
                     if (!map.getLayer('brick_kilns_GHA')) {
                         map.addLayer({
                             id: 'brick_kilns_GHA',

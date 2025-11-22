@@ -1,15 +1,5 @@
-import {toggleLayerVisibility} from './layerVisibility.js';
-import {
-    loadBrickKilnLayerBAN,
-    loadBrickKilnLayerDRC,
-    loadBrickKilnLayerGHA,
-    loadBrickKilnLayerIND,
-    loadBrickKilnLayerNGA,
-    loadBrickKilnLayerPK,
-    loadBrickKilnLayerUGA
-} from './brickKilns.js';
 
-const allCountries = ['India', 'Pakistan', 'Bangladesh', 'Nigeria', 'Uganda', 'Congo', 'Ghana'];
+const allCountries = ['India', 'Pakistan', 'Bangladesh', 'Nigeria', 'Uganda', 'Congo', 'Ghana','Kenya'];
 
 const assetGroups = {
   "Coal": ["coal", "coal_africa"],
