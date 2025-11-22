@@ -341,9 +341,15 @@ export function initializeLayerVisibilityControls(map) {
       // Setup other groups or single layers similarly...
 }
 
-export function buttonLayerVisibility(map, layerId, isVisible) {
-  if (!map.getLayer(layerId)) return;
-  map.setLayoutProperty(layerId, 'visibility', isVisible ? 'visible' : 'none');
+export function buttonLayerVisibility(map, layerIds, isVisible) {
+  // Handle both single layer ID (string) or multiple layer IDs (array)
+  const layers = Array.isArray(layerIds) ? layerIds : [layerIds];
+  
+  layers.forEach(layerId => {
+    if (map.getLayer(layerId)) {
+      map.setLayoutProperty(layerId, 'visibility', isVisible ? 'visible' : 'none');
+    }
+  });
 }
 
 // Reusable config for all buttons/layers
@@ -363,7 +369,7 @@ const layerConfigs = [
   {
     buttonId: 'buttonPollutionReports',
     tooltipId: 'tooltipPollutionReports',
-    layerId: 'pollution_reports',
+    layerId: ['pollution_reports', 'pollution_reports-clusters', 'pollution_reports-cluster-count'],
     loadFn: loadPollutionReportsLayer,
   },
 ];
@@ -376,12 +382,15 @@ export function initLayerVisibility(map) {
     if (!button) return;
 
     button.addEventListener('click', async () => {
+      // Handle both single layer ID (string) or multiple layer IDs (array)
+      const firstLayerId = Array.isArray(layerId) ? layerId[0] : layerId;
+      
       // Load layer if not yet added
-      if (!map.getLayer(layerId)) {
+      if (!map.getLayer(firstLayerId)) {
         await loadFn(map);
       }
 
-      const currentVisibility = map.getLayoutProperty(layerId, 'visibility');
+      const currentVisibility = map.getLayoutProperty(firstLayerId, 'visibility');
       const isVisible = currentVisibility === 'visible';
 
       buttonLayerVisibility(map, layerId, !isVisible);

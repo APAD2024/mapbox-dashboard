@@ -738,7 +738,7 @@ export function loadPM25ExposureLayer(map) {
 
         // Fill / choropleth
         map.addLayer({
-          id: "districts-fill",
+          id: "pm2.5_exposure",
           type: "fill",
           source: "pm2.5_exposure",
           paint: {
@@ -764,7 +764,7 @@ export function loadPM25ExposureLayer(map) {
 
         // Boundary lines
         map.addLayer({
-          id: "districts-outline",
+          id: "pm2.5_exposure",
           type: "line",
           source: "pm2.5_exposure",
           paint: {
