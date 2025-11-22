@@ -428,6 +428,7 @@ export function generatePM25PopupHTML(properties, coordinates) {
     properties.NAME_2 ||
     properties.admin2Name_en ||
     properties.admin1Name_en ||
+    properties.ADM2_EN||
     "Unknown District";
 
   // TYPE BADGE
@@ -716,6 +717,7 @@ export function loadPM25ExposureLayer(map) {
       "./data/pm2.5/pk_adm2_pm25.geojson",
       "./data/pm2.5/republic_congo_adm2_pm25.geojson",
       "./data/pm2.5/ugd_adm2_pm25.geojson",
+      "./data/pm2.5/npl_adm2_pm25.geojson"
     ];
 
     // Fetch all files in parallel
@@ -778,7 +780,7 @@ export function loadPM25ExposureLayer(map) {
         // -------------------------
         let currentPopup = null;
 
-        map.on("click", "districts-fill", (e) => {
+        map.on("click", "pm2.5_exposure", (e) => {
           const props = e.features[0].properties;
           const lngLat = e.lngLat;
 
