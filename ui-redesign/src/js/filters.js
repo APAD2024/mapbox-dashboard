@@ -3,8 +3,8 @@ const allCountries = ['India', 'Pakistan', 'Bangladesh', 'Nigeria', 'Uganda', 'C
 
 const assetGroups = {
   "Coal": ["coal", "coal_africa"],
-  "Fossil Fuel": ["fossil_fuel"],
-  "Furnace Oil": ["furnace_oil_IGP"],
+  // "Fossil Fuel": ["fossil_fuel"],
+  "Power Generation Plants": ["furnace_oil_IGP","furnace_oil_oil","furnace_oil_biofuel","furnace_oil_naturalgas"],
   "Steel": ["steel_IGP", "steel_africa"],
   "Paper Pulp": ["paper_pulp_IGP", "paper_pulp_africa"],
   "Cement": ["cement_IGP", "cement_africa"],

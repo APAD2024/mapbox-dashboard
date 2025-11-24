@@ -1,11 +1,11 @@
 import {
-    loadBrickKilnLayerBAN,
-    loadBrickKilnLayerDRC,
-    loadBrickKilnLayerGHA,
-    loadBrickKilnLayerIND,
-    loadBrickKilnLayerNGA,
-    loadBrickKilnLayerPK,
-    loadBrickKilnLayerUGA,
+  loadBrickKilnLayerBAN,
+  loadBrickKilnLayerDRC,
+  loadBrickKilnLayerGHA,
+  loadBrickKilnLayerIND,
+  loadBrickKilnLayerNGA,
+  loadBrickKilnLayerPK,
+  loadBrickKilnLayerUGA,
 } from './brickKilns.js';
 
 
@@ -34,15 +34,17 @@ let layerVisibility = {};
 const defaultLayerIds = [
     'coal', 'coal_africa','fossil_fuel', 'furnace_oil_IGP',
 
+
     'cement_igp','cement_africa','paper_pulp_igp', 'paper_pulp_africa','steel_igp','steel_africa','boilers',
 
     'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 
     'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA',
     'brick_kilns_NGA',
-
-    'gpw','solid_waste_igp',   
     
-    'pollution_reports','openaq_latest','pm2.5_exposure'
+    'gpw','solid_waste_igp','furnace_oil_biofuel' , 'furnace_oil_oil', 'furnace_oil_', 
+    
+    'pollution_reports','openaq_latest','pm2.5_exposure',
+
 
     //  'adm3_PAK', 'adm3_IND', 'adm3_BAN','population',
 ];
@@ -335,6 +337,38 @@ export function initializeLayerVisibilityControls(map) {
         "boilers_layer",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/boilers/boilers.geojson",
         layerStyles.boilers.circleColor, layerStyles.boilers.circleRadius, layerStyles.boilers.strokeWidth, layerStyles.boilers.strokeColor
+    )}
+    ]);
+
+    //Electricity Data Division
+
+    setupGroupLayerToggle(map, "toggleNaturalGas", [
+    { id: "naturalgas", load: (map) => loadGroupLayers(
+        map,
+        "furnace_oil_naturalgas",
+        "naturalgas_layer",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_gas.geojson",
+        layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
+    )}
+    ]);
+
+    setupGroupLayerToggle(map, "toggleOil", [
+    { id: "furnace_oil_oil", load: (map) => loadGroupLayers(
+        map,
+        "furnace_oil_oil",
+        "oil_layer",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_furnace_oil.geojson",
+layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
+    )}
+    ]);
+
+    setupGroupLayerToggle(map, "toggleBiofuel", [
+    { id: "furnace_oil_biofuel", load: (map) => loadGroupLayers(
+        map,
+        "furnace_oil_biofuel",
+        "biofuel_layer",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_biofuel.geojson",
+        layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
     )}
     ]);
 

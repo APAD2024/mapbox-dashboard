@@ -1,5 +1,5 @@
-import { closePopups  } from './utils.js';
 import { layerStyles } from './layerVisibility.js';
+import { closePopups } from './utils.js';
 
 // -----------------------------------------------------------AGGREGATE TOOL-----------------------------------------------------------
 
@@ -25,6 +25,9 @@ export const COUNTABLE_LAYERS_INFO = {
   coal_africa: 'Coal Plants',
   fossil_fuel: 'Fossil Fuel',
   furnace_oil_IGP: 'Furnace Oil',
+  furnace_oil_biofuel:'Biofuel',
+  furnace_oil_oil:'Oil',
+  furnace_oil_naturalgas:'Natural Gas',
   steel_IGP: 'Steel IGP',
   steel_africa: 'Steel Africa',
   paper_pulp_IGP: 'Paper Pulp',
@@ -42,6 +45,9 @@ export const layerIdToStyleKey = {
     coal_africa: 'coal',
     fossil_fuel: 'fossilFuel',
     furnace_oil_IGP: 'furnaceOil',
+    furnace_oil_biofuel:'furnaceOil',
+    furnace_oil_oil:'furnaceOil',
+    furnace_oil_naturalgas:'furnaceOil',
     steel_IGP: 'steel',
     steel_africa: 'steel',
     paper_pulp_IGP: 'paperPulp',
@@ -177,11 +183,11 @@ function handleAggregation(map, lngLat) {
                 const features = map.queryRenderedFeatures({ layers: [layer.id] });
                 features.forEach(f => {
                     if (f.geometry.type === 'Point' && turf.booleanPointInPolygon(turf.point(f.geometry.coordinates), buffer)) {
-                        if ('nox' in f.properties || 'so2' in f.properties || 'pm10' in f.properties || 'pm25' in f.properties) {
-                            totalEmissions.nox += f.properties.nox || 0;
-                            totalEmissions.so2 += f.properties.so2 || f.properties.sox || 0;
-                            totalEmissions.pm10 += f.properties.pm10 || 0;
-                            totalEmissions.pm25 += f.properties.pm25 || 0;
+                        if ('nox_t_yr' in f.properties || 'so2_t_yr' in f.properties || 'pm10_t_yr' in f.properties || 'pm25_t_yr' in f.properties) {
+                            totalEmissions.nox += f.properties.nox_t_yr || 0;
+                            totalEmissions.so2 += f.properties.so2_t_yr || f.properties.sox || 0;
+                            totalEmissions.pm10 += f.properties.pm10_t_yr || 0;
+                            totalEmissions.pm25 += f.properties.pm25_t_yr || 0;
                         }
                     }
                 });
