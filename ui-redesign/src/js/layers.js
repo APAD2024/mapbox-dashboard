@@ -353,7 +353,7 @@ function generateEmissionsChart(emissionsData) {
 
 export function generatePopupHTML(properties, coordinates, layerId = "") {
   if (!properties) return "";
-  console.log(properties);
+ // console.log(properties);
   // Determine name
   const name =
     properties.name ||
@@ -527,8 +527,8 @@ export function showPopup(map, lngLat, properties, layerId = "") {
 
   // Generate HTML
   const html = generatePopupHTML(properties, [lngLat.lng, lngLat.lat], layerId);
-   console.log(properties)
-   console.log(properties.pm25_t_yr)
+   //console.log(properties)
+  // console.log(properties.pm25_t_yr)
   // Create new popup
   currentPopup = new mapboxgl.Popup()
     .setLngLat(lngLat)

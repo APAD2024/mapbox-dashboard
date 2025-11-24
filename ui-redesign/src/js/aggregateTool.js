@@ -183,11 +183,11 @@ function handleAggregation(map, lngLat) {
                 const features = map.queryRenderedFeatures({ layers: [layer.id] });
                 features.forEach(f => {
                     if (f.geometry.type === 'Point' && turf.booleanPointInPolygon(turf.point(f.geometry.coordinates), buffer)) {
-                        if ('nox' in f.properties || 'so2' in f.properties || 'pm10' in f.properties || 'pm25' in f.properties) {
-                            totalEmissions.nox += f.properties.nox || 0;
-                            totalEmissions.so2 += f.properties.so2 || f.properties.sox || 0;
-                            totalEmissions.pm10 += f.properties.pm10 || 0;
-                            totalEmissions.pm25 += f.properties.pm25 || 0;
+                        if ('nox_t_yr' in f.properties || 'so2_t_yr' in f.properties || 'pm10_t_yr' in f.properties || 'pm25_t_yr' in f.properties) {
+                            totalEmissions.nox += f.properties.nox_t_yr || 0;
+                            totalEmissions.so2 += f.properties.so2_t_yr || f.properties.sox || 0;
+                            totalEmissions.pm10 += f.properties.pm10_t_yr || 0;
+                            totalEmissions.pm25 += f.properties.pm25_t_yr || 0;
                         }
                     }
                 });
