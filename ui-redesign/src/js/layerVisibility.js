@@ -343,9 +343,9 @@ export function initializeLayerVisibilityControls(map) {
     //Electricity Data Division
 
     setupGroupLayerToggle(map, "toggleNaturalGas", [
-    { id: "naturalgas", load: (map) => loadGroupLayers(
+    { id: "furnace_oil_natural_gas", load: (map) => loadGroupLayers(
         map,
-        "furnace_oil_naturalgas",
+        "furnace_oil_natural_gas",
         "naturalgas_layer",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_gas.geojson",
         layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor

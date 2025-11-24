@@ -20,7 +20,7 @@ export const layerIds = [
   "brick_kilns_BAN_hex",
   "cement_IGP",
   "furnace_oil_IGP",
-  "furnace_oil_naturalgas",
+  "furnace_oil_natural_gas",
   "furnace_oil_oil",
   "furnace_oil_biofuel",
   "paper_pulp_IGP",
@@ -320,6 +320,12 @@ function generateEmissionsChart(emissionsData) {
             color: getCSSColor("--dark-green"),
             font: { family: chartFont, size: 10 },
           },
+          title: {
+            display: true,
+            text: 'tonnes/year',
+            color: getCSSColor("--dark-green"),
+            font: { family: chartFont, size: 10 }
+          },
           border: { color: getCSSColor("--dark-green") },
         },
         y: {
@@ -401,11 +407,17 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
       : rawCapacity
     : "---";
 
-  // Pollutants
-  // const pm10 = properties.pm10 ?? properties["PM10"] ?? properties["pm10_t_yr"] ?? properties.pm10_t_yr ?? "---";
-  // const pm25 = properties.pm25 ?? properties["PM2.5"] ?? properties["PM25"] ?? properties["pm25_t_yr"] ?? properties.pm25_t_yr ?? "---";
-  // const so2  = properties.so2  ?? properties["SO2"]  ?? properties["SO2"] ?? properties["so2_t_yr"] ?? "---";
-  // const nox  = properties.nox  ?? properties["NOx"]  ?? properties["nox_t_yr"] ?? properties.nox_t_yr ??"---";
+  // Determine capacity unit based on layer type
+  const energyLayers = [
+    "coal",
+    "coal_africa",
+    "fossil_fuel",
+    "furnace_oil_IGP",
+    "furnace_oil_natural_gas",
+    "furnace_oil_oil",
+    "furnace_oil_biofuel"
+  ];
+  const capacityUnit = energyLayers.includes(layerId) ? "MW" : "tonnes/year";
 
   // Build HTML
   return `
@@ -418,7 +430,7 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
       <h3>${name}</h3>
       <div>${locationText}</div>
       ${latLngText ? `<div style="font-size: 1rem;">${latLngText}</div>` : ""}
-      <div style="font-size: 1rem;">Capacity: ${capacity}</div>
+      <div style="font-size: 1rem;">Capacity: ${capacity} ${capacity !== "---" ? capacityUnit : ""}</div>
       <canvas id="emissionsChart" width="auto" height="250">
       </canvas>
     </div>
