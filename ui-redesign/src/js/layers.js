@@ -20,6 +20,9 @@ export const layerIds = [
   "brick_kilns_BAN_hex",
   "cement_IGP",
   "furnace_oil_IGP",
+  "furnace_oil_naturalgas",
+  "furnace_oil_oil",
+  "furnace_oil_biofuel",
   "paper_pulp_IGP",
   "steel_IGP",
   "solid_waste_IGP",
@@ -524,7 +527,8 @@ export function showPopup(map, lngLat, properties, layerId = "") {
 
   // Generate HTML
   const html = generatePopupHTML(properties, [lngLat.lng, lngLat.lat], layerId);
-
+   console.log(properties)
+   console.log(properties.pm25_t_yr)
   // Create new popup
   currentPopup = new mapboxgl.Popup()
     .setLngLat(lngLat)
@@ -961,7 +965,7 @@ export async function loadGroupLayers(
     if (!isAggregateToolEnabled()) {
       let removeCurrentDot = null;
 
-      map.on("click", layerId, (e) => {
+      const clickHandler = (e) => {
         const feature = e.features[0];
 
         // Show existing popup
@@ -978,7 +982,16 @@ export async function loadGroupLayers(
           if (removeCurrentDot) removeCurrentDot();
           removeCurrentDot = null;
         });
-      });
+      };
+
+      map.on("click", layerId, clickHandler);
+
+      // For furnace oil, also add click handlers to sublayers
+      if (layerId === "furnace_oil_IGP") {
+        map.on("click", "furnace_oil_biofuel", clickHandler);
+        map.on("click", "furnace_oil_natural_gas", clickHandler);
+        map.on("click", "furnace_oil_oil", clickHandler);
+      }
     }
 
     hideLoadingSpinner();

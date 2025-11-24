@@ -1,5 +1,5 @@
-import { closePopups  } from './utils.js';
 import { layerStyles } from './layerVisibility.js';
+import { closePopups } from './utils.js';
 
 // -----------------------------------------------------------AGGREGATE TOOL-----------------------------------------------------------
 
@@ -25,6 +25,9 @@ export const COUNTABLE_LAYERS_INFO = {
   coal_africa: 'Coal Plants',
   fossil_fuel: 'Fossil Fuel',
   furnace_oil_IGP: 'Furnace Oil',
+  furnace_oil_biofuel:'Biofuel',
+  furnace_oil_oil:'Oil',
+  furnace_oil_naturalgas:'Natural Gas',
   steel_IGP: 'Steel IGP',
   steel_africa: 'Steel Africa',
   paper_pulp_IGP: 'Paper Pulp',
@@ -42,6 +45,9 @@ export const layerIdToStyleKey = {
     coal_africa: 'coal',
     fossil_fuel: 'fossilFuel',
     furnace_oil_IGP: 'furnaceOil',
+    furnace_oil_biofuel:'furnaceOil',
+    furnace_oil_oil:'furnaceOil',
+    furnace_oil_naturalgas:'furnaceOil',
     steel_IGP: 'steel',
     steel_africa: 'steel',
     paper_pulp_IGP: 'paperPulp',

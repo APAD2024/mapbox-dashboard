@@ -1,4 +1,4 @@
-import { toggleLayerVisibility, initializeLayerVisibilityControls } from './layerVisibility.js';
+import { initializeLayerVisibilityControls, toggleLayerVisibility } from './layerVisibility.js';
 
 /**
  * Handles legend interactions like toggling sections, drag-and-drop reordering, and checkbox sync
@@ -90,6 +90,40 @@ export function initializeLegend(map) {
             });
         }
     });
+
+    // Furnace Oil popup toggle
+    const furnaceOilToggleBtn = document.getElementById('furnaceOilToggleBtn');
+    const furnaceOilSubdivisions = document.getElementById('furnaceOilSubdivisions');
+    
+    if (furnaceOilToggleBtn && furnaceOilSubdivisions) {
+        furnaceOilToggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isVisible = furnaceOilSubdivisions.style.display === 'block';
+            
+            if (isVisible) {
+                furnaceOilSubdivisions.style.display = 'none';
+                this.textContent = '▶';
+            } else {
+                // Position popup next to legend
+                const legend = document.getElementById('legend');
+                const legendRect = legend.getBoundingClientRect();
+                const btnRect = this.getBoundingClientRect();
+                
+                furnaceOilSubdivisions.style.left = (legendRect.right + 10) + 'px';
+                furnaceOilSubdivisions.style.top = btnRect.top + 'px';
+                furnaceOilSubdivisions.style.display = 'block';
+                this.textContent = '◀';
+            }
+        });
+
+        // Close popup when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!furnaceOilSubdivisions.contains(e.target) && e.target !== furnaceOilToggleBtn) {
+                furnaceOilSubdivisions.style.display = 'none';
+                furnaceOilToggleBtn.textContent = '▶';
+            }
+        });
+    }
 
     // Toggle entire legend visibility
     legendButton.addEventListener('click', () => {

@@ -260,7 +260,7 @@
             </div>
 
             <!-- Fossil Fuel -->
-            <div
+            <!-- <div
               class="legend-section"
               id="legend-fossil-fuel"
               draggable="true"
@@ -281,7 +281,7 @@
                 ></div>
                 <p>Fossil Fuel</p>
               </div>
-            </div>
+            </div> -->
 
             <!-- Furnace Oil -->
             <div
@@ -289,23 +289,49 @@
               id="legend-furnace-oil"
               draggable="true"
             >
-              <label class="custom-checkbox">
-                <input id="toggleFurnaceOil" type="checkbox" checked />
-                <span class="checkmark"></span>
-              </label>
-              <div class="legend-name">
-                <div
-                  class="legend-key"
-                  style="
-                    width: 2rem;
-                    height: 2rem;
-                    background-color: hsla(324, 50%, 50%, 0.5);
-                    border: 0.1rem solid hsla(324, 50%, 50%, 1);
-                  "
-                ></div>
-                <p>Furnace Oil</p>
+              <div style="display: flex; align-items: center; width: 100%; position: relative;">
+                <div class="legend-name" style="flex: 1;">
+                  <div
+                    class="legend-key"
+                    style="
+                      width: 2rem;
+                      height: 2rem;
+                      background-color: hsla(324, 50%, 50%, 0.5);
+                      border: 0.1rem solid hsla(324, 50%, 50%, 1);
+                    "
+                  ></div>
+                  <p>Power Generation Plant</p>
+                </div>
+                <button 
+                  id="furnaceOilToggleBtn" 
+                  style="background: none; border: none; cursor: pointer; padding: 0.5rem; font-size: 1rem; color: inherit;"
+                  aria-label="Toggle furnace oil subdivisions"
+                >
+                  ▶
+                </button>
+
               </div>
             </div>
+          </div>
+
+          <!-- Furnace Oil Subdivisions (Popup Outside Legend) -->
+          <div id="furnaceOilSubdivisions" style="display: none; position: fixed; background: var(--light-green); color: var(--dark-green); border-radius: 1.6rem; padding: 1.2rem; box-shadow: var(--shadow); z-index: 10000; min-width: 180px;">
+            <div style="font-weight: 600; margin-bottom: 0.8rem; font-size: 1.1rem; border-bottom: 1px solid var(--dark-green); padding-bottom: 0.5rem;">Types</div>
+            <label class="custom-checkbox" style="display: flex; align-items: center; margin-bottom: 0.6rem; cursor: pointer;">
+              <input id="toggleBiofuel" type="checkbox" checked />
+              <span class="checkmark"></span>
+              <span style="margin-left: 0.5rem; font-size: var(--body01);">Biofuel</span>
+            </label>
+            <label class="custom-checkbox" style="display: flex; align-items: center; margin-bottom: 0.6rem; cursor: pointer;">
+              <input id="toggleNaturalGas" type="checkbox" checked />
+              <span class="checkmark"></span>
+              <span style="margin-left: 0.5rem; font-size: var(--body01);">Natural Gas</span>
+            </label>
+            <label class="custom-checkbox" style="display: flex; align-items: center; cursor: pointer;">
+              <input id="toggleOil" type="checkbox" checked />
+              <span class="checkmark"></span>
+              <span style="margin-left: 0.5rem; font-size: var(--body01);">Oil</span>
+            </label>
           </div>
 
           <div class="legend-group">
