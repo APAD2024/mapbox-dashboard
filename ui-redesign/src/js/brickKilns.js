@@ -25,6 +25,8 @@ function reportPoint(brickid, lng, lat) {
     });
 }
 
+// Expose function to global scope for inline onclick handlers
+window.reportPoint = reportPoint;
 
 const layerStyles = {
   brickKiln: { 
