@@ -12,7 +12,7 @@ export let brickKilnBANLoaded = false;
 
 
 function reportPoint(brickid, lng, lat) {
-    const reportURL = 'https://forms.gle/cr2TzX3Fjt8bXVRv8';
+    const reportURL = 'https://forms.gle/ny9ebQhD4f4dkAXHA';
     const params = `BrickID: ${brickid}, Longitude: ${lng}, Latitude: ${lat}`;
 
     // Copy parameters to the clipboard
@@ -25,6 +25,8 @@ function reportPoint(brickid, lng, lat) {
     });
 }
 
+// Expose function to global scope for inline onclick handlers
+window.reportPoint = reportPoint;
 
 const layerStyles = {
   brickKiln: { 
