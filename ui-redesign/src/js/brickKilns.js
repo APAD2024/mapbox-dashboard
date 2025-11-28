@@ -25,6 +25,16 @@ function reportPoint(brickid, lng, lat) {
     });
 }
 
+// Centralized function to attach report button functionality to popup
+function attachReportButton(popup, brickid, lng, lat) {
+    popup.on('open', () => {
+        const btn = popup.getElement().querySelector('.report-button');
+        if (btn) {
+            btn.onclick = () => reportPoint(brickid, lng, lat);
+        }
+    });
+}
+
 // Expose function to global scope for inline onclick handlers
 window.reportPoint = reportPoint;
 
@@ -87,6 +97,9 @@ export function loadBrickKilnLayerPK(map) {
                     if (!isAggregateToolEnabled()) {
                         map.on('click', 'brick_kilns_PK', (e) => {
                             const properties = e.features[0].properties;
+                            const brickid = properties.id;
+                            const lng = e.lngLat.lng;
+                            const lat = e.lngLat.lat;
                             const popupContent = `
                                 <div class="popup-table">
                                     <h3>${properties.id}</h3>
@@ -98,15 +111,17 @@ export function loadBrickKilnLayerPK(map) {
                                         <tr><td>NO<sub>2</sub></td><td>${properties['nox_t_yr']}</td></tr>
                                         <tr><td>SO<sub>2</sub></td><td>${properties['so2_t_yr']}</td></tr>
                                     </table>
-                                    <button id="reportButton" onclick="reportPoint('${properties.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
+                                    <button class="report-button">
                                         Report This Point
                                     </button>
                                 </div>
                             `;
-                            new mapboxgl.Popup()
+                            const popup = new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
-                                .setHTML(popupContent)
-                                .addTo(map);
+                                .setHTML(popupContent);
+                            
+                            attachReportButton(popup, brickid, lng, lat);
+                            popup.addTo(map);
                         });
                     }
 
@@ -158,6 +173,9 @@ export function loadBrickKilnLayerIND(map) {
                     if (!isAggregateToolEnabled()) {
                         map.on('click', 'brick_kilns_IND', (e) => {
                             const props = e.features[0].properties;
+                            const brickid = props.id;
+                            const lng = e.lngLat.lng;
+                            const lat = e.lngLat.lat;
                             const popupHTML = `
                                 <div class="popup-table">
                                     <h3>${props.id}</h3>
@@ -170,12 +188,15 @@ export function loadBrickKilnLayerIND(map) {
                                         <tr><td>NO<sub>2</sub></td><td>${props['nox_t_yr']}</td></tr>
                                         <tr><td>SO<sub>2</sub></td><td>${props['so2_t_yr']}</td></tr>
                                     </table>
-                                    <button id="reportButton" onclick="reportPoint('${props.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
+                                    <button class="report-button">
                                         Report This Point
                                     </button>
                                 </div>
                             `;
-                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                            const popup = new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML);
+                            
+                            attachReportButton(popup, brickid, lng, lat);
+                            popup.addTo(map);
                         });
                     }
 
@@ -226,6 +247,9 @@ export function loadBrickKilnLayerBAN(map) {
                     if (!isAggregateToolEnabled()) {
                         map.on('click', 'brick_kilns_BAN', (e) => {
                             const props = e.features[0].properties;
+                            const brickid = props.id;
+                            const lng = e.lngLat.lng;
+                            const lat = e.lngLat.lat;
                             const popupHTML = `
                                 <div class="popup-table">
                                     <h3>${props.id}</h3>
@@ -237,12 +261,15 @@ export function loadBrickKilnLayerBAN(map) {
                                         <tr><td>NO<sub>2</sub></td><td>${props['nox_t_yr']}</td></tr>
                                         <tr><td>SO<sub>2</sub></td><td>${props['so2_t_yr']}</td></tr>
                                     </table>
-                                    <button id="reportButton" onclick="reportPoint('${props.id}', '${e.lngLat.lon}', '${e.lngLat.lat}')">
+                                    <button class="report-button">
                                         Report This Point
                                     </button>
                                 </div>
                             `;
-                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                            const popup = new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML);
+                            
+                            attachReportButton(popup, brickid, lng, lat);
+                            popup.addTo(map);
                         });
                     }
 
@@ -286,6 +313,8 @@ export function loadBrickKilnLayerDRC(map) {
                     if (!isAggregateToolEnabled()) {
                         map.on('click', 'brick_kilns_DRC', (e) => {
                             const props = e.features[0].properties;
+                            const lng = e.lngLat.lng;
+                            const lat = e.lngLat.lat;
                             const popupHTML = `
                                 <div class="popup-table">
                                     <h3>${props.name}</h3>
@@ -293,10 +322,13 @@ export function loadBrickKilnLayerDRC(map) {
                                         <tr><td>Description</td></tr>
                                         <tr><td>${props.query}</td></tr>
                                     </table>
-                                    <button id="reportButton" onclick="reportPoint('${e.lngLat.lon}', '${e.lngLat.lat}')">Report This Point</button>
+                                    <button class="report-button">Report This Point</button>
                                 </div>
                             `;
-                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                            const popup = new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML);
+                            
+                            attachReportButton(popup, '', lng, lat);
+                            popup.addTo(map);
                         });
                     }
 
@@ -340,6 +372,8 @@ export function loadBrickKilnLayerGHA(map) {
                     if (!isAggregateToolEnabled()) {
                         map.on('click', 'brick_kilns_GHA', (e) => {
                             const props = e.features[0].properties;
+                            const lng = e.lngLat.lng;
+                            const lat = e.lngLat.lat;
                             const popupHTML = `
                                 <div class="popup-table">
                                     <h3>${props.name}</h3>
@@ -347,10 +381,13 @@ export function loadBrickKilnLayerGHA(map) {
                                         <tr><th>Description</th></tr>
                                         <tr><td>${props.query}</td></tr>
                                     </table>
-                                    <button id="reportButton" onclick="reportPoint('${e.lngLat.lon}', '${e.lngLat.lat}')">Report This Point</button>
+                                    <button class="report-button">Report This Point</button>
                                 </div>
                             `;
-                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                            const popup = new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML);
+                            
+                            attachReportButton(popup, '', lng, lat);
+                            popup.addTo(map);
                         });
                     }
 
@@ -394,6 +431,8 @@ export function loadBrickKilnLayerNGA(map) {
                     if (!isAggregateToolEnabled()) {
                         map.on('click', 'brick_kilns_NGA', (e) => {
                             const props = e.features[0].properties;
+                            const lng = e.lngLat.lng;
+                            const lat = e.lngLat.lat;
                             const popupHTML = `
                                 <div class="popup-table">
                                     <h3>${props.name}</h3>
@@ -401,10 +440,13 @@ export function loadBrickKilnLayerNGA(map) {
                                         <tr><th>Description</th></tr>
                                         <tr><td>${props.query}</td></tr>
                                     </table>
-                                    <button id="reportButton" onclick="reportPoint('${e.lngLat.lon}', '${e.lngLat.lat}')">Report This Point</button>
+                                    <button class="report-button">Report This Point</button>
                                 </div>
                             `;
-                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                            const popup = new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML);
+                            
+                            attachReportButton(popup, '', lng, lat);
+                            popup.addTo(map);
                         });
                     }
 
@@ -448,6 +490,8 @@ export function loadBrickKilnLayerUGA(map) {
                     if (!isAggregateToolEnabled()) {
                         map.on('click', 'brick_kilns_UGA', (e) => {
                             const props = e.features[0].properties;
+                            const lng = e.lngLat.lng;
+                            const lat = e.lngLat.lat;
                             const popupHTML = `
                                 <div class="popup-table">
                                     <h3>${props.name}</h3>
@@ -455,10 +499,13 @@ export function loadBrickKilnLayerUGA(map) {
                                         <tr><th>Description</th></tr>
                                         <tr><td>${props.query}</td></tr>
                                     </table>
-                                    <button id="reportButton" onclick="reportPoint('${e.lngLat.lon}', '${e.lngLat.lat}')">Report This Point</button>
+                                    <button class="report-button">Report This Point</button>
                                 </div>
                             `;
-                            new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML).addTo(map);
+                            const popup = new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHTML);
+                            
+                            attachReportButton(popup, '', lng, lat);
+                            popup.addTo(map);
                         });
                     }
 
