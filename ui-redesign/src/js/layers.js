@@ -938,14 +938,14 @@ export async function loadGroupLayers(
 
     // Find max PM2.5 value for this asset type
     const pm25Values = data.features
-      .map((f) => parseFloat(f.properties["pm25"]))
+      .map((f) => parseFloat(f.properties["pm25"] || f.properties["pm25_t_yr"]))
       .filter((v) => !isNaN(v));
-
+       
     const maxPM25 = pm25Values.length > 0 ? Math.max(...pm25Values) : 1;
 
     // Normalize and add scaled radius property
     data.features.forEach((f) => {
-      const pm25 = parseFloat(f.properties["pm25"]);
+      const pm25 = parseFloat(f.properties["pm25"]||f.properties["pm25_t_yr"]);
       const normalized = !isNaN(pm25) ? pm25 / maxPM25 : 0.2;
       f.properties.scaled_radius = baseRadius + normalized * 15;
     });
