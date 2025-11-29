@@ -419,6 +419,12 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
   ];
   const capacityUnit = energyLayers.includes(layerId) ? "MW" : "tonnes/year";
 
+  // Source field
+  const source = properties.source || properties.Source || "";
+  const sourceHTML = source 
+    ? `<div style="font-size: 0.85rem; margin-top: 8px;"><strong>Asset Source:</strong> <a href="${source}" target="_blank" style="color: ${strokeColor}; text-decoration: underline;">${source}</a></div>`
+    : "";
+
   // Build HTML
   return `
     <div class="popup-table" style="font-family: 'Montserrat', sans-serif;">
@@ -431,6 +437,7 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
       <div>${locationText}</div>
       ${latLngText ? `<div style="font-size: 1rem;">${latLngText}</div>` : ""}
       <div style="font-size: 1rem;">Capacity: ${capacity} ${capacity !== "---" ? capacityUnit : ""}</div>
+      ${sourceHTML}
       <canvas id="emissionsChart" width="auto" height="250">
       </canvas>
     </div>

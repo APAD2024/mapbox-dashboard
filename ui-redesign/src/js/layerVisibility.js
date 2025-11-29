@@ -288,7 +288,7 @@ export function initializeLayerVisibilityControls(map) {
         map,
         "steel_africa",
         "steel_Afc",
-        "https://gist.githubusercontent.com/Mseher/23af19444bdc70b115afcb6cc45879ec/raw/eda2bc6398aaa50595cfc7ed81bbca1d15d78c31/Steel_Plants_Africa.geojson",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/africa_assets/Steel_plants_Africa_main.geojson",
         layerStyles.steel.circleColor, layerStyles.steel.circleRadius, layerStyles.steel.strokeWidth, layerStyles.steel.strokeColor
         )}
     ]);
@@ -325,7 +325,7 @@ export function initializeLayerVisibilityControls(map) {
         map,
         "cement_africa",
         "cement_Afc",
-        "https://gist.githubusercontent.com/Mseher/3c778bdbd8464ddc939b41c87e145bbc/raw/c605634a3e418b2a52a2125a3943d432d688755f/cement_africa.geojson",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/africa_assets/cement_Africa_main.geojson",
         layerStyles.cement.circleColor, layerStyles.cement.circleRadius, layerStyles.cement.strokeWidth, layerStyles.cement.strokeColor
     )}
     ]);
