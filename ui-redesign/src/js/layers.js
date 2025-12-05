@@ -450,6 +450,7 @@ export function generatePM25PopupHTML(properties, coordinates) {
     properties.NAME_2 ||
     properties.admin2Name_en ||
     properties.admin1Name_en ||
+    properties.name2||
     properties.ADM2_EN||
     "Unknown District";
 
@@ -460,9 +461,9 @@ export function generatePM25PopupHTML(properties, coordinates) {
 
   // Location fallback (if present)
   const country =
-    properties.country || properties.COUNTRY || properties.admin0Name_en || properties.ADM0_EN ||"";
+    properties.country || properties.COUNTRY || properties.admin0Name_en || properties.ADM0_EN ||properties.name0||"";
 
-  const region = properties.region || properties.admin1Name_en ||properties.ADM1_EN ||"";
+  const region = properties.region || properties.admin1Name_en ||properties.ADM1_EN ||properties.name1||"";
 
   const locationText = region ? `${region}, ${country}` : country || "";
 
@@ -740,7 +741,8 @@ export function loadPM25ExposureLayer(map) {
       "./data/pm2.5/pk_adm2_pm25.geojson",
       "./data/pm2.5/republic_congo_adm2_pm25.geojson",
       "./data/pm2.5/ugd_adm2_pm25.geojson",
-      "./data/pm2.5/npl_adm2_pm25.geojson"
+      "./data/pm2.5/npl_adm2_pm25.geojson",
+      "./data/pm2.5/ind_adm2_pm25.geojson",
     ];
 
     // Fetch all files in parallel
@@ -753,7 +755,7 @@ export function loadPM25ExposureLayer(map) {
         };
         merged.features.forEach((f) => {
           f.properties.country =
-            f.properties.country || f.properties.COUNTRY ||f.properties.admin0Name_en|| "Unknown";
+            f.properties.country || f.properties.COUNTRY ||f.properties.admin0Name_en||f.properties.name0 ||"Unknown";
         });
         // Add merged source
         map.addSource("pm2.5_exposure", {
