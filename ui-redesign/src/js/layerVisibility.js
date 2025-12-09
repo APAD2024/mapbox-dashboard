@@ -9,7 +9,7 @@ import {
 } from './brickKilns.js';
 
 
-import { loadCountryBoundary, loadGroupLayers, loadOpenAQLayer, loadPM25ExposureLayer, loadPollutionReportsLayer } from './layers.js';
+import { loadCountryBoundary, loadGroupLayers, loadOpenAQLayer, loadPM25ExposureLayer, loadPollutionReportsLayer, loadWHO2023Layer } from './layers.js';
 
 
 export function loadAllBoundaries(map) {
@@ -43,7 +43,7 @@ const defaultLayerIds = [
     
     'gpw','solid_waste_igp','furnace_oil_biofuel' , 'furnace_oil_oil', 'furnace_oil_', 
     
-    'pollution_reports','openaq_latest','pm2.5_exposure',
+    'pollution_reports','openaq_latest','pm2.5_exposure','who2023_layer'
 
 
     //  'adm3_PAK', 'adm3_IND', 'adm3_BAN','population',
@@ -401,6 +401,12 @@ const layerConfigs = [
     loadFn: loadPM25ExposureLayer,
   },
   {
+    buttonId: 'buttonWHO25Data',
+    tooltipId: 'tooltipWHO2023',
+    layerId: 'who2023_layer',
+    loadFn: loadWHO2023Layer,
+  },
+  {
     buttonId: 'buttonPollutionReports',
     tooltipId: 'tooltipPollutionReports',
     layerId: ['pollution_reports', 'pollution_reports-clusters', 'pollution_reports-cluster-count'],
@@ -409,6 +415,11 @@ const layerConfigs = [
 ];
 
 export function initLayerVisibility(map) {
+  // Define mutually exclusive button groups
+  const mutuallyExclusiveGroups = [
+    ['buttonPM25Data', 'buttonWHO25Data'] // PM25 and WHO2023 are mutually exclusive
+  ];
+
   layerConfigs.forEach(({ buttonId, tooltipId, layerId, loadFn }) => {
     const button = document.getElementById(buttonId);
     const tooltip = document.getElementById(tooltipId);
@@ -426,6 +437,36 @@ export function initLayerVisibility(map) {
 
       const currentVisibility = map.getLayoutProperty(firstLayerId, 'visibility');
       const isVisible = currentVisibility === 'visible';
+
+      // If turning ON this layer, check if it's in a mutually exclusive group
+      if (!isVisible) {
+        mutuallyExclusiveGroups.forEach(group => {
+          if (group.includes(buttonId)) {
+            // Turn off all other layers in this group
+            group.forEach(otherButtonId => {
+              if (otherButtonId !== buttonId) {
+                const otherConfig = layerConfigs.find(cfg => cfg.buttonId === otherButtonId);
+                if (otherConfig) {
+                  const otherButton = document.getElementById(otherButtonId);
+                  const otherTooltip = document.getElementById(otherConfig.tooltipId);
+                  const otherFirstLayerId = Array.isArray(otherConfig.layerId) ? otherConfig.layerId[0] : otherConfig.layerId;
+                  
+                  // Only turn off if it exists and is visible
+                  if (map.getLayer(otherFirstLayerId)) {
+                    buttonLayerVisibility(map, otherConfig.layerId, false);
+                    if (otherButton) {
+                      otherButton.classList.remove('active');
+                    }
+                    if (otherTooltip) {
+                      otherTooltip.style.display = 'none';
+                    }
+                  }
+                }
+              }
+            });
+          }
+        });
+      }
 
       buttonLayerVisibility(map, layerId, !isVisible);
       button.classList.toggle('active', !isVisible);

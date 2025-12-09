@@ -454,10 +454,112 @@ width: 100%;
     transition: font-size 0.3s ease;
 }
 
-#buttonPM25Data {
-    font-size: 20px;
-    top: 31rem;
-    right: 1.6rem;
+/* PM2.5/WHO Dropdown Container */
+.fab-dropdown-container {
+    position: absolute;
+    z-index: 10;
+}
+
+.fab-dropdown-menu {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 0.8rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    background: var(--light-green);
+    border-radius: 0.8rem;
+    padding: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 0.12rem solid var(--dark-green);
+    animation: slideUp 0.2s ease;
+    white-space: nowrap;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fab-dropdown-menu.hidden {
+    display: none;
+}
+
+.fab-dropdown-container .FAB {
+   
+    padding: 0.8rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fab-dropdown-container .FAB .epic-text {
+    color: var(--dark-green);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.fab-dropdown-container .FAB:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.fab-dropdown-container .FAB:hover .epic-text {
+    color: var(--light-green);
+}
+
+.fab-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: var(--dark-green);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem !important;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    border: 0.1rem solid var(--dark-green);
+    letter-spacing: 0;
+    line-height: 1.2;
+    min-width: 90px;
+}
+
+.fab-menu-item span {
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+}
+
+.fab-menu-item sub {
+    font-size: 1rem;
+}
+
+.fab-menu-item:hover:not(.active) {
+    background: rgba(27, 49, 37, 0.1);
+}
+
+.fab-menu-item.active {
+    background: var(--dark-green);
+    color: var(--light-green);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-color: var(--dark-green);
+}
+
+.fab-menu-item:active {
+    transform: scale(0.98);
 }
 
 /* -------------------------------------------------- */
@@ -477,10 +579,13 @@ width: 100%;
     #areaChange {
         right: 1rem;
     }
+   
 
     #buttonPM25Data{
        right: 1rem;
     }
+    
+
 }
 
 
@@ -539,6 +644,15 @@ width: 100%;
     bottom: 3rem;
     left: 19rem;
 }
+
+/* Button for EPIC */
+#dropdown {
+    bottom: 3rem;
+    left: 23.5rem;
+}
+
+
+
 
 #menu {
     position: absolute;
