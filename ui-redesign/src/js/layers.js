@@ -37,7 +37,8 @@ export const layerIds = [
   "boilers",
   "pollution_reports",
   "openaq_latest",
-  "pm2.5_exposure"
+  "pm2.5_exposure",
+  "who2023_layer"
 ];
 // -------------------------------------------------------LAYERS VISIBILITY SETTINGS-------------------------------------------------------
 
@@ -443,7 +444,7 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
     </div>
   `;
 }
-export function generatePM25PopupHTML(properties, coordinates) {
+export function generatePM25PopupHTML(properties, coordinates, layerId = "") {
   if (!properties) return "";
 
   const name =
@@ -454,9 +455,11 @@ export function generatePM25PopupHTML(properties, coordinates) {
     properties.ADM2_EN||
     "Unknown District";
 
-  // TYPE BADGE
-  const displayType = "PM2.5 Exposure";
-  const backgroundColor = "hsla(24, 49%, 40%, 1.00)";
+  // TYPE BADGE - different for WHO2023 layer
+  const displayType = layerId === "who2023_layer" 
+    ? "Potential Gain in Life Expectancy" 
+    : "PM2.5 Exposure";
+  const backgroundColor = layerId === "who2023_layer"?"hsla(195, 49%, 49%, 1.00)":"hsla(24, 49%, 40%, 1.00)";
   const strokeColor = "#000";
 
   // Location fallback (if present)
@@ -484,6 +487,46 @@ export function generatePM25PopupHTML(properties, coordinates) {
     properties.pm25_mean ||
     properties.pm2023 ||
     "--";
+
+  // WHO 2023 value (district-specific field)
+  const who2023 = properties.who2023 !== undefined && properties.who2023 !== null
+    ? Number(properties.who2023).toFixed(2)
+    : "--";
+
+  // Determine the color used for this feature based on who2023 like the layer
+  function hexToRgbObj(hex) {
+    const bigint = parseInt(hex.slice(1), 16);
+    return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+  }
+  function interpolateColor(t, start, end) {
+    const r = Math.round(start.r + (end.r - start.r) * t);
+    const g = Math.round(start.g + (end.g - start.g) * t);
+    const b = Math.round(start.b + (end.b - start.b) * t);
+    return `rgb(${r},${g},${b})`;
+  }
+  // Major ramp used in the map layer (0–10 buckets)
+  const majorColors = [
+    "#dceefa", // 0–1
+    "#b3d5f2", // 1–2
+    "#80bbeb", // 2–3
+    "#4fa1e3", // 3–4
+    "#1f87db", // 4–5
+    "#0f6ab5", // 5–6
+    "#08568f", // 6–7
+    "rgba(5, 63, 111, 1)", // 7–8
+    "#032a50", // 8–9
+    "#021634"  // 9–10
+  ];
+  function colorForWho2023(val) {
+    if (val === null || val === undefined || isNaN(Number(val))) return "#999";
+    const v = Math.max(0, Math.min(9.9, Number(val))); // clamp to ramp
+    const major = Math.floor(v);
+    const minor = v - major; // 0..<1
+    const start = hexToRgbObj(majorColors[major]);
+    const end = hexToRgbObj(majorColors[Math.min(major + 1, majorColors.length - 1)]);
+    return interpolateColor(minor, start, end);
+  }
+  const whoColor = colorForWho2023(properties.who2023);
 
   return `
     <div class="popup-table" style="font-family: 'Montserrat', sans-serif;">
@@ -517,8 +560,15 @@ export function generatePM25PopupHTML(properties, coordinates) {
         <strong>PM2.5:</strong> ${pm25}
       </div>
 
+      <div style="font-size: 1rem; margin-top: 4px;">
+        <strong>WHO 2023:</strong>
+        <span style="display:inline-block; padding:2px 6px; margin-left:6px; border-radius:4px; background:${whoColor}; color:#fff;">
+          ${who2023}
+        </span>
+      </div>
+
       <div style="font-size: 0.7rem; color: #555; margin-top: 6px; font-style: italic; line-height: 1.2;">
-  Data source: <a href="https://aqli.epic.uchicago.edu/countryPage" target="_blank" style="color:#555; text-decoration: underline;">AQLI (district-based, 2023)</a>.<br>
+  Data source: <a href="https://github.com/aqli-epic/aqli-update/tree/main/AQLI%20Annual%20Update%202025%20data " target="_blank" style="color:#555; text-decoration: underline;">St Louis Washington Uni [PM2.5 exposure] and AQLI (EPIC)</a>.<br>
   Each normalized value:
   <span style="display:block; margin-top:2px; font-family: monospace; background: #f5f5f5; padding: 2px 4px; border-radius: 3px;">
     Normalized Exposure = ((District Population × PM2.5) / Total Population of Country )/Max(Population × PM2.5)
@@ -733,16 +783,16 @@ export function loadPM25ExposureLayer(map) {
 
     // --- All your PM2.5 files here ---
     const files = [
-      "./data/pm2.5/bng_adm2_pm25.geojson",
-      "./data/pm2.5/cod_adm2_pm25.geojson",
-      "./data/pm2.5/gha_adm2_pm25.geojson",
-      "./data/pm2.5/ken_adm2_pm25.geojson",
-      "./data/pm2.5/nga_adm2_pm25.geojson",
-      "./data/pm2.5/pk_adm2_pm25.geojson",
-      "./data/pm2.5/republic_congo_adm2_pm25.geojson",
-      "./data/pm2.5/ugd_adm2_pm25.geojson",
-      "./data/pm2.5/npl_adm2_pm25.geojson",
-      "./data/pm2.5/ind_adm2_pm25.geojson",
+      "./data/aqli/bng_adm2_pm25.geojson",
+      "./data/aqli/cod_adm2_pm25.geojson",
+      "./data/aqli/gha_adm2_pm25.geojson",
+      "./data/aqli/ken_adm2_pm25.geojson",
+      "./data/aqli/nga_adm2_pm25.geojson",
+      "./data/aqli/pk_adm2_pm25.geojson",
+      "./data/aqli/republic_congo_adm2_pm25.geojson",
+      "./data/aqli/npl_adm2_pm25.geojson",
+      "./data/aqli/ugd_adm2_pm25.geojson",
+      "./data/aqli/ind_adm2_pm25.geojson",
     ];
 
     // Fetch all files in parallel
@@ -818,7 +868,7 @@ export function loadPM25ExposureLayer(map) {
           const popupHTML = generatePM25PopupHTML(props, [
             lngLat.lng,
             lngLat.lat,
-          ]);
+          ], "pm2.5_exposure");
 
           currentPopup = new mapboxgl.Popup({
             closeButton: true,
@@ -839,6 +889,155 @@ export function loadPM25ExposureLayer(map) {
       });
   }
 }
+export function loadWHO2023Layer(map) {
+  if (!map.getSource("who2023_layer")) {
+    showLoadingSpinner();
+
+    const files = [
+      "./data/aqli/bng_adm2_pm25.geojson",
+      "./data/aqli/cod_adm2_pm25.geojson",
+      "./data/aqli/gha_adm2_pm25.geojson",
+      "./data/aqli/ken_adm2_pm25.geojson",
+      "./data/aqli/nga_adm2_pm25.geojson",
+      "./data/aqli/pk_adm2_pm25.geojson",
+      "./data/aqli/republic_congo_adm2_pm25.geojson",
+      "./data/aqli/npl_adm2_pm25.geojson",
+      "./data/aqli/ugd_adm2_pm25.geojson",
+      "./data/aqli/ind_adm2_pm25.geojson",
+    ];
+
+    Promise.all(files.map(f => fetch(f).then(r => r.json())))
+      .then(geojsons => {
+        // ------------------------------
+        // 1. Find global min/max WHO 2023
+        // ------------------------------
+        let globalMin = Infinity;
+        let globalMax = -Infinity;
+
+        geojsons.forEach(g => {
+          g.features.forEach(f => {
+            const val = Number(f.properties.who2023);
+            if (!isNaN(val)) {
+              if (val < globalMin) globalMin = val;
+              if (val > globalMax) globalMax = val;
+            }
+          });
+        });
+
+        globalMin = Math.floor(globalMin * 10) / 10;
+        globalMax = Math.ceil(globalMax * 10) / 10;
+
+      //  console.log("WHO 2023 Min:", globalMin, "Max:", globalMax);
+
+        // -----------------------------------------
+        // 2. Two-level color strategy
+        // -----------------------------------------
+        const majorColors = [
+          "#dceefa", // 0–1
+          "#b3d5f2", // 1–2
+          "#80bbeb", // 2–3
+          "#4fa1e3", // 3–4
+          "#1f87db", // 4–5
+          "#0f6ab5", // 5–6
+          "#08568f", // 6–7
+          "#053f6f", // 7–8
+          "#032a50", // 8–9
+          "#021634"  // 9–10
+        ];
+
+        
+// Esri color ramps - Blue 2
+// #fffcd4ff,#cde0caff,#b4d2c6ff,#82b6bcff,#69a8b7ff,#5a93a8ff,#3d6a89ff,#2e557aff,#102b5bff
+//const majorColors = ["#fffcd4ff", "#cde0caff", "#b4d2c6ff", "#82b6bcff", "#69a8b7ff", "#5a93a8ff", "#3d6a89ff", "#2e557aff", "#102b5bff"];
+        function hexToRgbObj(hex) {
+          const bigint = parseInt(hex.slice(1), 16);
+          return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+        }
+
+        function interpolateColor(t, start, end) {
+          const r = Math.round(start.r + (end.r - start.r) * t);
+          const g = Math.round(start.g + (end.g - start.g) * t);
+          const b = Math.round(start.b + (end.b - start.b) * t);
+          return `rgb(${r},${g},${b})`;
+        }
+
+        const colorStops = ["interpolate", ["linear"], ["get", "who2023"]];
+
+        for (let major = 0; major < 10; major++) {
+          const startColor = hexToRgbObj(majorColors[major]);
+          const endColor = major < 9 ? hexToRgbObj(majorColors[major + 1]) : startColor;
+
+          for (let minor = 0; minor <= 0.9; minor += 0.1) {
+            const value = major + minor;
+            const t = minor / 1.0; // progress within major bucket
+            const color = interpolateColor(t, startColor, endColor); 
+            colorStops.push(Number(value.toFixed(1)));
+            colorStops.push(color);
+          }
+        }
+
+        // ------------------------------
+        // 3. Merge features
+        // ------------------------------
+        const merged = {
+          type: "FeatureCollection",
+          features: geojsons.flatMap(g => g.features),
+        };
+
+        map.addSource("who2023_layer", {
+          type: "geojson",
+          data: merged,
+        });
+
+        // ------------------------------
+        // 4. Add color-scaled layer
+        // ------------------------------
+        map.addLayer({
+          id: "who2023_layer",
+          type: "fill",
+          source: "who2023_layer",
+          paint: {
+            "fill-color": colorStops,
+            "fill-opacity": 0.75,
+          },
+        });
+
+        // --- Add PM2.5 popup on click (district-based) ---
+        if (!map.__pm25PopupBound) {
+          map.__pm25PopupBound = true;
+          const bindClick = (layerId) => {
+            if (map.getLayer(layerId)) {
+              map.on("click", layerId, (e) => {
+                const props = e.features[0].properties;
+                const lngLat = e.lngLat;
+
+                if (currentPopup) {
+                  currentPopup.remove();
+                  currentPopup = null;
+                }
+
+                const html = generatePM25PopupHTML(props, [lngLat.lng, lngLat.lat], layerId);
+                currentPopup = new mapboxgl.Popup({ closeButton: true, closeOnClick: false })
+                  .setLngLat(lngLat)
+                  .setHTML(html)
+                  .addTo(map);
+              });
+            }
+          };
+          // Bind for both possible layer IDs
+          bindClick("who2023_layer");
+          bindClick("pm2.5_exposure");
+        }
+
+        hideLoadingSpinner();
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        hideLoadingSpinner();
+      });
+  }
+}
+
 
 // --- PULSING DOT HELPER ---
 export function addPulsingDot(map, coordinates) {

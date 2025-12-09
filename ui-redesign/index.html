@@ -119,7 +119,7 @@
           </div>
 
           <div class="tooltip" id="tooltipPM2.5">Population Weighted PM2.5 Exposure activated</div>
-
+          <div class="tooltip" id="tooltipWHO2023">Potential Gain in Life Expectancy (Compared to WHO guideline)</div>
           <div class="tooltip" id="tooltipAggregate">
             Click on the map to aggregate data within the selected buffer size.
           </div>
@@ -167,23 +167,30 @@
         <i class="fas fa-globe-africa"></i>
       </div>
 
-      <div
-        class="FAB"
-        id="buttonPM25Data"
-        title="Button PM2.5 Population Weighted Exposure"
-      >
-        <i
-          class="fa-solid fa-smog"
-          alt="PM2.5 Population Weighted Exposure"
-        ></i>
-      </div>
+      
 
       <!--------------------------- FLOATING BUTTONS BOTTOM LEFT --------------------------->
 
       <!-- Air Quality Button -->
 
-      <div class="FAB" id="buttonOpenAQData" title="Button Air Quality Layer">
+      <div class="FAB" id="buttonOpenAQData" title="Air Quality Layer">
         <i class="fa-solid fa-wind" alt="Air quality icon"></i>
+      </div>
+
+      <!-- PM2.5/WHO 2023 Dropdown Button -->
+      <div class="fab-dropdown-container FAB" id="dropdown">
+        <div class="FAB" id="pm25MainButton" title="Air Quality Layers">
+          <span class="epic-text">EPIC</span>
+        </div>
+        
+        <div class="fab-dropdown-menu hidden" id="pm25DropdownMenu">
+          <div class="fab-menu-item" id="buttonPM25Data" title="PM2.5 Population Weighted Exposure">
+            PM25 Exposure
+          </div>
+          <div class="fab-menu-item" id="buttonWHO25Data" title="WHO 2023 Life Expectancy">
+            Potential Gain in Life Expectancy (WHO)
+          </div>
+        </div>
       </div>
 
       <!-- Report Poluttion Button -->
