@@ -568,7 +568,7 @@ export function generatePM25PopupHTML(properties, coordinates, layerId = "") {
       </div>
 
       <div style="font-size: 0.7rem; color: #555; margin-top: 6px; font-style: italic; line-height: 1.2;">
-  Data source: <a href="https://github.com/aqli-epic/aqli-update/tree/main/AQLI%20Annual%20Update%202025%20data " target="_blank" style="color:#555; text-decoration: underline;">St Louis Washington Uni [PM2.5 exposure] and AQLI (EPIC)</a>.<br>
+  Data source: <a href="https://github.com/aqli-epic/aqli-update/tree/main/AQLI%20Annual%20Update%202025%20data " target="_blank" style="color:#555; text-decoration: underline;">St Louis Washington University [PM2.5 exposure] and AQLI (EPIC)</a>.<br>
   Each normalized value:
   <span style="display:block; margin-top:2px; font-family: monospace; background: #f5f5f5; padding: 2px 4px; border-radius: 3px;">
     Normalized Exposure = ((District Population × PM2.5) / Total Population of Country )/Max(Population × PM2.5)
