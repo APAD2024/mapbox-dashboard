@@ -633,19 +633,19 @@ width: 100%;
 /* Button for AQ Data */
 #buttonOpenAQData {
     bottom: 3rem;
-    left: 14.5rem;
+    left: 19rem;
 }
 
 /* Button for Report Pollution */
 #buttonPollutionReports {
     bottom: 3rem;
-    left: 19rem;
+    left: 14.5rem;
 }
 
 /* Button for EPIC */
 #dropdown {
     bottom: 3rem;
-    left: 26.5rem;
+    left: 28rem;
 }
 
 
