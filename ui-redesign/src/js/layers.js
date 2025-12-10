@@ -563,7 +563,7 @@ export function generatePM25PopupHTML(properties, coordinates, layerId = "") {
       <div style="font-size: 1rem; margin-top: 4px;">
         <strong>Potential Gain in Life Expectancy (If WHO guidelines are met):</strong>
         <span style="display:inline-block; padding:2px 6px; margin-left:6px; border-radius:4px; background:${whoColor}; color:#fff;">
-          ${who2023}
+          ${who2023} years
         </span>
       </div>
 
