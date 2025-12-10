@@ -464,9 +464,9 @@ export function generatePM25PopupHTML(properties, coordinates, layerId = "") {
 
   // Location fallback (if present)
   const country =
-    properties.country || properties.COUNTRY || properties.admin0Name_en || properties.ADM0_EN ||properties.name0||"";
+    properties.country || properties.COUNTRY || properties.admin0Name_en || properties.ADM0_EN ||properties.name0||properties.name0_x||"";
 
-  const region = properties.region || properties.admin1Name_en ||properties.ADM1_EN ||properties.name1||"";
+  const region = properties.region || properties.admin1Name_en ||properties.ADM1_EN ||properties.name1||properties.name1_x||"";
 
   const locationText = region ? `${region}, ${country}` : country || "";
 
@@ -557,18 +557,18 @@ export function generatePM25PopupHTML(properties, coordinates, layerId = "") {
       </div>
 
       <div style="font-size: 1rem; margin-top: 4px;">
-        <strong>PM2.5:</strong> ${pm25}
+        <strong>PM2.5:</strong> ${pm25} ug/m3
       </div>
 
       <div style="font-size: 1rem; margin-top: 4px;">
-        <strong>WHO 2023:</strong>
+        <strong>Potential Gain in Life Expectancy (If WHO guidelines are met):</strong>
         <span style="display:inline-block; padding:2px 6px; margin-left:6px; border-radius:4px; background:${whoColor}; color:#fff;">
           ${who2023}
         </span>
       </div>
 
       <div style="font-size: 0.7rem; color: #555; margin-top: 6px; font-style: italic; line-height: 1.2;">
-  Data source: <a href="https://github.com/aqli-epic/aqli-update/tree/main/AQLI%20Annual%20Update%202025%20data " target="_blank" style="color:#555; text-decoration: underline;">St Louis Washington University [PM2.5 exposure] and AQLI (EPIC)</a>.<br>
+  Data source: <a href="https://aqli.epic.uchicago.edu/" target="_blank" style="color:#555; text-decoration: underline;">Air Quality Life Index</a>, Satellite-derived PM2.5 data from <a href="https://sites.wustl.edu/acag/surface-pm2-5/" target="_blank" style="color:#555; text-decoration: underline;">ACAG, WUSTL</a> (2023).<br>
   Each normalized value:
   <span style="display:block; margin-top:2px; font-family: monospace; background: #f5f5f5; padding: 2px 4px; border-radius: 3px;">
     Normalized Exposure = ((District Population × PM2.5) / Total Population of Country )/Max(Population × PM2.5)

@@ -501,12 +501,9 @@ width: 100%;
     justify-content: center;
 }
 
-.fab-dropdown-container .FAB .epic-text {
-    color: var(--dark-green);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
+.fab-dropdown-container .FAB .epic-logo {
+    display: block;
+    transition: filter 0.2s ease;
 }
 
 .fab-dropdown-container .FAB:hover {
@@ -514,8 +511,8 @@ width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.fab-dropdown-container .FAB:hover .epic-text {
-    color: var(--light-green);
+.fab-dropdown-container .FAB:hover .epic-logo {
+    filter: brightness(0) invert(1);
 }
 
 .fab-menu-item {
@@ -648,7 +645,7 @@ width: 100%;
 /* Button for EPIC */
 #dropdown {
     bottom: 3rem;
-    left: 23.5rem;
+    left: 26.5rem;
 }
 
 
