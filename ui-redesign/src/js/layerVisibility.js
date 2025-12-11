@@ -227,7 +227,7 @@ export function initializeLayerVisibilityControls(map) {
         map,
         "coal_africa",
         "coal_Afc",
-        "https://gist.githubusercontent.com/Mseher/b3f5e885ddae2b90be7048f87896ef48/raw/57db894dc8237b9d09a8f3ed1a5e114400cfc49f/Africa_Coal.geojson",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/africa_assets/africa_coal_plants_main.geojson",
         layerStyles.coal.circleColor, layerStyles.coal.circleRadius, layerStyles.coal.strokeWidth, layerStyles.coal.strokeColor
         )}
     ]);
