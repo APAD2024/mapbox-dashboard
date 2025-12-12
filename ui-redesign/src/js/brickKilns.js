@@ -108,7 +108,7 @@ export function loadBrickKilnLayerPK(map) {
                                          <tr><td>Capacity</td><td>${properties['capacity_tonnes'] || '---'}</td></tr>
                                         <tr><td>PM<sub>10</sub></td><td>${properties['pm10_t_yr']}</td></tr>
                                         <tr><td>PM<sub>2.5</sub></td><td>${properties['pm25_t_yr']}</td></tr>
-                                        <tr><td>NO<sub>2</sub></td><td>${properties['nox_t_yr']}</td></tr>
+                                        <tr><td>NO<sub>x</sub></td><td>${properties['Nox_t_yr']}</td></tr>
                                         <tr><td>SO<sub>2</sub></td><td>${properties['so2_t_yr']}</td></tr>
                                     </table>
                                     <button class="report-button">
@@ -185,7 +185,7 @@ export function loadBrickKilnLayerIND(map) {
                                          <tr><td>Capacity</td><td>${props['capacity_tonnes'] || '---'}</td></tr>
                                         <tr><td>PM<sub>10</sub></td><td>${props['pm10_t_yr']}</td></tr>
                                         <tr><td>PM<sub>2.5</sub></td><td>${props['pm25_t_yr']}</td></tr>
-                                        <tr><td>NO<sub>2</sub></td><td>${props['nox_t_yr']}</td></tr>
+                                        <tr><td>NO<sub>x</sub></td><td>${props['Nox_t_yr']}</td></tr>
                                         <tr><td>SO<sub>2</sub></td><td>${props['so2_t_yr']}</td></tr>
                                     </table>
                                     <button class="report-button">
@@ -258,7 +258,7 @@ export function loadBrickKilnLayerBAN(map) {
                                          <tr><td>Capacity</td><td>${props['capacity_tonnes'] || '---'}</td></tr>
                                         <tr><td>PM<sub>10</sub></td><td>${props['pm10_t_yr']}</td></tr>
                                         <tr><td>PM<sub>2.5</sub></td><td>${props['pm25_t_yr']}</td></tr>
-                                        <tr><td>NO<sub>2</sub></td><td>${props['nox_t_yr']}</td></tr>
+                                        <tr><td>NO<sub>x</sub></td><td>${props['Nox_t_yr']}</td></tr>
                                         <tr><td>SO<sub>2</sub></td><td>${props['so2_t_yr']}</td></tr>
                                     </table>
                                     <button class="report-button">
