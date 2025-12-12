@@ -475,6 +475,8 @@ width: 100%;
     border: 0.12rem solid var(--dark-green);
     animation: slideUp 0.2s ease;
     white-space: nowrap;
+    max-width: calc(100vw - 4rem);
+    overflow-x: auto;
 }
 
 @keyframes slideUp {
@@ -577,12 +579,22 @@ width: 100%;
         right: 1rem;
     }
    
-
     #buttonPM25Data{
        right: 1rem;
     }
     
-
+    .fab-dropdown-menu {
+        flex-direction: column;
+        left: auto;
+        right: 0;
+        max-width: 90vw;
+    }
+    
+    .fab-menu-item {
+        font-size: 0.85rem !important;
+        padding: 0.4rem 0.8rem;
+        min-width: auto;
+    }
 }
 
 
