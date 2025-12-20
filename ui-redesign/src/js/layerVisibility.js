@@ -41,7 +41,7 @@ const defaultLayerIds = [
     'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA',
     'brick_kilns_NGA',
     
-    'gpw','solid_waste_igp','furnace_oil_biofuel' , 'furnace_oil_oil', 'furnace_oil_', 
+    'gpw','solid_waste_igp','furnace_oil_biofuel' , 'furnace_oil_oil', 'furnace_oil_','solid_waste_africa',
     
     'pollution_reports','openaq_latest','pm2.5_exposure','who2023_layer'
 
@@ -261,7 +261,15 @@ export function initializeLayerVisibilityControls(map) {
         "solidWasteIGP",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Plastic+and+Landfill+Sites/waste_main.geojson",
         layerStyles.landFillWaste.circleColor, layerStyles.landFillWaste.circleRadius, layerStyles.landFillWaste.strokeWidth, layerStyles.landFillWaste.strokeColor
-    )}
+    )},
+    { id: "solid_waste_africa", load: (map) => loadGroupLayers(
+        map,
+        "solid_waste_africa",
+        "solidWasteAfrica",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/africa_assets/waste_Africa_main.geojson",
+        layerStyles.landFillWaste.circleColor, layerStyles.landFillWaste.circleRadius, layerStyles.landFillWaste.strokeWidth, layerStyles.landFillWaste.strokeColor
+        )}
+    
     ]);
 
      setupGroupLayerToggle(map, "toggleGPW", [

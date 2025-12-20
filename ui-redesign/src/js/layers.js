@@ -26,6 +26,7 @@ export const layerIds = [
   "paper_pulp_IGP",
   "steel_IGP",
   "solid_waste_IGP",
+  "solid_waste_africa",
   "coal_africa",
   "cement_africa",
   "paper_pulp_africa",
@@ -404,8 +405,8 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
 
   const capacity = rawCapacity
     ? typeof rawCapacity === "string"
-      ? parseFloat(rawCapacity)
-      : rawCapacity
+      ? parseFloat(rawCapacity).toFixed(2)
+      : Number(rawCapacity).toFixed(2)
     : "---";
 
   // Determine capacity unit based on layer type

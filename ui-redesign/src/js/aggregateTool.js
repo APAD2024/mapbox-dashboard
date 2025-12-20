@@ -36,6 +36,7 @@ export const COUNTABLE_LAYERS_INFO = {
   cement_africa: 'Cement',
   boilers: 'Boilers',
   solid_waste_IGP: 'Solid Waste',
+  solid_waste_africa: 'Solid Waste',
   gpw: 'GPW'
 };
 
@@ -56,6 +57,7 @@ export const layerIdToStyleKey = {
     cement_africa: 'cement',
     boilers: 'boilers',
     solid_waste_IGP: 'landFillWaste',
+    solid_waste_africa: 'landFillWaste',
     gpw: 'gpw'
 };
 
