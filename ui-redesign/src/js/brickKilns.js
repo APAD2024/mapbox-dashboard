@@ -65,7 +65,7 @@ export function loadBrickKilnLayerPK(map) {
         if (!map.getSource('brickKilnsPK')) {
             showLoadingSpinner(); // Show the spinner while loading
 
-            fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_PAK_coal.geojson')
+            fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/asset_igp/Brick_kilns_PAK_coal.geojson')
                 .then(response => response.json())
                 .then(data => {
                   
@@ -148,7 +148,7 @@ export function loadBrickKilnLayerIND(map) {
         if (!map.getSource('brickKilnsIND')) {
             showLoadingSpinner();
 
-            fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_IND_coal.geojson')
+            fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/asset_igp/Brick_kilns_IND_coal.geojson')
                 .then(response => response.json())
                 .then(data => {
                    
@@ -222,7 +222,7 @@ export function loadBrickKilnLayerBAN(map) {
         if (!map.getSource('brickKilnsBAN')) {
             showLoadingSpinner();
 
-            fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/Brick+Kilns/Brick_kilns_BAN_coal.geojson')
+            fetch('https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/asset_igp/Brick_kilns_BAN_coal.geojson')
                 .then(response => response.json())
                 .then(data => {
                    
