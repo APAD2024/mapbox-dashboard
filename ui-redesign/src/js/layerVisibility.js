@@ -35,7 +35,7 @@ const defaultLayerIds = [
     'coal', 'coal_africa','fossil_fuel', 'furnace_oil_IGP',
 
 
-    'cement_igp','cement_africa','paper_pulp_igp', 'paper_pulp_africa','steel_igp','steel_africa','boilers',
+    'cement_igp','cement_africa','paper_pulp_igp', 'paper_pulp_africa','steel_igp','steel_africa','boilers','others',
 
     'brick_kilns_PK', 'brick_kilns_IND', 'brick_kilns_BAN', 
     'brick_kilns_DRC', 'brick_kilns_GHA', 'brick_kilns_UGA',
@@ -204,7 +204,9 @@ export const layerStyles = {
 
     // brickKiln:{ circleColor: hslaVar('--red', 0.25), circleRadius: 4, strokeWidth: 0, strokeColor: hslaVar('--red')},
     
-    boilers:{ circleColor: hslaVar('--red', 0.25), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--red') },  
+    boilers:{ circleColor: hslaVar('--red', 0.25), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--red') }, 
+    
+    others:{circleColor: hslaVar('--gray', 0.25), circleRadius: 10, strokeWidth: 1, strokeColor: hslaVar('--gray')},
 
     //Group 3: tertiary
     landFillWaste :{ circleColor: hslaVar('--yellow', 0), circleRadius: 5, strokeWidth: 1, strokeColor: hslaVar('--yellow') },
@@ -337,7 +339,7 @@ export function initializeLayerVisibilityControls(map) {
         layerStyles.cement.circleColor, layerStyles.cement.circleRadius, layerStyles.cement.strokeWidth, layerStyles.cement.strokeColor
     )}
     ]);
-
+   
     setupGroupLayerToggle(map, "toggleBoilers", [
     { id: "boilers", load: (map) => loadGroupLayers(
         map,
@@ -345,6 +347,16 @@ export function initializeLayerVisibilityControls(map) {
         "boilers_layer",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/boilers/boilers.geojson",
         layerStyles.boilers.circleColor, layerStyles.boilers.circleRadius, layerStyles.boilers.strokeWidth, layerStyles.boilers.strokeColor
+    )}
+    ]);
+
+    setupGroupLayerToggle(map, "toggleOthers", [
+    { id: "others", load: (map) => loadGroupLayers(
+        map,
+        "others",
+        "others_layer",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/asset_igp/other_manufacturing.geojson",
+        layerStyles.others.circleColor, layerStyles.others.circleRadius, layerStyles.others.strokeWidth, layerStyles.others.strokeColor
     )}
     ]);
 

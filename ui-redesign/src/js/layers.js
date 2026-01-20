@@ -36,6 +36,7 @@ export const layerIds = [
   "brick_kilns_UGA",
   "brick_kilns_NGA",
   "boilers",
+  "others",
   "pollution_reports",
   "openaq_latest",
   "pm2.5_exposure",

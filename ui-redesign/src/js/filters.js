@@ -9,6 +9,7 @@ const assetGroups = {
   "Paper Pulp": ["paper_pulp_IGP", "paper_pulp_africa"],
   "Cement": ["cement_IGP", "cement_africa"],
   "Boilers": ["boilers"],
+  "Others":["others"],
   "Brick Kilns": ["brick_kilns_PK", "brick_kilns_IND", "brick_kilns_BAN", "brick_kilns_DRC", "brick_kilns_GHA", "brick_kilns_UGA", "brick_kilns_NGA"],
   "Land Fill Waste": ["solid_waste_IGP","solid_waste_africa"],
   "GPW": ["gpw"]
