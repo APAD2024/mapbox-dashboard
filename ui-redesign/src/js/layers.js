@@ -21,8 +21,11 @@ export const layerIds = [
   "cement_IGP",
   "furnace_oil_IGP",
   "furnace_oil_natural_gas",
+  "furnace_oil_natural_gas_africa",
   "furnace_oil_oil",
+  "furnace_oil_oil_africa",
   "furnace_oil_biofuel",
+  "furnace_oil_biofuel_africa",
   "paper_pulp_IGP",
   "steel_IGP",
   "solid_waste_IGP",
@@ -418,7 +421,10 @@ export function generatePopupHTML(properties, coordinates, layerId = "") {
     "furnace_oil_IGP",
     "furnace_oil_natural_gas",
     "furnace_oil_oil",
-    "furnace_oil_biofuel"
+    "furnace_oil_biofuel",
+    "furnace_oil_natural_gas_africa",
+    "furnace_oil_oil_africa",
+    "furnace_oil_biofuel_africa"
   ];
   const capacityUnit = energyLayers.includes(layerId) ? "MW" : "tonnes/year";
 

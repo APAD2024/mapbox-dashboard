@@ -369,6 +369,13 @@ export function initializeLayerVisibilityControls(map) {
         "naturalgas_layer",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_gas.geojson",
         layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
+    )},
+    { id: "furnace_oil_natural_gas_africa", load: (map) => loadGroupLayers(
+        map,
+        "furnace_oil_natural_gas_africa",
+        "naturalgas_layer",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/africa_assets/power_africa_gas.geojson",
+        layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
     )}
     ]);
 
@@ -378,6 +385,13 @@ export function initializeLayerVisibilityControls(map) {
         "furnace_oil_oil",
         "oil_layer",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_furnace_oil.geojson",
+layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
+    )},
+     { id: "furnace_oil_oil_africa", load: (map) => loadGroupLayers(
+        map,
+        "furnace_oil_oil_africa",
+        "oil_layer",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/africa_assets/power_africa_oil.geojson",
 layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
     )}
     ]);
@@ -389,7 +403,16 @@ layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerSt
         "biofuel_layer",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/oil_and_gas/Furnace_oil_biofuel.geojson",
         layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
-    )}
+    )},
+
+    { id: "furnace_oil_biofuel_africa", load: (map) => loadGroupLayers(
+        map,
+        "furnace_oil_biofuel_africa",
+        "biofuel_layer",
+        "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/africa_assets/power_africa_biofuel.geojson",
+        layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
+    )},
+
     ]);
 
       // Setup other groups or single layers similarly...
