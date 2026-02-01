@@ -373,7 +373,7 @@ export function initializeLayerVisibilityControls(map) {
     { id: "furnace_oil_natural_gas_africa", load: (map) => loadGroupLayers(
         map,
         "furnace_oil_natural_gas_africa",
-        "naturalgas_layer",
+        "naturalgas_layer_Afc",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/africa_assets/power_africa_gas.geojson",
         layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
     )}
@@ -390,7 +390,7 @@ layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerSt
      { id: "furnace_oil_oil_africa", load: (map) => loadGroupLayers(
         map,
         "furnace_oil_oil_africa",
-        "oil_layer",
+        "oil_layer_Afc",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/africa_assets/power_africa_oil.geojson",
 layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
     )}
@@ -408,7 +408,7 @@ layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerSt
     { id: "furnace_oil_biofuel_africa", load: (map) => loadGroupLayers(
         map,
         "furnace_oil_biofuel_africa",
-        "biofuel_layer",
+        "biofuel_layer_Afc",
         "https://assetdata-igp.s3.ap-southeast-1.amazonaws.com/africa_assets/power_africa_biofuel.geojson",
         layerStyles.furnaceOil.circleColor, layerStyles.furnaceOil.circleRadius, layerStyles.furnaceOil.strokeWidth, layerStyles.furnaceOil.strokeColor
     )},
